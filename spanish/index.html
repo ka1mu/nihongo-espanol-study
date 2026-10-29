@@ -231,59 +231,27 @@ tr.is-learned .btn-speaker {
 .es-word {
   color: #166534;
 }
-.col-check, th.col-check, td.col-check {
-  width: 68px !important;
-  min-width: 68px !important;
-  max-width: 72px !important;
+.col-check {
+  width: 36px;
   text-align: center;
-  padding: 6px 3px !important;
+  padding: 8px 4px;
 }
-.check-pill-btn {
-  display: flex;
-  flex-direction: column;
+.check-box {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+.check-wrap {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 48px;
-  background: #f1f5f9;
-  border: 2px solid #cbd5e1;
-  border-radius: 10px;
+  padding: 6px 4px;
   cursor: pointer;
-  user-select: none;
-  margin: 0 auto;
-  transition: all 0.15s ease;
 }
-.check-pill-btn:active {
-  transform: scale(0.92);
-  background: #e2e8f0;
-}
-.check-pill-btn input {
-  display: none !important;
-}
-.check-pill-icon {
-  font-size: 1.25rem;
-  line-height: 1;
-  color: #94a3b8;
-  font-weight: 900;
-}
-.check-pill-text {
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: #64748b;
-  margin-top: 2px;
-}
-tr.is-learned .check-pill-btn {
-  background: #dcfce7 !important;
-  border-color: #22c55e !important;
-}
-tr.is-learned .check-pill-icon {
-  color: #16a34a !important;
-}
-tr.is-learned .check-pill-text {
-  color: #15803d !important;
-}
-td.col-es {
-  padding-left: 10px !important;
+/* 済の横にしっかりとしたスペース（余白）を確保 */
+th.col-es, td.col-es {
+  padding-left: 20px !important;
 }
 .col-es {
   width: 38%;
@@ -359,7 +327,7 @@ td.col-es {
 @media (max-width: 600px) {
   body { padding: 4px 2px; }
   h1 { font-size: 1.2rem; }
-  .col-check, th.col-check, td.col-check { width: 66px !important; min-width: 66px !important; }
+  .col-check { width: 34px; } th.col-es, td.col-es { padding-left: 16px !important; }
   .col-es { width: 40%; }
   .col-ja-en { width: 30%; }
   .col-note { width: 26%; font-size: 0.74rem; }
@@ -595,10 +563,8 @@ function renderTable() {
     
     html += `<tr class="${learnedClass}" id="row-${item.no}">
       <td class="col-check">
-        <label class="check-pill-btn" onclick="event.stopPropagation();">
-          <input type="checkbox" data-no="${item.no}" ${checkedAttr} onchange="toggleLearned(${item.no}, this.checked)">
-          <span class="check-pill-icon">${isLearned ? '✓' : '□'}</span>
-          <span class="check-pill-text">${isLearned ? '暗記済' : '未暗記'}</span>
+        <label class="check-wrap" onclick="event.stopPropagation();">
+          <input type="checkbox" class="check-box" data-no="${item.no}" ${checkedAttr} onchange="toggleLearned(${item.no}, this.checked)">
         </label>
       </td>
       <td class="col-es ${esMaskClass}" onclick="this.classList.toggle('revealed')">
@@ -626,15 +592,11 @@ window.toggleLearned = function(no, isChecked) {
   }
   saveLearned();
   
-  const row = document.getElementById(`row-${no}`);
+  const row = document.getElementById('row-' + no);
   if (row) {
-    if (isChecked) {
-      row.classList.add('is-learned');
-      if (hideLearnedActive) {
-        row.style.display = 'none';
-      }
-    } else {
-      row.classList.remove('is-learned');
+    row.classList.toggle('is-learned', isChecked);
+    if (hideLearnedActive && isChecked) {
+      row.style.display = 'none';
     }
   }
 };
