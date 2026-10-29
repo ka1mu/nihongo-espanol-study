@@ -361,35 +361,59 @@ tr.is-learned {
   background-color: #f0fdf4 !important;
   opacity: 0.65;
 }
-.col-check {
-  width: 52px;
+.col-check, th.col-check, td.col-check {
+  width: 68px !important;
+  min-width: 68px !important;
+  max-width: 72px !important;
   text-align: center;
-  padding: 4px 2px !important;
+  padding: 6px 3px !important;
 }
-.check-wrapper {
+.check-pill-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 58px;
+  height: 48px;
+  background: #f1f5f9;
+  border: 2px solid #cbd5e1;
+  border-radius: 10px;
   cursor: pointer;
-  padding: 6px 2px;
-  border-radius: 6px;
-  min-height: 44px;
+  user-select: none;
+  margin: 0 auto;
+  transition: all 0.15s ease;
 }
-.check-wrapper:active {
-  background: rgba(0,0,0,0.05);
+.check-pill-btn:active {
+  transform: scale(0.92);
+  background: #e2e8f0;
 }
-.check-box {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  accent-color: var(--accent);
+.check-pill-btn input {
+  display: none !important;
 }
-.check-label-text {
-  font-size: 0.65rem;
+.check-pill-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #94a3b8;
+  font-weight: 900;
+}
+.check-pill-text {
+  font-size: 0.62rem;
+  font-weight: 700;
   color: #64748b;
   margin-top: 2px;
-  font-weight: 700;
+}
+tr.is-learned .check-pill-btn {
+  background: #dcfce7 !important;
+  border-color: #22c55e !important;
+}
+tr.is-learned .check-pill-icon {
+  color: #16a34a !important;
+}
+tr.is-learned .check-pill-text {
+  color: #15803d !important;
+}
+td.col-kanji, td.col-v-word {
+  padding-left: 10px !important;
 }
 
 /* Badge */
@@ -1257,9 +1281,10 @@ function renderTable() {
       
       html += `<tr class="${isL ? 'is-learned' : ''}" id="row-k-${k.id}">
         <td class="col-check">
-          <label class="check-wrapper">
-            <input type="checkbox" class="check-box" ${isL ? 'checked' : ''} onchange="toggleLearned(${k.id}, this.checked)">
-            <span class="check-label-text">済</span>
+          <label class="check-pill-btn" onclick="event.stopPropagation();">
+            <input type="checkbox" ${isL ? 'checked' : ''} onchange="toggleLearned(${k.id}, this.checked)">
+            <span class="check-pill-icon">${isL ? '✓' : '□'}</span>
+            <span class="check-pill-text">${isL ? 'Dominado' : 'Pendiente'}</span>
           </label>
         </td>
         <td class="col-kanji">
@@ -1323,9 +1348,10 @@ function renderTable() {
       
       html += `<tr class="${isL ? 'is-learned' : ''}" id="row-v-${v.id}">
         <td class="col-check">
-          <label class="check-wrapper">
-            <input type="checkbox" class="check-box" ${isL ? 'checked' : ''} onchange="toggleLearned(${v.id}, this.checked)">
-            <span class="check-label-text">済</span>
+          <label class="check-pill-btn" onclick="event.stopPropagation();">
+            <input type="checkbox" ${isL ? 'checked' : ''} onchange="toggleLearned(${v.id}, this.checked)">
+            <span class="check-pill-icon">${isL ? '✓' : '□'}</span>
+            <span class="check-pill-text">${isL ? 'Dominado' : 'Pendiente'}</span>
           </label>
         </td>
         <td class="col-v-word">
@@ -1364,6 +1390,10 @@ window.toggleLearned = function(id, isChecked) {
   const row = document.getElementById(prefix + id);
   if (row) {
     row.classList.toggle('is-learned', isChecked);
+    const icon = row.querySelector('.check-pill-icon');
+    const text = row.querySelector('.check-pill-text');
+    if (icon) icon.textContent = isChecked ? '✓' : '□';
+    if (text) text.textContent = isChecked ? 'Dominado' : 'Pendiente';
     if (hideLearnedActive && isChecked) {
       row.style.display = 'none';
     }

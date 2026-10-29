@@ -231,35 +231,59 @@ tr.is-learned .btn-speaker {
 .es-word {
   color: #166534;
 }
-.col-check {
-  width: 52px;
+.col-check, th.col-check, td.col-check {
+  width: 68px !important;
+  min-width: 68px !important;
+  max-width: 72px !important;
   text-align: center;
-  padding: 4px 2px !important;
+  padding: 6px 3px !important;
 }
-.check-wrapper {
+.check-pill-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 56px;
+  height: 48px;
+  background: #f1f5f9;
+  border: 2px solid #cbd5e1;
+  border-radius: 10px;
   cursor: pointer;
-  padding: 6px 2px;
-  border-radius: 6px;
-  min-height: 44px;
+  user-select: none;
+  margin: 0 auto;
+  transition: all 0.15s ease;
 }
-.check-wrapper:active {
-  background: rgba(0,0,0,0.05);
+.check-pill-btn:active {
+  transform: scale(0.92);
+  background: #e2e8f0;
 }
-.check-box {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  accent-color: var(--accent);
+.check-pill-btn input {
+  display: none !important;
 }
-.check-label-text {
+.check-pill-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #94a3b8;
+  font-weight: 900;
+}
+.check-pill-text {
   font-size: 0.65rem;
+  font-weight: 700;
   color: #64748b;
   margin-top: 2px;
-  font-weight: 700;
+}
+tr.is-learned .check-pill-btn {
+  background: #dcfce7 !important;
+  border-color: #22c55e !important;
+}
+tr.is-learned .check-pill-icon {
+  color: #16a34a !important;
+}
+tr.is-learned .check-pill-text {
+  color: #15803d !important;
+}
+td.col-es {
+  padding-left: 10px !important;
 }
 .col-es {
   width: 38%;
@@ -335,7 +359,7 @@ tr.is-learned .btn-speaker {
 @media (max-width: 600px) {
   body { padding: 4px 2px; }
   h1 { font-size: 1.2rem; }
-  .col-check { width: 48px; } .check-box { width: 22px; height: 22px; }
+  .col-check, th.col-check, td.col-check { width: 66px !important; min-width: 66px !important; }
   .col-es { width: 40%; }
   .col-ja-en { width: 30%; }
   .col-note { width: 26%; font-size: 0.74rem; }
@@ -571,9 +595,10 @@ function renderTable() {
     
     html += `<tr class="${learnedClass}" id="row-${item.no}">
       <td class="col-check">
-        <label class="check-wrapper">
-          <input type="checkbox" class="check-box" data-no="${item.no}" ${checkedAttr} onchange="toggleLearned(${item.no}, this.checked)">
-          <span class="check-label-text">済</span>
+        <label class="check-pill-btn" onclick="event.stopPropagation();">
+          <input type="checkbox" data-no="${item.no}" ${checkedAttr} onchange="toggleLearned(${item.no}, this.checked)">
+          <span class="check-pill-icon">${isLearned ? '✓' : '□'}</span>
+          <span class="check-pill-text">${isLearned ? '暗記済' : '未暗記'}</span>
         </label>
       </td>
       <td class="col-es ${esMaskClass}" onclick="this.classList.toggle('revealed')">
