@@ -1,8 +1,9 @@
 /**
- * Google Apps Script (GAS) - Servidor de Progreso para "Aprender Japonés"
+ * Google Apps Script (GAS) - Servidor de Progreso Escolar
+ * N5/N4別・漢字/語彙別の詳細進捗対応版
  * 
  * 【設定手順】
- * 1. Google スプレッドシートを新規作成（名前例: 「日本語クラス進捗表」）
+ * 1. Google スプレッドシートを新規作成（名前例: 「メキシコ日本語クラス進捗」）
  * 2. メニュー「拡張機能」>「Apps Script」を開く
  * 3. このコードをすべて貼り付けて保存（Cmd+S）
  * 4. 画面右上の「デプロイ」>「新しいデプロイ」をクリック
@@ -18,16 +19,16 @@ function doGet(e) {
   var data = sheet.getDataRange().getValues();
   var students = [];
   
-  // 1行目はヘッダーなので2行目から読み込み
   for (var i = 1; i < data.length; i++) {
     if (!data[i][0]) continue;
     students.push({
       name: String(data[i][0]),
       avatar: String(data[i][1] || '🥷'),
-      kanji: Number(data[i][2]) || 0,
-      vocab: Number(data[i][3]) || 0,
-      total: (Number(data[i][2]) || 0) + (Number(data[i][3]) || 0),
-      updatedAt: String(data[i][4] || '')
+      k5: Number(data[i][2]) || 0,
+      k4: Number(data[i][3]) || 0,
+      v5: Number(data[i][4]) || 0,
+      v4: Number(data[i][5]) || 0,
+      updatedAt: String(data[i][6] || '')
     });
   }
   
@@ -44,14 +45,13 @@ function doPost(e) {
     
     // ヘッダー行がなければ自動生成
     if (sheet.getLastRow() === 0) {
-      sheet.appendRow(["Nombre", "Avatar", "Kanji", "Vocabulario", "Ultima_Actualizacion"]);
-      sheet.getRange(1, 1, 1, 5).setBackground("#1e293b").setFontColor("#ffffff").setFontWeight("bold");
+      sheet.appendRow(["Nombre", "Avatar", "N5_Kanji", "N4_Kanji", "N5_Vocab", "N4_Vocab", "Ultima_Actualizacion"]);
+      sheet.getRange(1, 1, 1, 7).setBackground("#1e293b").setFontColor("#ffffff").setFontWeight("bold");
     }
     
     var data = sheet.getDataRange().getValues();
     var rowIndex = -1;
     
-    // 既存の生徒を名前で検索
     for (var i = 1; i < data.length; i++) {
       if (String(data[i][0]).toLowerCase() === String(body.name).toLowerCase()) {
         rowIndex = i + 1; // 1-based index
@@ -60,16 +60,21 @@ function doPost(e) {
     }
     
     var now = Utilities.formatDate(new Date(), "America/Mexico_City", "yyyy-MM-dd HH:mm:ss");
+    var k5 = Number(body.k5) || 0;
+    var k4 = Number(body.k4) || 0;
+    var v5 = Number(body.v5) || 0;
+    var v4 = Number(body.v4) || 0;
+    var avatar = String(body.avatar || '🥷');
     
     if (rowIndex > 0) {
-      // 既存の生徒データを更新
-      sheet.getRange(rowIndex, 2).setValue(body.avatar || '🥷');
-      sheet.getRange(rowIndex, 3).setValue(body.kanji || 0);
-      sheet.getRange(rowIndex, 4).setValue(body.vocab || 0);
-      sheet.getRange(rowIndex, 5).setValue(now);
+      sheet.getRange(rowIndex, 2).setValue(avatar);
+      sheet.getRange(rowIndex, 3).setValue(k5);
+      sheet.getRange(rowIndex, 4).setValue(k4);
+      sheet.getRange(rowIndex, 5).setValue(v5);
+      sheet.getRange(rowIndex, 6).setValue(v4);
+      sheet.getRange(rowIndex, 7).setValue(now);
     } else {
-      // 新規生徒を追加
-      sheet.appendRow([body.name, body.avatar || '🥷', body.kanji || 0, body.vocab || 0, now]);
+      sheet.appendRow([body.name, avatar, k5, k4, v5, v4, now]);
     }
     
     return ContentService.createTextOutput(JSON.stringify({ status: 'success' }))
@@ -79,4 +84,3 @@ function doPost(e) {
       .setMimeType(ContentService.MimeType.JSON);
   }
 }
-

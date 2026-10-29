@@ -892,20 +892,38 @@ tr.is-learned {
 
 <!-- 3. Leaderboard Modal -->
 <div class="modal-overlay" id="leaderboardModal">
-  <div class="modal-card">
+  <div class="modal-card" style="max-width: 540px;">
     <div class="modal-header">
-      <div class="modal-title">🏆 Tabla de Progreso de la Clase</div>
+      <div class="modal-title">🏆 Clasificación de la Clase</div>
       <button class="btn-close-modal" onclick="closeModal('leaderboardModal')">×</button>
     </div>
     <div class="modal-body">
-      <div style="background:#f1f5f9;padding:12px;border-radius:10px;text-align:center;">
-        <div style="font-size:0.82rem;color:#64748b;">Tu progreso actual</div>
-        <div style="font-size:1.3rem;font-weight:800;color:var(--text);margin:2px 0;" id="lbMyStats">
+      <!-- Category & Level Filters for Leaderboard -->
+      <div style="display:flex;flex-direction:column;gap:8px;background:#f8fafc;padding:10px;border-radius:10px;border:1px solid var(--border);">
+        <div style="display:flex;gap:4px;">
+          <button class="lvl-btn active lb-cat-btn" data-cat="all" onclick="changeLeaderboardFilter('cat', 'all')">🌟 Todo</button>
+          <button class="lvl-btn lb-cat-btn" data-cat="kanji" onclick="changeLeaderboardFilter('cat', 'kanji')">🈸 Kanji</button>
+          <button class="lvl-btn lb-cat-btn" data-cat="vocab" onclick="changeLeaderboardFilter('cat', 'vocab')">📖 Vocab</button>
+        </div>
+        <div style="display:flex;gap:4px;align-items:center;">
+          <span style="font-size:0.75rem;font-weight:700;color:#64748b;margin-right:2px;">Nivel:</span>
+          <button class="lvl-btn active lb-lvl-btn" data-lvl="all" onclick="changeLeaderboardFilter('lvl', 'all')">N5 + N4</button>
+          <button class="lvl-btn lb-lvl-btn" data-lvl="N5" onclick="changeLeaderboardFilter('lvl', 'N5')">🟢 Solo N5</button>
+          <button class="lvl-btn lb-lvl-btn" data-lvl="N4" onclick="changeLeaderboardFilter('lvl', 'N4')">🔵 Solo N4</button>
+        </div>
+      </div>
+
+      <div style="background:linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);padding:12px;border-radius:10px;text-align:center;border:1px solid #bfdbfe;">
+        <div style="font-size:0.78rem;font-weight:600;color:#3b82f6;" id="lbFilterTitle">Progreso Actual (Todo N5+N4)</div>
+        <div style="font-size:1.25rem;font-weight:900;color:#1e3a8a;margin:2px 0;" id="lbMyStats">
           🥷 Estudiante: 0% Dominado
         </div>
       </div>
 
-      <div style="font-size:0.85rem;font-weight:700;color:#334155;margin-top:6px;">Clasificación de Estudiantes:</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2px;">
+        <span style="font-size:0.85rem;font-weight:700;color:#334155;">Tabla de Posiciones:</span>
+        <span style="font-size:0.72rem;color:#64748b;" id="lbTotalDenominator"></span>
+      </div>
       <div class="leaderboard-list" id="leaderboardList">
         <!-- Injected by JS -->
       </div>
@@ -1039,13 +1057,51 @@ function speak(text, e) {
     return;
   }
   window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
+  const clean = text.replace(/・/g, '').trim();
+  const u = new SpeechSynthesisUtterance(clean);
   u.lang = 'ja-JP';
-  u.rate = 0.88; // Slightly slow and clear for learners
+  u.rate = 0.88;
   const voices = window.speechSynthesis.getVoices();
   const jaVoice = voices.find(v => v.lang.startsWith('ja'));
   if (jaVoice) u.voice = jaVoice;
   window.speechSynthesis.speak(u);
+}
+
+// 2-tempo pause reading for multiple readings (e.g., "み, みっ・つ")
+function speakReadings(text, e) {
+  if (e) e.stopPropagation();
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+
+  // Split by comma, slash or japanese comma
+  const parts = text.split(/[,/、]/).map(s => s.replace(/・/g, '').trim()).filter(Boolean);
+  if (parts.length === 0) return;
+
+  let idx = 0;
+  function speakNext() {
+    if (idx >= parts.length) return;
+    const word = parts[idx];
+    const u = new SpeechSynthesisUtterance(word);
+    u.lang = 'ja-JP';
+    u.rate = 0.85; // Natural clear pace
+    const voices = window.speechSynthesis.getVoices();
+    const jaVoice = voices.find(v => v.lang.startsWith('ja'));
+    if (jaVoice) u.voice = jaVoice;
+
+    u.onend = () => {
+      idx++;
+      if (idx < parts.length) {
+        // Wait ~2 tempos (750ms) before next reading
+        setTimeout(speakNext, 750);
+      }
+    };
+    u.onerror = () => {
+      idx++;
+      if (idx < parts.length) setTimeout(speakNext, 500);
+    };
+    window.speechSynthesis.speak(u);
+  }
+  speakNext();
 }
 
 // Masks state
@@ -1185,8 +1241,8 @@ function renderTable() {
           </div>
         </td>
         <td class="col-readings ${mRead}" onclick="this.classList.toggle('revealed')">
-          ${k.onyomi ? `<div><span class="on-yomi">音:</span> ${k.onyomi} <button class="btn-speaker" onclick="speak('${k.onyomi.replace(/,/g, ' ')}', event)">🔊</button></div>` : ''}
-          ${k.kunyomi ? `<div><span class="kun-yomi">訓:</span> ${k.kunyomi} <button class="btn-speaker" onclick="speak('${k.kunyomi.replace(/,/g, ' ')}', event)">🔊</button></div>` : ''}
+          ${k.onyomi ? `<div><span class="on-yomi">音:</span> ${k.onyomi} <button class="btn-speaker" title="Escuchar lecturas On" onclick="speakReadings('${k.onyomi}', event)">🔊</button></div>` : ''}
+          ${k.kunyomi ? `<div><span class="kun-yomi">訓:</span> ${k.kunyomi} <button class="btn-speaker" title="Escuchar lecturas Kun" onclick="speakReadings('${k.kunyomi}', event)">🔊</button></div>` : ''}
         </td>
         <td class="col-meaning ${mMean}" onclick="this.classList.toggle('revealed')">
           <div class="kanji-cat">${k.category}</div>
@@ -1467,13 +1523,33 @@ function triggerAutoSync() {
   syncTimeout = setTimeout(syncNow, 2500);
 }
 
+function getMyProgressBreakdown() {
+  let k5 = 0, k4 = 0, v5 = 0, v4 = 0;
+  DB.kanji.forEach(k => {
+    if (learnedKanji.has(k.id)) {
+      if (k.level === 'N5') k5++;
+      else if (k.level === 'N4') k4++;
+    }
+  });
+  DB.vocab.forEach(v => {
+    if (learnedVocab.has(v.id)) {
+      if (v.level === 'N5') v5++;
+      else if (v.level === 'N4') v4++;
+    }
+  });
+  return {
+    k5, k4, kTotal: k5 + k4,
+    v5, v4, vTotal: v5 + v4,
+    total: k5 + k4 + v5 + v4
+  };
+}
+
 async function syncNow() {
   if (!gasApiUrl) {
     openLeaderboardModal();
     return;
   }
-  const kCount = learnedKanji.size;
-  const vCount = learnedVocab.size;
+  const prog = getMyProgressBreakdown();
   try {
     await fetch(gasApiUrl, {
       method: 'POST',
@@ -1481,8 +1557,10 @@ async function syncNow() {
       body: JSON.stringify({
         name: studentProfile.name,
         avatar: studentProfile.avatar,
-        kanji: kCount,
-        vocab: vCount
+        k5: prog.k5,
+        k4: prog.k4,
+        v5: prog.v5,
+        v4: prog.v4
       })
     });
     openLeaderboardModal();
@@ -1492,62 +1570,142 @@ async function syncNow() {
 }
 
 // ================= LEADERBOARD =================
+let lbFilterCat = 'all'; // 'all', 'kanji', 'vocab'
+let lbFilterLvl = 'all'; // 'all', 'N5', 'N4'
+
+function changeLeaderboardFilter(type, val) {
+  if (type === 'cat') lbFilterCat = val;
+  if (type === 'lvl') lbFilterLvl = val;
+
+  document.querySelectorAll('.lb-cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === lbFilterCat));
+  document.querySelectorAll('.lb-lvl-btn').forEach(b => b.classList.toggle('active', b.dataset.lvl === lbFilterLvl));
+
+  renderLeaderboardList();
+}
+
+let cachedRemoteClassmates = null;
+
 async function openLeaderboardModal() {
-  const kTotal = DB.kanji.length;
-  const vTotal = DB.vocab.length;
-  const kCount = learnedKanji.size;
-  const vCount = learnedVocab.size;
-  const overallPct = (((kCount + vCount) / (kTotal + vTotal)) * 100).toFixed(1);
-
-  document.getElementById('lbMyStats').textContent = 
-    `${studentProfile.avatar} ${studentProfile.name}: ${kCount} Kanji / ${vCount} Vocab (${overallPct}%)`;
-
-  let classmates = [];
-  const listEl = document.getElementById('leaderboardList');
-
-  if (gasApiUrl) {
-    listEl.innerHTML = '<div style="text-align:center;padding:15px;color:#64748b;">Cargando clasificación de la nube...</div>';
+  openModal('leaderboardModal');
+  if (gasApiUrl && !cachedRemoteClassmates) {
+    const listEl = document.getElementById('leaderboardList');
+    listEl.innerHTML = '<div style="text-align:center;padding:15px;color:#64748b;">Cargando clasificación de Google Sheets...</div>';
     try {
       const res = await fetch(gasApiUrl);
       const json = await res.json();
       if (json && json.data) {
-        classmates = json.data.map(st => {
-          const total = (st.kanji || 0) + (st.vocab || 0);
-          const p = (((total) / (kTotal + vTotal)) * 100).toFixed(1);
-          return {
-            name: st.name,
-            avatar: st.avatar || '🥷',
-            count: total,
-            pct: parseFloat(p),
-            isMe: (st.name === studentProfile.name)
-          };
-        });
+        cachedRemoteClassmates = json.data;
       }
     } catch(e) {
       console.log('Error al cargar datos remotos:', e);
     }
   }
+  renderLeaderboardList();
+}
 
-  if (classmates.length === 0) {
-    // Local / Simulated class members
-    classmates = [
-      { name: studentProfile.name, avatar: studentProfile.avatar, count: (kCount + vCount), pct: parseFloat(overallPct), isMe: true },
-      { name: 'Carlos', avatar: '🥷', count: 312, pct: 14.7, isMe: false },
-      { name: 'Sofía', avatar: '🌸', count: 245, pct: 11.5, isMe: false },
-      { name: 'Mateo', avatar: '⚽', count: 180, pct: 8.5, isMe: false },
-      { name: 'Valentina', avatar: '🐼', count: 142, pct: 6.7, isMe: false },
-      { name: 'Alejandro', avatar: '🌮', count: 98, pct: 4.6, isMe: false }
+function renderLeaderboardList() {
+  const myProg = getMyProgressBreakdown();
+
+  // Denominators
+  const K5_TOTAL = 118, K4_TOTAL = 282;
+  const V5_TOTAL = 794, V4_TOTAL = 924;
+
+  let maxPossible = 0;
+  if (lbFilterCat === 'all') {
+    if (lbFilterLvl === 'all') maxPossible = (K5_TOTAL + K4_TOTAL + V5_TOTAL + V4_TOTAL); // 2118
+    else if (lbFilterLvl === 'N5') maxPossible = (K5_TOTAL + V5_TOTAL); // 912
+    else if (lbFilterLvl === 'N4') maxPossible = (K4_TOTAL + V4_TOTAL); // 1206
+  } else if (lbFilterCat === 'kanji') {
+    if (lbFilterLvl === 'all') maxPossible = (K5_TOTAL + K4_TOTAL); // 400
+    else if (lbFilterLvl === 'N5') maxPossible = K5_TOTAL; // 118
+    else if (lbFilterLvl === 'N4') maxPossible = K4_TOTAL; // 282
+  } else if (lbFilterCat === 'vocab') {
+    if (lbFilterLvl === 'all') maxPossible = (V5_TOTAL + V4_TOTAL); // 1718
+    else if (lbFilterLvl === 'N5') maxPossible = V5_TOTAL; // 794
+    else if (lbFilterLvl === 'N4') maxPossible = V4_TOTAL; // 924
+  }
+
+  function calcScore(st) {
+    const k5 = st.k5 || 0, k4 = st.k4 || 0;
+    const v5 = st.v5 || 0, v4 = st.v4 || 0;
+    if (lbFilterCat === 'all') {
+      if (lbFilterLvl === 'all') return k5 + k4 + v5 + v4;
+      if (lbFilterLvl === 'N5') return k5 + v5;
+      if (lbFilterLvl === 'N4') return k4 + v4;
+    } else if (lbFilterCat === 'kanji') {
+      if (lbFilterLvl === 'all') return k5 + k4;
+      if (lbFilterLvl === 'N5') return k5;
+      if (lbFilterLvl === 'N4') return k4;
+    } else if (lbFilterCat === 'vocab') {
+      if (lbFilterLvl === 'all') return v5 + v4;
+      if (lbFilterLvl === 'N5') return v5;
+      if (lbFilterLvl === 'N4') return v4;
+    }
+    return 0;
+  }
+
+  // Filter labels
+  const catName = (lbFilterCat === 'all') ? 'Todo' : (lbFilterCat === 'kanji') ? 'Kanji' : 'Vocabulario';
+  const lvlName = (lbFilterLvl === 'all') ? 'N5 + N4' : lbFilterLvl;
+  document.getElementById('lbFilterTitle').textContent = `Ranking: ${catName} (${lvlName})`;
+  document.getElementById('lbTotalDenominator').textContent = `Total posible: ${maxPossible} ítems`;
+
+  // Base list
+  let rawList = [];
+  if (cachedRemoteClassmates && cachedRemoteClassmates.length > 0) {
+    rawList = cachedRemoteClassmates.map(r => ({
+      name: r.name,
+      avatar: r.avatar || '🥷',
+      k5: r.k5 || 0, k4: r.k4 || 0,
+      v5: r.v5 || 0, v4: r.v4 || 0,
+      isMe: (r.name === studentProfile.name)
+    }));
+  } else {
+    // Simulated classmates with breakdown
+    rawList = [
+      { name: 'Carlos', avatar: '🥷', k5: 95, k4: 45, v5: 420, v4: 180, isMe: false },
+      { name: 'Sofía', avatar: '🌸', k5: 110, k4: 60, v5: 380, v4: 110, isMe: false },
+      { name: 'Mateo', avatar: '⚽', k5: 75, k4: 20, v5: 290, v4: 70, isMe: false },
+      { name: 'Valentina', avatar: '🐼', k5: 60, k4: 15, v5: 210, v4: 40, isMe: false },
+      { name: 'Alejandro', avatar: '🌮', k5: 45, k4: 10, v5: 160, v4: 25, isMe: false }
     ];
   }
 
-  // Ensure current user is present
-  if (!classmates.some(c => c.isMe)) {
-    classmates.push({ name: studentProfile.name, avatar: studentProfile.avatar, count: (kCount + vCount), pct: parseFloat(overallPct), isMe: true });
-  }
+  // Replace or add current user
+  const meIndex = rawList.findIndex(x => x.name === studentProfile.name);
+  const myEntry = {
+    name: studentProfile.name,
+    avatar: studentProfile.avatar,
+    k5: myProg.k5, k4: myProg.k4,
+    v5: myProg.v5, v4: myProg.v4,
+    isMe: true
+  };
+  if (meIndex >= 0) rawList[meIndex] = myEntry;
+  else rawList.push(myEntry);
+
+  // Compute scores and percentages
+  const classmates = rawList.map(st => {
+    const score = calcScore(st);
+    const pct = maxPossible > 0 ? ((score / maxPossible) * 100).toFixed(1) : '0.0';
+    return {
+      name: st.name,
+      avatar: st.avatar,
+      score: score,
+      pct: parseFloat(pct),
+      isMe: st.isMe
+    };
+  });
 
   // Sort descending
-  classmates.sort((a, b) => b.count - a.count);
+  classmates.sort((a, b) => b.score - a.score);
 
+  // Update My Stats banner
+  const myScore = calcScore(myEntry);
+  const myPct = maxPossible > 0 ? ((myScore / maxPossible) * 100).toFixed(1) : '0.0';
+  document.getElementById('lbMyStats').textContent = 
+    `${studentProfile.avatar} ${studentProfile.name}: ${myScore} / ${maxPossible} (${myPct}%)`;
+
+  const listEl = document.getElementById('leaderboardList');
   listEl.innerHTML = classmates.map((item, index) => {
     const rankClass = (index === 0) ? 'rank-1' : (index === 1) ? 'rank-2' : (index === 2) ? 'rank-3' : '';
     const medal = (index === 0) ? '🥇' : (index === 1) ? '🥈' : (index === 2) ? '🥉' : `${index + 1}`;
@@ -1560,14 +1718,12 @@ async function openLeaderboardModal() {
             ${item.name}
             ${item.isMe ? '<span style="font-size:0.7rem;background:#dbeafe;color:#1e40af;padding:1px 5px;border-radius:4px;">Tú</span>' : ''}
           </div>
-          <div class="rank-stats">${item.count} ítems dominados</div>
+          <div class="rank-stats">${item.score} de ${maxPossible} dominados</div>
         </div>
         <div class="rank-pct">${item.pct}%</div>
       </div>
     `;
   }).join('');
-
-  openModal('leaderboardModal');
 }
 
 document.getElementById('searchInput').addEventListener('input', e => {
