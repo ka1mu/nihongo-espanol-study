@@ -185,17 +185,20 @@ h1 {
 }
 table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   background: var(--card-bg);
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  word-break: break-word;
 }
 th, td {
   padding: 8px 6px;
   text-align: left;
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
+  word-break: break-word;
 }
 th {
   background: #1e293b;
@@ -232,13 +235,13 @@ tr.is-learned .btn-speaker {
   color: #166534;
 }
 .col-check {
-  width: 36px;
+  width: 32px;
   text-align: center;
-  padding: 8px 4px;
+  padding: 6px 2px;
 }
 .check-box {
-  width: 20px;
-  height: 20px;
+  width: 19px;
+  height: 19px;
   cursor: pointer;
   accent-color: var(--accent);
 }
@@ -246,12 +249,12 @@ tr.is-learned .btn-speaker {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 4px;
+  padding: 4px 2px;
   cursor: pointer;
 }
 /* 済の横にしっかりとしたスペース（余白）を確保 */
 th.col-es, td.col-es {
-  padding-left: 20px !important;
+  padding-left: 12px !important;
 }
 .col-es {
   width: 38%;
@@ -325,17 +328,22 @@ th.col-es, td.col-es {
   visibility: visible !important;
 }
 @media (max-width: 600px) {
-  body { padding: 4px 2px; }
-  h1 { font-size: 1.2rem; }
-  .col-check { width: 34px; } th.col-es, td.col-es { padding-left: 16px !important; }
-  .col-es { width: 40%; }
-  .col-ja-en { width: 30%; }
-  .col-note { width: 26%; font-size: 0.74rem; }
-  th, td { padding: 6px 4px; }
-  .es-word { font-size: 0.88rem; }
-  .es-pron { font-size: 0.74rem; }
-  .ja-word { font-size: 0.84rem; }
-  .en-word { font-size: 0.7rem; }
+  body { padding: 4px 1px; }
+  .container { width: 100%; max-width: 100%; padding: 0 1px; }
+  h1 { font-size: 1.15rem; }
+  .col-check { width: 26px !important; padding: 4px 1px !important; }
+  .check-box { width: 18px; height: 18px; }
+  .check-wrap { padding: 2px 0; }
+  th.col-es, td.col-es { padding-left: 8px !important; }
+  .col-es { width: 38%; }
+  .col-ja-en { width: 28%; }
+  .col-note { width: 34%; font-size: 0.68rem; line-height: 1.25; }
+  th, td { padding: 5px 3px !important; }
+  .es-word { font-size: 0.82rem; line-height: 1.2; }
+  .es-pron { font-size: 0.7rem; }
+  .ja-word { font-size: 0.78rem; line-height: 1.2; }
+  .en-word { font-size: 0.66rem; }
+  .btn-speaker { font-size: 0.78rem; padding: 0; }
 }
 </style>
 </head>

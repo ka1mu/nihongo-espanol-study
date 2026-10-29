@@ -333,17 +333,20 @@ h1 {
 /* Tables */
 table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   background: var(--card-bg);
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  word-break: break-word;
 }
 th, td {
   padding: 8px 6px;
   text-align: left;
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
+  word-break: break-word;
 }
 th {
   background: #1e293b;
@@ -362,13 +365,13 @@ tr.is-learned {
   opacity: 0.65;
 }
 .col-check {
-  width: 36px;
+  width: 32px;
   text-align: center;
-  padding: 8px 4px;
+  padding: 6px 2px;
 }
 .check-box {
-  width: 20px;
-  height: 20px;
+  width: 19px;
+  height: 19px;
   cursor: pointer;
   accent-color: var(--accent);
 }
@@ -376,12 +379,12 @@ tr.is-learned {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 4px;
+  padding: 4px 2px;
   cursor: pointer;
 }
 /* 済の横にしっかりとしたスペース（余白）を確保 */
 th.col-kanji, td.col-kanji, th.col-v-word, td.col-v-word {
-  padding-left: 20px !important;
+  padding-left: 12px !important;
 }
 
 /* Badge */
@@ -756,20 +759,40 @@ th.col-kanji, td.col-kanji, th.col-v-word, td.col-v-word {
 .rank-pct { font-weight: 800; color: var(--accent); font-size: 0.95rem; }
 
 @media (max-width: 650px) {
-  body { padding: 4px 2px; }
-  h1 { font-size: 1.2rem; }
-  .col-check { width: 48px; } .check-box { width: 22px; height: 22px; }
+  body { padding: 4px 1px; }
+  .container { width: 100%; max-width: 100%; padding: 0 1px; }
+  h1 { font-size: 1.15rem; }
+  
+  /* 済列はコンパクトに、横スペースも適度に保ちつつ他の列を狭小化 */
+  .col-check { width: 26px !important; padding: 4px 1px !important; }
+  .check-box { width: 18px; height: 18px; }
+  .check-wrap { padding: 2px 0; }
+  th.col-kanji, td.col-kanji, th.col-v-word, td.col-v-word {
+    padding-left: 8px !important;
+  }
+  
+  /* 漢字テーブル: 各列を画面幅にキッチリ収まるよう狭小化 */
   .col-kanji { width: 22%; }
-  .col-readings { width: 25%; font-size: 0.75rem; }
-  .col-meaning { width: 28%; }
-  .col-examples { width: 25%; font-size: 0.7rem; }
+  .kanji-big { font-size: 1.15rem; gap: 3px; }
+  .lvl-badge { padding: 0 3px; font-size: 0.62rem; }
+  .col-readings { width: 24%; font-size: 0.7rem; line-height: 1.25; }
+  .col-meaning { width: 26%; }
+  .es-txt { font-size: 0.74rem; line-height: 1.2; }
+  .en-txt { font-size: 0.65rem; }
+  .col-examples { width: 28%; font-size: 0.68rem; line-height: 1.25; }
   
+  /* 語彙テーブル: 各列を狭小化 */
   .col-v-word { width: 28%; }
+  .v-kanji { font-size: 0.92rem; gap: 3px; }
+  .v-kana { font-size: 0.72rem; }
   .col-v-meaning { width: 34%; }
-  .col-v-example { width: 38%; font-size: 0.74rem; }
+  .v-es { font-size: 0.76rem; line-height: 1.2; }
+  .v-en { font-size: 0.65rem; }
+  .col-v-example { width: 38%; font-size: 0.7rem; line-height: 1.25; }
   
-  th, td { padding: 6px 4px; }
-  .kanji-big { font-size: 1.3rem; }
+  /* 全体の余白・パディングを詰めて全画面に収める */
+  th, td { padding: 5px 3px !important; }
+  .btn-speaker { font-size: 0.78rem; padding: 0; }
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
