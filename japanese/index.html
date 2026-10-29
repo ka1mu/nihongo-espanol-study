@@ -538,17 +538,13 @@ tr.is-learned {
   background: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(4px);
   z-index: 1000;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   padding: 12px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
 }
 .modal-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
+  display: flex !important;
 }
 .modal-card {
   background: white;
@@ -1448,8 +1444,7 @@ try {
 
 function promptGasUrl() {
   const current = gasApiUrl || '';
-  const input = prompt('Introduce la URL de tu Google Apps Script (Web App):
-(Deja vacío para usar el modo local simulado)', current);
+  const input = prompt('Introduce la URL de tu Google Apps Script (Web App): (Deja vacío para usar el modo local)', current);
   if (input !== null) {
     gasApiUrl = input.trim();
     try {
