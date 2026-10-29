@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>語学学習ハブ (Japonés ⇄ Español)</title>
+<style>
+:root {
+  --primary: #c0392b;
+  --secondary: #2563eb;
+  --bg: #f8fafc;
+  --card-bg: #ffffff;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  padding: 20px 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+  flex: 1;
+}
+header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.badge-portal {
+  display: inline-block;
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+h1 {
+  font-size: 1.7rem;
+  color: #0f172a;
+  margin-bottom: 6px;
+  font-weight: 800;
+}
+.subtitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+@media (max-width: 640px) {
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+  color: inherit;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.card-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+.card-title-group h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+.card-target {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.card-desc {
+  font-size: 0.85rem;
+  color: #475569;
+  margin-bottom: 16px;
+  line-height: 1.45;
+}
+.card-features {
+  list-style: none;
+  margin-bottom: 20px;
+  font-size: 0.8rem;
+  color: #334155;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.card-features li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-enter {
+  display: block;
+  text-align: center;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.btn-spanish {
+  background: #c0392b;
+  color: white;
+}
+.btn-spanish:hover {
+  background: #962d22;
+}
+.btn-japanese {
+  background: #047857;
+  color: white;
+}
+.btn-japanese:hover {
+  background: #065f46;
+}
+
+.tip-box {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 0.82rem;
+  color: #1e40af;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+.tip-title {
+  font-weight: 700;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+footer {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+}
+footer a {
+  color: var(--secondary);
+  text-decoration: none;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="badge-portal">PORTAL DE APRENDIZAJE</div>
+    <h1>🌐 日本語 ⇄ スペイン語 学習ハブ</h1>
+    <p class="subtitle">いつでも・どこからでもスマホで学べる相互言語学習Webアプリ</p>
+  </header>
+
+  <div class="tip-box">
+    <div class="tip-title">📱 スマホで便利に使うコツ（ホーム画面に追加）</div>
+    Safari または Chrome でこのページを開き、共有メニューから「<strong>ホーム画面に追加</strong>」を行うと、アプリのように全画面でオフラインでも快適に学習できます。
+  </div>
+
+  <div class="cards-grid">
+    <!-- Card 1: Spanish for Japanese Speakers -->
+    <a href="./spanish/" class="card">
+      <div>
+        <div class="card-header">
+          <div class="card-icon">🇪🇸</div>
+          <div class="card-title-group">
+            <h2>ターゲット1200 スペイン語版</h2>
+            <div class="card-target">対象：日本人学習者（DELE対策）</div>
+          </div>
+        </div>
+        <p class="card-desc">
+          英単語ターゲット1200をベースに、厳選されたスペイン語単語と実践的な暗記学習ツールを凝縮。
+        </p>
+        <ul class="card-features">
+          <li>🗣️ <strong>発音カタカナ表記</strong>（強勢部分を太字化）</li>
+          <li>📝 <strong>DELE対策メモ</strong>（日本語訳付き）</li>
+          <li>🙈 <strong>暗記マスク機能</strong>（単語/発音/意味）</li>
+          <li>✅ <strong>暗記チェック & 進捗バー</strong>（自動保存）</li>
+          <li>📂 <strong>Part別切り替え</strong>（100単語区切り）</li>
+        </ul>
+      </div>
+      <div class="btn-enter btn-spanish">スペイン語アプリを開く →</div>
+    </a>
+
+    <!-- Card 2: Japanese for Spanish Speakers -->
+    <a href="./japanese/" class="card">
+      <div>
+        <div class="card-header">
+          <div class="card-icon">🇯🇵</div>
+          <div class="card-title-group">
+            <h2>Aprender Japonés (JLPT)</h2>
+            <div class="card-target">Para hispanohablantes (N5 & N4)</div>
+          </div>
+        </div>
+        <p class="card-desc">
+          Guía interactiva para dominar Kanji y Vocabulario esencial del examen oficial JLPT N5 y N4.
+        </p>
+        <ul class="card-features">
+          <li>🈸 <strong>400 Kanji</strong> (Lecturas 音/訓, significado en ES/EN)</li>
+          <li>📖 <strong>1,718 Vocabulario</strong> (Furigana, ejemplos traducidos)</li>
+          <li>🎛️ <strong>Filtro de nivel JLPT</strong> (Botones N5 / N4 / Todos)</li>
+          <li>🙈 <strong>Máscaras inteligentes</strong> (Ocultar y revelar)</li>
+          <li>📊 <strong>Control de progreso</strong> (Check "Dominado")</li>
+        </ul>
+      </div>
+      <div class="btn-enter btn-japanese">Abrir App de Japonés →</div>
+    </a>
+  </div>
+
+  <footer>
+    <p>Desarrollado con ❤️ para el aprendizaje de idiomas | <a href="https://github.com/ka1mu/nihongo-espanol-study" target="_blank">Repositorio en GitHub</a></p>
+  </footer>
+</div>
+</body>
+</html>
