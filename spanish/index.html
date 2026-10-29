@@ -213,7 +213,22 @@ tr.is-learned {
   background-color: #f0fdf4 !important;
   opacity: 0.65;
 }
-tr.is-learned .es-word {
+tr.is-learned .btn-speaker {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #64748b;
+  padding: 1px 3px;
+  border-radius: 4px;
+  vertical-align: middle;
+  transition: transform 0.1s, color 0.15s;
+}
+.btn-speaker:hover {
+  color: var(--secondary);
+  transform: scale(1.15);
+}
+.es-word {
   color: #166534;
 }
 .col-check {
@@ -474,6 +489,23 @@ function syncPartUI(part) {
   renderTable();
 }
 
+function speakSpanish(text, e) {
+  if (e) e.stopPropagation();
+  if (!('speechSynthesis' in window)) {
+    alert('音声合成がサポートされていません');
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const cleanText = text.replace(/\(.*\)/g, '').trim();
+  const u = new SpeechSynthesisUtterance(cleanText);
+  u.lang = 'es-ES';
+  u.rate = 0.9;
+  const voices = window.speechSynthesis.getVoices();
+  const esVoice = voices.find(v => v.lang.startsWith('es'));
+  if (esVoice) u.voice = esVoice;
+  window.speechSynthesis.speak(u);
+}
+
 function renderTable() {
   const q = searchQuery.toLowerCase().trim();
   
@@ -519,7 +551,7 @@ function renderTable() {
         <input type="checkbox" class="check-box" data-no="${item.no}" ${checkedAttr} onchange="toggleLearned(${item.no}, this.checked)">
       </td>
       <td class="col-es ${esMaskClass}" onclick="this.classList.toggle('revealed')">
-        <div class="es-word"><span class="es-no">#${item.no}</span>${item.es} ${posTag}</div>
+        <div class="es-word"><span class="es-no">#${item.no}</span>${item.es} <button class="btn-speaker" onclick="speakSpanish(\'${item.es}\', event)">🔊</button> ${posTag}</div>
         <div class="es-pron">(${item.pronunciation})</div>
       </td>
       <td class="col-ja-en ${jaMaskClass}" onclick="this.classList.toggle('revealed')">
