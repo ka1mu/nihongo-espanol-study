@@ -232,15 +232,34 @@ tr.is-learned .btn-speaker {
   color: #166534;
 }
 .col-check {
-  width: 32px;
+  width: 52px;
   text-align: center;
-  padding: 8px 4px;
+  padding: 4px 2px !important;
+}
+.check-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 6px 2px;
+  border-radius: 6px;
+  min-height: 44px;
+}
+.check-wrapper:active {
+  background: rgba(0,0,0,0.05);
 }
 .check-box {
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
   accent-color: var(--accent);
+}
+.check-label-text {
+  font-size: 0.65rem;
+  color: #64748b;
+  margin-top: 2px;
+  font-weight: 700;
 }
 .col-es {
   width: 38%;
@@ -293,14 +312,16 @@ tr.is-learned .btn-speaker {
   line-height: 1.35;
 }
 .mask {
-  background: #cbd5e1;
+  background: #cbd5e1 !important;
   color: transparent !important;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   user-select: none;
 }
 .mask * {
   color: transparent !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 .mask:hover, .mask.revealed {
   background: transparent !important;
@@ -308,11 +329,13 @@ tr.is-learned .btn-speaker {
 }
 .mask.revealed * {
   color: inherit !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 @media (max-width: 600px) {
   body { padding: 4px 2px; }
   h1 { font-size: 1.2rem; }
-  .col-check { width: 28px; }
+  .col-check { width: 48px; } .check-box { width: 22px; height: 22px; }
   .col-es { width: 40%; }
   .col-ja-en { width: 30%; }
   .col-note { width: 26%; font-size: 0.74rem; }
@@ -548,7 +571,10 @@ function renderTable() {
     
     html += `<tr class="${learnedClass}" id="row-${item.no}">
       <td class="col-check">
-        <input type="checkbox" class="check-box" data-no="${item.no}" ${checkedAttr} onchange="toggleLearned(${item.no}, this.checked)">
+        <label class="check-wrapper">
+          <input type="checkbox" class="check-box" data-no="${item.no}" ${checkedAttr} onchange="toggleLearned(${item.no}, this.checked)">
+          <span class="check-label-text">済</span>
+        </label>
       </td>
       <td class="col-es ${esMaskClass}" onclick="this.classList.toggle('revealed')">
         <div class="es-word"><span class="es-no">#${item.no}</span>${item.es} <button class="btn-speaker" onclick="speakSpanish(\'${item.es}\', event)">🔊</button> ${posTag}</div>
