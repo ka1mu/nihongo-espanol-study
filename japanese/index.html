@@ -756,6 +756,7 @@ tr.is-learned {
   .kanji-big { font-size: 1.3rem; }
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <div class="container">
@@ -929,9 +930,10 @@ tr.is-learned {
       </div>
 
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">
-        <button style="font-size:0.75rem;padding:4px 8px;background:#f1f5f9;border:1px solid var(--border);border-radius:6px;cursor:pointer;color:#475569;" onclick="promptGasUrl()">
-          ⚙️ Conectar Google Sheets
-        </button>
+        <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:#059669;font-weight:600;">
+          <span style="display:inline-block;width:8px;height:8px;background:#10b981;border-radius:50%;"></span>
+          En vivo (Supabase Cloud)
+        </div>
         <button style="font-size:0.75rem;padding:4px 10px;background:var(--secondary);color:white;border:none;border-radius:6px;cursor:pointer;font-weight:600;" onclick="syncNow()">
           🔄 Sincronizar
         </button>
@@ -1492,35 +1494,23 @@ function renderQuizResult() {
   renderTable();
 }
 
-// ================= GOOGLE SHEETS SYNC =================
-let gasApiUrl = '';
-try {
-  gasApiUrl = localStorage.getItem('jp_app_gas_url') || '';
-} catch(e) {}
+// ================= SUPABASE CLOUD SYNC =================
+const SUPABASE_URL = "https://sffxizkioqmamfhmlckl.supabase.co";
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNmZnhpemtpb3FtYW1maG1sY2tsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NTc3MDgsImV4cCI6MjA5NDMzMzcwOH0.w6-EAIDvjVaAYo9kUd7wKnUU4z2GFS74gskycrqjR_8";
+let sbClient = null;
 
-function promptGasUrl() {
-  const current = gasApiUrl || '';
-  const input = prompt('Introduce la URL de tu Google Apps Script (Web App): (Deja vacío para usar el modo local)', current);
-  if (input !== null) {
-    gasApiUrl = input.trim();
-    try {
-      localStorage.setItem('jp_app_gas_url', gasApiUrl);
-    } catch(e) {}
-    if (gasApiUrl) {
-      alert('¡Servidor conectado exitosamente! Sincronizando datos...');
-      syncNow();
-    } else {
-      alert('Modo local activado.');
-      openLeaderboardModal();
-    }
+try {
+  if (window.supabase) {
+    sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
   }
+} catch(e) {
+  console.log('Error initializing Supabase client:', e);
 }
 
 let syncTimeout = null;
 function triggerAutoSync() {
-  if (!gasApiUrl) return;
   clearTimeout(syncTimeout);
-  syncTimeout = setTimeout(syncNow, 2500);
+  syncTimeout = setTimeout(syncNow, 2000);
 }
 
 function getMyProgressBreakdown() {
@@ -1545,28 +1535,25 @@ function getMyProgressBreakdown() {
 }
 
 async function syncNow() {
-  if (!gasApiUrl) {
-    openLeaderboardModal();
-    return;
-  }
+  if (!sbClient) return;
   const prog = getMyProgressBreakdown();
   try {
-    await fetch(gasApiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({
+    const { error } = await sbClient
+      .from('student_progress')
+      .upsert({
         name: studentProfile.name,
         avatar: studentProfile.avatar,
         k5: prog.k5,
         k4: prog.k4,
         v5: prog.v5,
-        v4: prog.v4
-      })
-    });
-    openLeaderboardModal();
+        v4: prog.v4,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'name' });
+    if (error) console.log('Supabase upsert error:', error);
   } catch(e) {
     console.log('Error de sincronización:', e);
   }
+  renderLeaderboardList();
 }
 
 // ================= LEADERBOARD =================
@@ -1587,17 +1574,17 @@ let cachedRemoteClassmates = null;
 
 async function openLeaderboardModal() {
   openModal('leaderboardModal');
-  if (gasApiUrl && !cachedRemoteClassmates) {
-    const listEl = document.getElementById('leaderboardList');
-    listEl.innerHTML = '<div style="text-align:center;padding:15px;color:#64748b;">Cargando clasificación de Google Sheets...</div>';
+  if (sbClient) {
     try {
-      const res = await fetch(gasApiUrl);
-      const json = await res.json();
-      if (json && json.data) {
-        cachedRemoteClassmates = json.data;
+      const { data, error } = await sbClient
+        .from('student_progress')
+        .select('*')
+        .order('updated_at', { ascending: false });
+      if (data && data.length > 0) {
+        cachedRemoteClassmates = data;
       }
     } catch(e) {
-      console.log('Error al cargar datos remotos:', e);
+      console.log('Error al cargar datos de Supabase:', e);
     }
   }
   renderLeaderboardList();
@@ -1735,6 +1722,24 @@ document.getElementById('hideLearned').addEventListener('change', e => {
   hideLearnedActive = e.target.checked;
   renderTable();
 });
+
+// Realtime Subscription
+try {
+  if (sbClient) {
+    sbClient
+      .channel('public:student_progress')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'student_progress' }, payload => {
+        if (payload.new) {
+          if (!cachedRemoteClassmates) cachedRemoteClassmates = [];
+          const idx = cachedRemoteClassmates.findIndex(x => x.name === payload.new.name);
+          if (idx >= 0) cachedRemoteClassmates[idx] = payload.new;
+          else cachedRemoteClassmates.push(payload.new);
+          renderLeaderboardList();
+        }
+      })
+      .subscribe();
+  }
+} catch(e) {}
 
 // Initial setup
 updateProfileUI();
