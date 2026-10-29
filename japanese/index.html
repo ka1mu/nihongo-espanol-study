@@ -1648,14 +1648,7 @@ function renderLeaderboardList() {
       isMe: (r.name === studentProfile.name)
     }));
   } else {
-    // Simulated classmates with breakdown
-    rawList = [
-      { name: 'Carlos', avatar: '🥷', k5: 95, k4: 45, v5: 420, v4: 180, isMe: false },
-      { name: 'Sofía', avatar: '🌸', k5: 110, k4: 60, v5: 380, v4: 110, isMe: false },
-      { name: 'Mateo', avatar: '⚽', k5: 75, k4: 20, v5: 290, v4: 70, isMe: false },
-      { name: 'Valentina', avatar: '🐼', k5: 60, k4: 15, v5: 210, v4: 40, isMe: false },
-      { name: 'Alejandro', avatar: '🌮', k5: 45, k4: 10, v5: 160, v4: 25, isMe: false }
-    ];
+    rawList = [];
   }
 
   // Replace or add current user
