@@ -758,10 +758,92 @@ th.col-kanji, td.col-kanji, th.col-v-word, td.col-v-word {
 .rank-stats { font-size: 0.74rem; color: var(--text-muted); }
 .rank-pct { font-weight: 800; color: var(--accent); font-size: 0.95rem; }
 
+/* Leaderboard Tabs & Filters */
+.lb-type-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background: #f1f5f9;
+  padding: 4px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+.btn-lb-type {
+  padding: 8px 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  border-radius: 7px;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.15s;
+  text-align: center;
+}
+.btn-lb-type.active {
+  background: white;
+  color: #1e3a8a;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+.btn-lb-type.quiz-type.active {
+  color: #b45309;
+}
+.lb-filter-pills {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  -webkit-overflow-scrolling: touch;
+}
+.lb-preset-btn {
+  white-space: nowrap;
+  font-size: 0.75rem;
+}
+
+/* Guide Modal Cards */
+.guide-card {
+  display: flex;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  align-items: flex-start;
+}
+.guide-icon {
+  font-size: 1.4rem;
+  background: white;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  flex-shrink: 0;
+}
+.guide-content {
+  flex: 1;
+}
+.guide-title {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 2px;
+}
+.guide-desc {
+  font-size: 0.76rem;
+  color: #64748b;
+  line-height: 1.35;
+}
+
 @media (max-width: 650px) {
   body { padding: 4px 1px; }
   .container { width: 100%; max-width: 100%; padding: 0 1px; }
   h1 { font-size: 1.15rem; }
+  .top-nav { gap: 4px; }
+  .btn-nav { padding: 4px 6px; font-size: 0.72rem; }
+  .student-pill { padding: 3px 6px; font-size: 0.74rem; }
   
   /* 済列はコンパクトに、横スペースも適度に保ちつつ他の列を狭小化 */
   .col-check { width: 26px !important; padding: 4px 1px !important; }
@@ -802,7 +884,10 @@ th.col-kanji, td.col-kanji, th.col-v-word, td.col-v-word {
   <!-- Top Navigation & Student Profile -->
   <div class="top-nav">
     <a href="../" class="btn-nav">← Portal de Estudio</a>
-    <div style="display: flex; gap: 6px; align-items: center;">
+    <div style="display: flex; gap: 5px; align-items: center;">
+      <button class="btn-nav" style="background:#f8fafc;color:#334155;border-color:#cbd5e1;" onclick="openGuideModal()" title="Guía de uso">
+        ❓ Guía
+      </button>
       <button class="btn-nav gold" onclick="openLeaderboardModal()">
         🏆 Clasificación
       </button>
@@ -934,33 +1019,40 @@ th.col-kanji, td.col-kanji, th.col-v-word, td.col-v-word {
 <div class="modal-overlay" id="leaderboardModal">
   <div class="modal-card" style="max-width: 540px;">
     <div class="modal-header">
-      <div class="modal-title">🏆 Clasificación de la Clase</div>
+      <div class="modal-title">🏆 Clasificación y Competición</div>
       <button class="btn-close-modal" onclick="closeModal('leaderboardModal')">×</button>
     </div>
     <div class="modal-body">
-      <!-- Category & Level Filters for Leaderboard -->
-      <div style="display:flex;flex-direction:column;gap:8px;background:#f8fafc;padding:10px;border-radius:10px;border:1px solid var(--border);">
-        <div style="display:flex;gap:4px;">
-          <button class="lvl-btn active lb-cat-btn" data-cat="all" onclick="changeLeaderboardFilter('cat', 'all')">🌟 Todo</button>
-          <button class="lvl-btn lb-cat-btn" data-cat="kanji" onclick="changeLeaderboardFilter('cat', 'kanji')">🈸 Kanji</button>
-          <button class="lvl-btn lb-cat-btn" data-cat="vocab" onclick="changeLeaderboardFilter('cat', 'vocab')">📖 Vocab</button>
-        </div>
-        <div style="display:flex;gap:4px;align-items:center;">
-          <span style="font-size:0.75rem;font-weight:700;color:#64748b;margin-right:2px;">Nivel:</span>
-          <button class="lvl-btn active lb-lvl-btn" data-lvl="all" onclick="changeLeaderboardFilter('lvl', 'all')">N5 + N4</button>
-          <button class="lvl-btn lb-lvl-btn" data-lvl="N5" onclick="changeLeaderboardFilter('lvl', 'N5')">🟢 Solo N5</button>
-          <button class="lvl-btn lb-lvl-btn" data-lvl="N4" onclick="changeLeaderboardFilter('lvl', 'N4')">🔵 Solo N4</button>
+      <!-- 1. Mode Selector: Dominio (Progreso) vs Quiz (Competición) -->
+      <div class="lb-type-tabs">
+        <button class="btn-lb-type active" id="btnLbTypeProgress" onclick="setLeaderboardType('progress')">
+          🏆 Dominio (% Progreso)
+        </button>
+        <button class="btn-lb-type quiz-type" id="btnLbTypeQuiz" onclick="setLeaderboardType('quiz')">
+          ⚡ Quiz (Puntos)
+        </button>
+      </div>
+
+      <!-- 2. Category & Level Preset Filters -->
+      <div style="background:#f8fafc;padding:8px 10px;border-radius:10px;border:1px solid var(--border);margin-bottom:8px;">
+        <div style="font-size:0.72rem;font-weight:700;color:#64748b;margin-bottom:4px;">Categoría y Nivel:</div>
+        <div class="lb-filter-pills">
+          <button class="lvl-btn active lb-preset-btn" data-preset="all" onclick="setLeaderboardPreset('all')">🌟 Todo</button>
+          <button class="lvl-btn lb-preset-btn" data-preset="k5" onclick="setLeaderboardPreset('k5')">🈸 Kanji N5</button>
+          <button class="lvl-btn lb-preset-btn" data-preset="k4" onclick="setLeaderboardPreset('k4')">🈸 Kanji N4</button>
+          <button class="lvl-btn lb-preset-btn" data-preset="v5" onclick="setLeaderboardPreset('v5')">📖 Vocab N5</button>
+          <button class="lvl-btn lb-preset-btn" data-preset="v4" onclick="setLeaderboardPreset('v4')">📖 Vocab N4</button>
         </div>
       </div>
 
-      <div style="background:linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);padding:12px;border-radius:10px;text-align:center;border:1px solid #bfdbfe;">
-        <div style="font-size:0.78rem;font-weight:600;color:#3b82f6;" id="lbFilterTitle">Progreso Actual (Todo N5+N4)</div>
+      <div style="background:linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);padding:12px;border-radius:10px;text-align:center;border:1px solid #bfdbfe;" id="lbStatsBanner">
+        <div style="font-size:0.78rem;font-weight:600;color:#3b82f6;" id="lbFilterTitle">Ranking: Dominio (Todo N5+N4)</div>
         <div style="font-size:1.25rem;font-weight:900;color:#1e3a8a;margin:2px 0;" id="lbMyStats">
           🥷 Estudiante: 0% Dominado
         </div>
       </div>
 
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
         <span style="font-size:0.85rem;font-weight:700;color:#334155;">Tabla de Posiciones:</span>
         <span style="font-size:0.72rem;color:#64748b;" id="lbTotalDenominator"></span>
       </div>
@@ -977,9 +1069,66 @@ th.col-kanji, td.col-kanji, th.col-v-word, td.col-v-word {
           🔄 Sincronizar
         </button>
       </div>
-      <div style="font-size:0.72rem;color:#64748b;text-align:center;margin-top:4px;">
+      <div style="font-size:0.72rem;color:#64748b;text-align:center;margin-top:4px;" id="lbFooterNote">
         💡 Cada vez que marcas "Dominado" o aciertas en el Quiz, tu puntuación sube.
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. Guide Modal -->
+<div class="modal-overlay" id="guideModal">
+  <div class="modal-card" style="max-width: 520px;">
+    <div class="modal-header">
+      <div class="modal-title">📖 Guía de Uso (使い方)</div>
+      <button class="btn-close-modal" onclick="closeModal('guideModal')">×</button>
+    </div>
+    <div class="modal-body" style="display:flex;flex-direction:column;gap:10px;padding:14px;">
+      <div class="guide-card">
+        <div class="guide-icon">✅</div>
+        <div class="guide-content">
+          <div class="guide-title">1. Memorizar y Marcar (暗記チェック)</div>
+          <div class="guide-desc">Toca la casilla para marcar una palabra como <b>"Dominado"</b>. Tu progreso se guardará automáticamente y subirá tu posición en la clasificación.</div>
+        </div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">🙈</div>
+        <div class="guide-content">
+          <div class="guide-title">2. Modo Máscara (復習テスト)</div>
+          <div class="guide-desc">Oculta Kanji, lecturas o significados con los botones de máscara. <b>Toca cualquier celda oculta</b> para voltearla y comprobar tu respuesta.</div>
+        </div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">🔊</div>
+        <div class="guide-content">
+          <div class="guide-title">3. Escuchar Pronunciación (ネイティブ音声)</div>
+          <div class="guide-desc">Toca el botón <b>🔊</b> para escuchar el audio con pronunciación nativa japonesa. En kanji puedes escuchar 音 (On) y 訓 (Kun).</div>
+        </div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">⚡</div>
+        <div class="guide-content">
+          <div class="guide-title">4. Modo Quiz & Puntos (クイズ大会)</div>
+          <div class="guide-desc">Pon a prueba tu memoria con un quiz de 10 preguntas. ¡Cada acierto suma <b>puntos de competición</b> y te ayuda a liderar el Ranking de Quiz!</div>
+        </div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">🏆</div>
+        <div class="guide-content">
+          <div class="guide-title">5. Competición en Vivo (クラス内ランキング)</div>
+          <div class="guide-desc">Compite con tus compañeros en <b>Dominio (% de estudio)</b> y en <b>Quiz (puntos acumulados)</b>. Puedes filtrar por <b>Kanji N5, N4 y Vocabulario N5, N4</b>.</div>
+        </div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">🥷</div>
+        <div class="guide-content">
+          <div class="guide-title">6. Perfil y Avatar (プロフィール設定)</div>
+          <div class="guide-desc">Toca tu avatar arriba a la derecha para poner tu nombre real y elegir tu icono favorito (ninja, sushi, zorro, etc.).</div>
+        </div>
+      </div>
+      <button style="margin-top:6px;width:100%;padding:12px;background:var(--secondary);color:white;border:none;border-radius:8px;font-weight:700;font-size:0.9rem;cursor:pointer;" onclick="closeModal('guideModal')">
+        ¡Entendido, a estudiar! 🚀
+      </button>
     </div>
   </div>
 </div>
@@ -1400,11 +1549,31 @@ function openModal(id) {
 function closeModal(id) {
   document.getElementById(id).classList.remove('active');
 }
+function openGuideModal() {
+  openModal('guideModal');
+}
 
 // ================= QUIZ ENGINE =================
 let quizQuestions = [];
 let quizCurrentIndex = 0;
 let quizScore = 0;
+let quizCurrentBreakdown = { k5: 0, k4: 0, v5: 0, v4: 0 };
+let quizScores = { k5: 0, k4: 0, v5: 0, v4: 0 };
+
+function loadQuizScores() {
+  try {
+    const raw = localStorage.getItem('study_quiz_scores_v1');
+    if (raw) {
+      quizScores = Object.assign({ k5: 0, k4: 0, v5: 0, v4: 0 }, JSON.parse(raw));
+    }
+  } catch(e) {}
+}
+
+function saveQuizScores() {
+  try {
+    localStorage.setItem('study_quiz_scores_v1', JSON.stringify(quizScores));
+  } catch(e) {}
+}
 
 function startQuiz() {
   const list = (currentMode === 'kanji') ? DB.kanji : DB.vocab;
@@ -1433,6 +1602,7 @@ function startQuiz() {
 
   quizCurrentIndex = 0;
   quizScore = 0;
+  quizCurrentBreakdown = { k5: 0, k4: 0, v5: 0, v4: 0 };
   openModal('quizModal');
   renderQuizQuestion();
 }
@@ -1494,9 +1664,19 @@ function checkQuizAnswer(optIndex, isCorrect, itemId) {
   if (isCorrect) {
     playSuccessSound();
     quizScore++;
-    // Auto-mark as dominado!
-    if (currentMode === 'kanji') learnedKanji.add(itemId);
-    else learnedVocab.add(itemId);
+    
+    // Add point to breakdown by category & level
+    const q = quizQuestions[quizCurrentIndex];
+    const lvl = q.target.level;
+    if (currentMode === 'kanji') {
+      if (lvl === 'N5') quizCurrentBreakdown.k5++;
+      else quizCurrentBreakdown.k4++;
+      learnedKanji.add(itemId);
+    } else {
+      if (lvl === 'N5') quizCurrentBreakdown.v5++;
+      else quizCurrentBreakdown.v4++;
+      learnedVocab.add(itemId);
+    }
     saveLearned();
   } else {
     playErrorSound();
@@ -1516,13 +1696,24 @@ function renderQuizResult() {
   if (pct >= 90) { message = '¡Increíble! ¡Puntuación perfecta!'; emoji = '🎉'; }
   else if (pct >= 70) { message = '¡Muy buen trabajo!'; emoji = '👏'; }
 
+  // Accumulate points to total quizScores
+  quizScores.k5 += quizCurrentBreakdown.k5;
+  quizScores.k4 += quizCurrentBreakdown.k4;
+  quizScores.v5 += quizCurrentBreakdown.v5;
+  quizScores.v4 += quizCurrentBreakdown.v4;
+  saveQuizScores();
+  triggerAutoSync();
+
   body.innerHTML = `
     <div style="text-align:center;padding:16px 0;">
       <div style="font-size:3rem;margin-bottom:6px;">${emoji}</div>
       <div class="quiz-result-score">${quizScore} / ${quizQuestions.length}</div>
+      <div style="font-size:0.9rem;color:#059669;font-weight:700;margin-top:6px;">
+        ⚡ ¡+${quizScore} pts sumados a tu Ranking de Competición!
+      </div>
       <div style="font-size:1.1rem;font-weight:700;color:#0f172a;margin-top:6px;">${message}</div>
-      <p style="font-size:0.85rem;color:#64748b;margin:8px 0 20px;">
-        Los aciertos se han registrado automáticamente en tu progreso.
+      <p style="font-size:0.82rem;color:#64748b;margin:8px 0 20px;">
+        Los aciertos se han registrado automáticamente en tu progreso y clasificación.
       </p>
       <div style="display:flex;gap:10px;">
         <button style="flex:1;padding:12px;background:#f1f5f9;border:1px solid var(--border);border-radius:8px;font-weight:700;cursor:pointer;" onclick="closeModal('quizModal')">
@@ -1590,6 +1781,10 @@ async function syncNow() {
         k4: prog.k4,
         v5: prog.v5,
         v4: prog.v4,
+        quiz_k5: quizScores.k5 || 0,
+        quiz_k4: quizScores.k4 || 0,
+        quiz_v5: quizScores.v5 || 0,
+        quiz_v4: quizScores.v4 || 0,
         updated_at: new Date().toISOString()
       }, { onConflict: 'name' });
     if (error) console.log('Supabase upsert error:', error);
@@ -1600,16 +1795,21 @@ async function syncNow() {
 }
 
 // ================= LEADERBOARD =================
-let lbFilterCat = 'all'; // 'all', 'kanji', 'vocab'
-let lbFilterLvl = 'all'; // 'all', 'N5', 'N4'
+let lbType = 'progress'; // 'progress' (Dominio) or 'quiz' (Competición Quiz)
+let lbPreset = 'all';    // 'all', 'k5', 'k4', 'v5', 'v4'
 
-function changeLeaderboardFilter(type, val) {
-  if (type === 'cat') lbFilterCat = val;
-  if (type === 'lvl') lbFilterLvl = val;
+function setLeaderboardType(type) {
+  lbType = type;
+  document.getElementById('btnLbTypeProgress').classList.toggle('active', type === 'progress');
+  document.getElementById('btnLbTypeQuiz').classList.toggle('active', type === 'quiz');
+  renderLeaderboardList();
+}
 
-  document.querySelectorAll('.lb-cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === lbFilterCat));
-  document.querySelectorAll('.lb-lvl-btn').forEach(b => b.classList.toggle('active', b.dataset.lvl === lbFilterLvl));
-
+function setLeaderboardPreset(preset) {
+  lbPreset = preset;
+  document.querySelectorAll('.lb-preset-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.preset === preset);
+  });
   renderLeaderboardList();
 }
 
@@ -1625,6 +1825,15 @@ async function openLeaderboardModal() {
         .order('updated_at', { ascending: false });
       if (data && data.length > 0) {
         cachedRemoteClassmates = data;
+        // Merge quizScores from remote if larger
+        const myRemote = data.find(x => x.name === studentProfile.name);
+        if (myRemote) {
+          quizScores.k5 = Math.max(quizScores.k5 || 0, myRemote.quiz_k5 || 0);
+          quizScores.k4 = Math.max(quizScores.k4 || 0, myRemote.quiz_k4 || 0);
+          quizScores.v5 = Math.max(quizScores.v5 || 0, myRemote.quiz_v5 || 0);
+          quizScores.v4 = Math.max(quizScores.v4 || 0, myRemote.quiz_v4 || 0);
+          saveQuizScores();
+        }
       }
     } catch(e) {
       console.log('Error al cargar datos de Supabase:', e);
@@ -1636,49 +1845,64 @@ async function openLeaderboardModal() {
 function renderLeaderboardList() {
   const myProg = getMyProgressBreakdown();
 
-  // Denominators
+  // Denominators for Dominio
   const K5_TOTAL = 118, K4_TOTAL = 282;
   const V5_TOTAL = 794, V4_TOTAL = 924;
 
   let maxPossible = 0;
-  if (lbFilterCat === 'all') {
-    if (lbFilterLvl === 'all') maxPossible = (K5_TOTAL + K4_TOTAL + V5_TOTAL + V4_TOTAL); // 2118
-    else if (lbFilterLvl === 'N5') maxPossible = (K5_TOTAL + V5_TOTAL); // 912
-    else if (lbFilterLvl === 'N4') maxPossible = (K4_TOTAL + V4_TOTAL); // 1206
-  } else if (lbFilterCat === 'kanji') {
-    if (lbFilterLvl === 'all') maxPossible = (K5_TOTAL + K4_TOTAL); // 400
-    else if (lbFilterLvl === 'N5') maxPossible = K5_TOTAL; // 118
-    else if (lbFilterLvl === 'N4') maxPossible = K4_TOTAL; // 282
-  } else if (lbFilterCat === 'vocab') {
-    if (lbFilterLvl === 'all') maxPossible = (V5_TOTAL + V4_TOTAL); // 1718
-    else if (lbFilterLvl === 'N5') maxPossible = V5_TOTAL; // 794
-    else if (lbFilterLvl === 'N4') maxPossible = V4_TOTAL; // 924
+  let presetName = '🌟 Todo (N5+N4)';
+  if (lbPreset === 'all') {
+    maxPossible = (K5_TOTAL + K4_TOTAL + V5_TOTAL + V4_TOTAL); // 2118
+    presetName = '🌟 Todo (N5+N4)';
+  } else if (lbPreset === 'k5') {
+    maxPossible = K5_TOTAL; // 118
+    presetName = '🈸 Kanji N5';
+  } else if (lbPreset === 'k4') {
+    maxPossible = K4_TOTAL; // 282
+    presetName = '🈸 Kanji N4';
+  } else if (lbPreset === 'v5') {
+    maxPossible = V5_TOTAL; // 794
+    presetName = '📖 Vocabulario N5';
+  } else if (lbPreset === 'v4') {
+    maxPossible = V4_TOTAL; // 924
+    presetName = '📖 Vocabulario N4';
   }
 
   function calcScore(st) {
-    const k5 = st.k5 || 0, k4 = st.k4 || 0;
-    const v5 = st.v5 || 0, v4 = st.v4 || 0;
-    if (lbFilterCat === 'all') {
-      if (lbFilterLvl === 'all') return k5 + k4 + v5 + v4;
-      if (lbFilterLvl === 'N5') return k5 + v5;
-      if (lbFilterLvl === 'N4') return k4 + v4;
-    } else if (lbFilterCat === 'kanji') {
-      if (lbFilterLvl === 'all') return k5 + k4;
-      if (lbFilterLvl === 'N5') return k5;
-      if (lbFilterLvl === 'N4') return k4;
-    } else if (lbFilterCat === 'vocab') {
-      if (lbFilterLvl === 'all') return v5 + v4;
-      if (lbFilterLvl === 'N5') return v5;
-      if (lbFilterLvl === 'N4') return v4;
+    const k5 = st.k5 || 0, k4 = st.k4 || 0, v5 = st.v5 || 0, v4 = st.v4 || 0;
+    const qk5 = st.quiz_k5 || 0, qk4 = st.quiz_k4 || 0, qv5 = st.quiz_v5 || 0, qv4 = st.quiz_v4 || 0;
+
+    if (lbType === 'progress') {
+      if (lbPreset === 'all') return k5 + k4 + v5 + v4;
+      if (lbPreset === 'k5') return k5;
+      if (lbPreset === 'k4') return k4;
+      if (lbPreset === 'v5') return v5;
+      if (lbPreset === 'v4') return v4;
+    } else {
+      if (lbPreset === 'all') return qk5 + qk4 + qv5 + qv4;
+      if (lbPreset === 'k5') return qk5;
+      if (lbPreset === 'k4') return qk4;
+      if (lbPreset === 'v5') return qv5;
+      if (lbPreset === 'v4') return qv4;
     }
     return 0;
   }
 
-  // Filter labels
-  const catName = (lbFilterCat === 'all') ? 'Todo' : (lbFilterCat === 'kanji') ? 'Kanji' : 'Vocabulario';
-  const lvlName = (lbFilterLvl === 'all') ? 'N5 + N4' : lbFilterLvl;
-  document.getElementById('lbFilterTitle').textContent = `Ranking: ${catName} (${lvlName})`;
-  document.getElementById('lbTotalDenominator').textContent = `Total posible: ${maxPossible} ítems`;
+  // Title & Header Badges
+  const modeName = (lbType === 'progress') ? '🏆 Dominio' : '⚡ Quiz Competición';
+  document.getElementById('lbFilterTitle').textContent = `Ranking: ${modeName} (${presetName})`;
+  
+  if (lbType === 'progress') {
+    document.getElementById('lbTotalDenominator').textContent = `Total posible: ${maxPossible} palabras`;
+    document.getElementById('lbStatsBanner').style.background = 'linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%)';
+    document.getElementById('lbStatsBanner').style.borderColor = '#bfdbfe';
+    document.getElementById('lbFooterNote').textContent = '💡 Cada palabra marcada como "Dominado" suma a tu porcentaje.';
+  } else {
+    document.getElementById('lbTotalDenominator').textContent = 'Puntos acumulados en Quiz';
+    document.getElementById('lbStatsBanner').style.background = 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)';
+    document.getElementById('lbStatsBanner').style.borderColor = '#f59e0b';
+    document.getElementById('lbFooterNote').textContent = '⚡ ¡Resuelve el Modo Quiz para ganar más puntos y liderar la clase!';
+  }
 
   // Base list
   let rawList = [];
@@ -1688,6 +1912,8 @@ function renderLeaderboardList() {
       avatar: r.avatar || '🥷',
       k5: r.k5 || 0, k4: r.k4 || 0,
       v5: r.v5 || 0, v4: r.v4 || 0,
+      quiz_k5: r.quiz_k5 || 0, quiz_k4: r.quiz_k4 || 0,
+      quiz_v5: r.quiz_v5 || 0, quiz_v4: r.quiz_v4 || 0,
       isMe: (r.name === studentProfile.name)
     }));
   } else {
@@ -1701,15 +1927,19 @@ function renderLeaderboardList() {
     avatar: studentProfile.avatar,
     k5: myProg.k5, k4: myProg.k4,
     v5: myProg.v5, v4: myProg.v4,
+    quiz_k5: quizScores.k5 || 0,
+    quiz_k4: quizScores.k4 || 0,
+    quiz_v5: quizScores.v5 || 0,
+    quiz_v4: quizScores.v4 || 0,
     isMe: true
   };
   if (meIndex >= 0) rawList[meIndex] = myEntry;
   else rawList.push(myEntry);
 
-  // Compute scores and percentages
+  // Compute scores
   const classmates = rawList.map(st => {
     const score = calcScore(st);
-    const pct = maxPossible > 0 ? ((score / maxPossible) * 100).toFixed(1) : '0.0';
+    const pct = (maxPossible > 0) ? ((score / maxPossible) * 100).toFixed(1) : '0.0';
     return {
       name: st.name,
       avatar: st.avatar,
@@ -1724,14 +1954,30 @@ function renderLeaderboardList() {
 
   // Update My Stats banner
   const myScore = calcScore(myEntry);
-  const myPct = maxPossible > 0 ? ((myScore / maxPossible) * 100).toFixed(1) : '0.0';
-  document.getElementById('lbMyStats').textContent = 
-    `${studentProfile.avatar} ${studentProfile.name}: ${myScore} / ${maxPossible} (${myPct}%)`;
+  if (lbType === 'progress') {
+    const myPct = maxPossible > 0 ? ((myScore / maxPossible) * 100).toFixed(1) : '0.0';
+    document.getElementById('lbMyStats').textContent = 
+      `${studentProfile.avatar} ${studentProfile.name}: ${myScore} / ${maxPossible} (${myPct}%)`;
+  } else {
+    document.getElementById('lbMyStats').textContent = 
+      `${studentProfile.avatar} ${studentProfile.name}: ${myScore} pts en ${presetName}`;
+  }
 
   const listEl = document.getElementById('leaderboardList');
   listEl.innerHTML = classmates.map((item, index) => {
     const rankClass = (index === 0) ? 'rank-1' : (index === 1) ? 'rank-2' : (index === 2) ? 'rank-3' : '';
     const medal = (index === 0) ? '🥇' : (index === 1) ? '🥈' : (index === 2) ? '🥉' : `${index + 1}`;
+    
+    let statText = '';
+    let scoreDisplay = '';
+    if (lbType === 'progress') {
+      statText = `${item.score} de ${maxPossible} dominados`;
+      scoreDisplay = `${item.pct}%`;
+    } else {
+      statText = `Puntos en ${presetName}`;
+      scoreDisplay = `${item.score} pts`;
+    }
+
     return `
       <div class="rank-item ${item.isMe ? 'is-me' : ''} ${rankClass}">
         <div class="rank-num">${medal}</div>
@@ -1741,9 +1987,9 @@ function renderLeaderboardList() {
             ${item.name}
             ${item.isMe ? '<span style="font-size:0.7rem;background:#dbeafe;color:#1e40af;padding:1px 5px;border-radius:4px;">Tú</span>' : ''}
           </div>
-          <div class="rank-stats">${item.score} de ${maxPossible} dominados</div>
+          <div class="rank-stats">${statText}</div>
         </div>
-        <div class="rank-pct">${item.pct}%</div>
+        <div class="rank-pct">${scoreDisplay}</div>
       </div>
     `;
   }).join('');
@@ -1778,6 +2024,7 @@ try {
 } catch(e) {}
 
 // Initial setup
+loadQuizScores();
 updateProfileUI();
 renderMaskControls();
 updateProgressUI();

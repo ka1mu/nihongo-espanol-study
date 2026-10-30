@@ -345,11 +345,78 @@ th.col-es, td.col-es {
   .en-word { font-size: 0.66rem; }
   .btn-speaker { font-size: 0.78rem; padding: 0; }
 }
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+.modal-overlay.active { display: flex !important; }
+.modal-card {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-title { font-size: 1.1rem; font-weight: 700; }
+.btn-close-modal {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: #94a3b8;
+}
+.guide-card {
+  display: flex;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  align-items: flex-start;
+}
+.guide-icon {
+  font-size: 1.3rem;
+  background: white;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  flex-shrink: 0;
+}
+.guide-content { flex: 1; }
+.guide-title { font-size: 0.85rem; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+.guide-desc { font-size: 0.76rem; color: #64748b; line-height: 1.35; }
 </style>
 </head>
 <body>
 <div class="container">
-  <div style="margin-bottom: 8px;"><a href="../" style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.8rem; font-weight: 600; color: #64748b; text-decoration: none; padding: 4px 8px; background: #e2e8f0; border-radius: 6px;">← 学習ハブ（ポータル）へ戻る</a></div>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+    <a href="../" style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.8rem; font-weight: 600; color: #64748b; text-decoration: none; padding: 4px 8px; background: #e2e8f0; border-radius: 6px;">← 学習ハブ（ポータル）へ戻る</a>
+    <button onclick="openGuideModal()" style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.78rem; font-weight: 600; color: #334155; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 4px 10px; border-radius: 6px; cursor: pointer;">❓ 使い方</button>
+  </div>
   <header>
     <h1>🇪🇸 ターゲット1200 スペイン語</h1>
     <p class="subtitle">全1700語・暗記チェック機能・アクセント太字・全メモ日本語訳付き</p>
@@ -658,6 +725,56 @@ btnResetLearned.addEventListener('click', () => {
 
 updateProgressBar();
 renderTable();
+
+function openGuideModal() {
+  document.getElementById('guideModal').classList.add('active');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
 </script>
+
+<!-- Guide Modal -->
+<div class="modal-overlay" id="guideModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">📖 アプリの使い方</div>
+      <button class="btn-close-modal" onclick="closeModal('guideModal')">×</button>
+    </div>
+    <div class="modal-body" style="display:flex;flex-direction:column;gap:10px;padding:14px;">
+      <div class="guide-card">
+        <div class="guide-icon">✅</div>
+        <div class="guide-content">
+          <div class="guide-title">1. 暗記チェック機能</div>
+          <div class="guide-desc">覚えた単語のチェックボックスを押すと「暗記済」になり、上部の達成率プログレスバーに反映されます（自動保存）。</div>
+        </div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">🙈</div>
+        <div class="guide-content">
+          <div class="guide-title">2. マスク（単語帳）機能</div>
+          <div class="guide-desc">「西語」「意味」「補足」にチェックを入れると文字が隠れます。隠れたセルをタップすると中身が見えるので暗記テストができます。</div>
+        </div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">🔊</div>
+        <div class="guide-content">
+          <div class="guide-title">3. ネイティブ音声発音</div>
+          <div class="guide-desc">単語横の <b>🔊</b> ボタンを押すと、スペイン語の正確な発音音声をいつでも再生できます。</div>
+        </div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-icon">🔍</div>
+        <div class="guide-content">
+          <div class="guide-title">4. リアルタイム検索 & Part別絞り込み</div>
+          <div class="guide-desc">日本語・スペイン語・発音カタカナ・メモの全項目を高速インクリメンタル検索できます。Partボタンで100語単位の学習も可能です。</div>
+        </div>
+      </div>
+      <button style="margin-top:6px;width:100%;padding:12px;background:var(--secondary);color:white;border:none;border-radius:8px;font-weight:700;font-size:0.9rem;cursor:pointer;" onclick="closeModal('guideModal')">
+        閉じる
+      </button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
