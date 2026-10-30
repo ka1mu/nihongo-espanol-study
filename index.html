@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>語学学習ハブ (Japonés ⇄ Español)</title>
+<title>Portal de Estudio / 学習ハブ (Japonés ⇄ Español)</title>
 <style>
 :root {
   --primary: #c0392b;
   --secondary: #2563eb;
+  --accent: #059669;
   --bg: #f8fafc;
   --card-bg: #ffffff;
   --text: #0f172a;
@@ -20,40 +21,86 @@ body {
   background-color: var(--bg);
   color: var(--text);
   line-height: 1.5;
-  padding: 20px 12px;
+  padding: 16px 12px;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 .container {
-  max-width: 800px;
+  max-width: 820px;
   margin: 0 auto;
   width: 100%;
   flex: 1;
 }
 header {
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
 }
 .badge-portal {
   display: inline-block;
-  background: #fee2e2;
-  color: #991b1b;
-  padding: 4px 10px;
+  background: #dbeafe;
+  color: #1e40af;
+  padding: 4px 12px;
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 700;
   margin-bottom: 8px;
+  letter-spacing: 0.5px;
 }
 h1 {
-  font-size: 1.7rem;
+  font-size: 1.65rem;
   color: #0f172a;
   margin-bottom: 6px;
   font-weight: 800;
 }
 .subtitle {
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+/* Welcome Guide Banners */
+.welcome-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.welcome-card-es {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 1px solid #86efac;
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: #14532d;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.welcome-title-es {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: #166534;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.welcome-card-ja {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: #1e40af;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+.welcome-title-ja {
+  font-weight: 700;
+  font-size: 0.88rem;
+  margin-bottom: 3px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .cards-grid {
@@ -80,10 +127,28 @@ h1 {
   transition: transform 0.2s, box-shadow 0.2s;
   text-decoration: none;
   color: inherit;
+  position: relative;
+  overflow: hidden;
 }
 .card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+.card.featured {
+  border: 2px solid #10b981;
+}
+.badge-featured {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #10b981;
+  color: white;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 .card-header {
   display: flex;
@@ -101,11 +166,12 @@ h1 {
   color: #0f172a;
 }
 .card-target {
-  font-size: 0.75rem;
+  font-size: 0.74rem;
+  font-weight: 600;
   color: var(--text-muted);
 }
 .card-desc {
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   color: #475569;
   margin-bottom: 16px;
   line-height: 1.45;
@@ -113,7 +179,7 @@ h1 {
 .card-features {
   list-style: none;
   margin-bottom: 20px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: #334155;
   display: flex;
   flex-direction: column;
@@ -127,19 +193,13 @@ h1 {
 .btn-enter {
   display: block;
   text-align: center;
-  padding: 10px 16px;
+  padding: 12px 16px;
   border-radius: 8px;
-  font-weight: 700;
-  font-size: 0.9rem;
+  font-weight: 800;
+  font-size: 0.92rem;
   text-decoration: none;
-  transition: background 0.2s;
-}
-.btn-spanish {
-  background: #c0392b;
-  color: white;
-}
-.btn-spanish:hover {
-  background: #962d22;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
 }
 .btn-japanese {
   background: #047857;
@@ -148,23 +208,12 @@ h1 {
 .btn-japanese:hover {
   background: #065f46;
 }
-
-.tip-box {
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
-  border-radius: 10px;
-  padding: 14px 16px;
-  font-size: 0.82rem;
-  color: #1e40af;
-  line-height: 1.5;
-  margin-bottom: 20px;
+.btn-spanish {
+  background: #c0392b;
+  color: white;
 }
-.tip-title {
-  font-weight: 700;
-  margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.btn-spanish:hover {
+  background: #962d22;
 }
 
 footer {
@@ -173,6 +222,7 @@ footer {
   color: var(--text-muted);
   padding: 16px 0;
   border-top: 1px solid var(--border);
+  margin-top: auto;
 }
 footer a {
   color: var(--secondary);
@@ -183,18 +233,69 @@ footer a {
 <body>
 <div class="container">
   <header>
-    <div class="badge-portal">PORTAL DE APRENDIZAJE</div>
-    <h1>🌐 日本語 ⇄ スペイン語 学習ハブ</h1>
-    <p class="subtitle">いつでも・どこからでもスマホで学べる相互言語学習Webアプリ</p>
+    <div class="badge-portal">PORTAL DE APRENDIZAJE / 学習ポータル</div>
+    <h1>🌐 Japonés ⇄ Español Study Hub</h1>
+    <p class="subtitle">
+      Plataforma de estudio interactiva para estudiantes en México y Japón<br>
+      <span style="font-size:0.8rem;color:#64748b;">いつでもどこでもスマホで学べる相互言語学習Webアプリ</span>
+    </p>
   </header>
 
-  <div class="tip-box">
-    <div class="tip-title">📱 スマホで便利に使うコツ（ホーム画面に追加）</div>
-    Safari または Chrome でこのページを開き、共有メニューから「<strong>ホーム画面に追加</strong>」を行うと、アプリのように全画面でオフラインでも快適に学習できます。
+  <!-- Welcome & Instructions in Spanish and Japanese -->
+  <div class="welcome-section">
+    <!-- Spanish Welcome for Mexican Students -->
+    <div class="welcome-card-es">
+      <div class="welcome-title-es">
+        <span>🇲🇽 ¡Bienvenido, estudiante de Japonés!</span>
+      </div>
+      <p style="margin-bottom:6px;">
+        Para estudiar <b>Kanji</b> y <b>Vocabulario oficial JLPT (N5 & N4)</b> con pronunciación nativa, modo Quiz y ranking en vivo de tu clase, <b>toca la tarjeta verde de abajo: "Aprender Japonés (JLPT)"</b>.
+      </p>
+      <div style="font-size:0.78rem;color:#166534;background:rgba(255,255,255,0.7);padding:6px 10px;border-radius:6px;margin-top:6px;display:flex;align-items:center;gap:6px;">
+        <span>📱</span>
+        <span><b>Consejo para celular:</b> En Safari o Chrome, toca <b>"Añadir a pantalla de inicio"</b> para usar la app a pantalla completa como una app real.</span>
+      </div>
+    </div>
+
+    <!-- Japanese Welcome for Japanese Learners -->
+    <div class="welcome-card-ja">
+      <div class="welcome-title-ja">
+        <span>🇯🇵 スペイン語を学習される方へ</span>
+      </div>
+      <p>
+        DELE対策・単語暗記には、赤色のカード「<b>ターゲット1200 スペイン語版</b>」をご利用ください。ネイティブ音声、暗記マスク、全メモ日本語訳付きで快適に自習できます。
+      </p>
+    </div>
   </div>
 
   <div class="cards-grid">
-    <!-- Card 1: Spanish for Japanese Speakers -->
+    <!-- Card 1: Japanese for Spanish Speakers (Featured for Mexican Students) -->
+    <a href="./japanese/" class="card featured">
+      <span class="badge-featured">Recomendado / 日本語学習</span>
+      <div>
+        <div class="card-header">
+          <div class="card-icon">🇯🇵</div>
+          <div class="card-title-group">
+            <h2>Aprender Japonés (JLPT)</h2>
+            <div class="card-target">Para hispanohablantes (Nivel N5 & N4)</div>
+          </div>
+        </div>
+        <p class="card-desc">
+          Guía oficial interactiva para dominar Kanji y Vocabulario con audio nativo y competir con tus compañeros en tiempo real.
+        </p>
+        <ul class="card-features">
+          <li>🔊 <strong>Voz Nativa en un Toque</strong> (Kanji, lecturas On/Kun, vocabulario y ejemplos)</li>
+          <li>⚡ <strong>Modo Quiz de 10 Preguntas</strong> (Gana puntos y sube en el ranking)</li>
+          <li>🏆 <strong>Clasificación de la Clase en Vivo</strong> (Filtros por Kanji N5, N4 y Vocabulario N5, N4)</li>
+          <li>🈸 <strong>400 Kanji & 1,718 Vocabulario</strong> (N5 y N4 completo con significado en español)</li>
+          <li>🙈 <strong>Máscaras de Memoria</strong> (Oculta y voltea para ponerte a prueba)</li>
+          <li>🥷 <strong>Perfil de Alumno Personalizable</strong> (Elige tu avatar y apodo)</li>
+        </ul>
+      </div>
+      <div class="btn-enter btn-japanese">🚀 Entrar a la App de Japonés →</div>
+    </a>
+
+    <!-- Card 2: Spanish for Japanese Speakers -->
     <a href="./spanish/" class="card">
       <div>
         <div class="card-header">
@@ -205,49 +306,24 @@ footer a {
           </div>
         </div>
         <p class="card-desc">
-          英単語ターゲット1200をベースに、厳選されたスペイン語単語と実践的な暗記学習ツールを凝縮。
+          英単語ターゲット1200をベースに、厳選されたスペイン語単語1700語と実践的な暗記学習ツールを凝縮。
         </p>
         <ul class="card-features">
           <li>🔊 <strong>ネイティブ音声ワンタップ再生</strong>（Web Speech API）</li>
-          <li>🗣️ <strong>発音カタカナ表記</strong>（強勢部分を太字化）</li>
-          <li>📝 <strong>DELE対策メモ</strong>（日本語訳付き）</li>
-          <li>🙈 <strong>暗記マスク機能</strong>（単語/発音/意味）</li>
+          <li>🗣️ <strong>発音カタカナ表記</strong>（アクセント太字強調）</li>
+          <li>📝 <strong>DELE対策メモ</strong>（全項目日本語訳付き）</li>
+          <li>🙈 <strong>暗記マスク機能</strong>（西語/発音/意味）</li>
           <li>✅ <strong>暗記チェック & 進捗バー</strong>（自動保存）</li>
-          <li>📂 <strong>Part別切り替え</strong>（100単語区切り）</li>
+          <li>📂 <strong>Part別切り替え</strong>（100単語区切りで手軽に学習）</li>
         </ul>
       </div>
       <div class="btn-enter btn-spanish">スペイン語アプリを開く →</div>
     </a>
-
-    <!-- Card 2: Japanese for Spanish Speakers -->
-    <a href="./japanese/" class="card">
-      <div>
-        <div class="card-header">
-          <div class="card-icon">🇯🇵</div>
-          <div class="card-title-group">
-            <h2>Aprender Japonés (JLPT)</h2>
-            <div class="card-target">Para hispanohablantes (N5 & N4)</div>
-          </div>
-        </div>
-        <p class="card-desc">
-          Guía interactiva para dominar Kanji y Vocabulario esencial del examen oficial JLPT N5 y N4.
-        </p>
-        <ul class="card-features">
-          <li>🔊 <strong>Voz Nativa en un Toque</strong> (Kanji, lecturas, vocabulario y ejemplos)</li>
-          <li>⚡ <strong>Modo Quiz de 10 Preguntas</strong> (Efectos de sonido interactivos)</li>
-          <li>🏆 <strong>Tabla de Progreso & Avatar</strong> (Compite y comparte tu nivel)</li>
-          <li>🈸 <strong>400 Kanji & 1,718 Vocabulario</strong> (N5 y N4 completo)</li>
-          <li>🙈 <strong>Máscaras Inteligentes</strong> (Tapa y revela para estudiar)</li>
-        </ul>
-      </div>
-      <div class="btn-enter btn-japanese">Abrir App de Japonés →</div>
-    </a>
   </div>
 
   <footer>
-    <p>Desarrollado con ❤️ para el aprendizaje de idiomas | <a href="https://github.com/ka1mu/nihongo-espanol-study" target="_blank">Repositorio en GitHub</a></p>
+    <p>Desarrollado con ❤️ para el intercambio cultural México 🇲🇽 ⇄ 🇯🇵 Japón | <a href="https://github.com/ka1mu/nihongo-espanol-study" target="_blank">GitHub</a></p>
   </footer>
 </div>
 </body>
 </html>
-
