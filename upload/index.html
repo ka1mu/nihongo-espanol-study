@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Enviar Hoja de Respuestas / マークシート提出</title>
+<!-- Supabase Official JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --primary: #c0392b;
@@ -260,7 +265,7 @@ h1 {
   </div>
 
   <header>
-    <div class="badge-header">SISTEMA DE CALIFICACIÓN JLPT</div>
+    <div class="badge-header">SISTEMA DE CALIFICACIÓN JLPT · v2.0</div>
     <h1>📄 Enviar Hoja de Respuestas</h1>
     <p class="subtitle">Sube tu hoja de respuestas para ver tu calificación en la pantalla del salón</p>
   </header>
@@ -388,6 +393,17 @@ const urlParams = new URLSearchParams(window.location.search);
 let selectedDate = urlParams.get('date') || getUpcomingSaturday();
 let selectedLevel = urlParams.get('level') || "N5";
 let selectedFileBlob = null;
+let selectedRawFile = null; // Canvas変換失敗時のフォールバック用
+
+// Supabaseクライアントの初期化（CDN読み込み完了時）
+let supabaseClient = null;
+try {
+  if (window.supabase) {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  }
+} catch(e) {
+  console.warn("Supabase SDK init error:", e);
+}
 
 // Inicializar selección de fecha y nivel
 initDateSelect();
@@ -466,41 +482,50 @@ function handleFileSelect(e) {
   const file = e.target.files[0];
   if (!file) return;
 
+  selectedRawFile = file;
+  selectedFileBlob = file; // 初期値として元ファイルをセット
+
+  const preview = document.getElementById('previewImg');
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = 'block';
+  document.getElementById('photoPrompt').style.display = 'none';
+  document.getElementById('dropArea').classList.add('has-file');
+
+  // Canvasでの縮小圧縮を試行（バックグラウンドで完了次第Blobを差し替え）
   const reader = new FileReader();
   reader.onload = function(event) {
     const img = new Image();
     img.onload = function() {
-      // Redimensionar a máx 1600px en el lado largo para subir súper rápido
-      const MAX_SIZE = 1600;
-      let width = img.width;
-      let height = img.height;
-      if (width > height) {
-        if (width > MAX_SIZE) {
-          height = Math.round((height * MAX_SIZE) / width);
-          width = MAX_SIZE;
+      try {
+        const MAX_SIZE = 1600;
+        let width = img.width;
+        let height = img.height;
+        if (width > height) {
+          if (width > MAX_SIZE) {
+            height = Math.round((height * MAX_SIZE) / width);
+            width = MAX_SIZE;
+          }
+        } else {
+          if (height > MAX_SIZE) {
+            width = Math.round((width * MAX_SIZE) / height);
+            height = MAX_SIZE;
+          }
         }
-      } else {
-        if (height > MAX_SIZE) {
-          width = Math.round((width * MAX_SIZE) / height);
-          height = MAX_SIZE;
-        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob(function(blob) {
+          if (blob) {
+            selectedFileBlob = blob;
+          }
+        }, 'image/jpeg', 0.85);
+      } catch(err) {
+        console.warn("Canvas compress fallback to raw file:", err);
       }
-
-      const canvas = document.createElement('canvas');
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, width, height);
-
-      // Comprimir a JPEG (calidad 85% - súper nítido para OMR y pesa ~400KB)
-      canvas.toBlob(function(blob) {
-        selectedFileBlob = blob;
-        const preview = document.getElementById('previewImg');
-        preview.src = URL.createObjectURL(blob);
-        preview.style.display = 'block';
-        document.getElementById('photoPrompt').style.display = 'none';
-        document.getElementById('dropArea').classList.add('has-file');
-      }, 'image/jpeg', 0.85);
     };
     img.src = event.target.result;
   };
@@ -530,7 +555,8 @@ async function submitSheet() {
     studentName = parts[1];
   }
 
-  if (!selectedFileBlob) {
+  const fileToUpload = selectedFileBlob || selectedRawFile;
+  if (!fileToUpload) {
     alert('Por favor toma o selecciona una foto de tu hoja de respuestas.');
     return;
   }
@@ -541,12 +567,11 @@ async function submitSheet() {
   statusCard.style.display = 'block';
   document.getElementById('statusIcon').textContent = '⏳';
   document.getElementById('statusTitle').textContent = 'Subiendo examen...';
-  document.getElementById('statusDesc').textContent = 'Tu hoja se está procesando en el servidor del profesor.';
+  document.getElementById('statusDesc').textContent = 'Subiendo tu hoja a la nube del profesor...';
 
   // Supabase Storage (S3互換) はキーにASCII文字のみ許可するため、安全なファイル名に正規化
   function sanitizeForStorage(name, no) {
     if (!name) return `Alumno_${no}`;
-    // アクセント記号（é➔e, ñ➔n など）を除去してASCII英数字に変換
     let s = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     s = s.replace(/ñ/g, "n").replace(/Ñ/g, "N");
     s = s.replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "");
@@ -561,21 +586,55 @@ async function submitSheet() {
   const storagePath = `${cleanDate}/${selectedLevel}/${filename}`;
 
   try {
-    const uploadUrl = `${SUPABASE_URL}/storage/v1/object/mock-sheets/${encodeURIComponent(cleanDate)}/${encodeURIComponent(selectedLevel)}/${encodeURIComponent(filename)}`;
-    const response = await fetch(uploadUrl, {
-      method: 'POST',
-      headers: {
-        'apikey': SUPABASE_ANON,
-        'Authorization': `Bearer ${SUPABASE_ANON}`,
-        'Content-Type': 'image/jpeg',
-        'x-upsert': 'true'
-      },
-      body: selectedFileBlob
-    });
+    let uploadSuccess = false;
+    let lastError = null;
 
-    if (!response.ok) {
-      const errBody = await response.text();
-      throw new Error(`Servidor ${response.status}: ${errBody}`);
+    // 1. Supabase公式SDKでのアップロード試行（最も確実）
+    if (!supabaseClient && window.supabase) {
+      try {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+      } catch(e) {}
+    }
+
+    if (supabaseClient) {
+      const { data, error } = await supabaseClient.storage
+        .from('mock-sheets')
+        .upload(storagePath, fileToUpload, {
+          contentType: 'image/jpeg',
+          upsert: true
+        });
+      if (!error) {
+        uploadSuccess = true;
+      } else {
+        lastError = error;
+        console.warn("SDK upload failed, attempting direct fetch fallback:", error);
+      }
+    }
+
+    // 2. フォールバック: 直接REST API fetch
+    if (!uploadSuccess) {
+      const uploadUrl = `${SUPABASE_URL}/storage/v1/object/mock-sheets/${encodeURIComponent(cleanDate)}/${encodeURIComponent(selectedLevel)}/${encodeURIComponent(filename)}`;
+      const response = await fetch(uploadUrl, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON,
+          'Authorization': `Bearer ${SUPABASE_ANON}`,
+          'Content-Type': 'image/jpeg',
+          'x-upsert': 'true'
+        },
+        body: fileToUpload
+      });
+
+      if (response.ok) {
+        uploadSuccess = true;
+      } else {
+        const errText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errText || response.statusText}`);
+      }
+    }
+
+    if (!uploadSuccess && lastError) {
+      throw new Error(lastError.message || JSON.stringify(lastError));
     }
 
     // Éxito
@@ -594,8 +653,10 @@ async function submitSheet() {
     document.getElementById('statusTitle').textContent = 'Error al enviar';
     document.getElementById('statusDesc').innerHTML = `
       Hubo un problema al subir la foto.<br>
-      <span style="font-size:0.75rem; color:#dc2626; word-break:break-all;">${err.message || 'Error de conexión'}</span><br><br>
-      Por favor inténtalo de nuevo.
+      <div style="background:#fee2e2;border:1px solid #ef4444;border-radius:8px;padding:8px 12px;margin:10px 0;color:#991b1b;font-size:0.78rem;font-family:monospace;word-break:break-all;text-align:left;">
+        <b>Detalle técnico:</b><br>${err.message || err.toString()}
+      </div>
+      Por favor inténtalo de nuevo o avisa al profesor.
     `;
     document.getElementById('btnAnother').style.display = 'flex';
     document.getElementById('btnAnother').textContent = 'Reintentar Envío 🔄';
@@ -610,6 +671,7 @@ function resetForm() {
   document.getElementById('dropArea').classList.remove('has-file');
   document.getElementById('photoInput').value = '';
   selectedFileBlob = null;
+  selectedRawFile = null;
 }
 </script>
 </body>
