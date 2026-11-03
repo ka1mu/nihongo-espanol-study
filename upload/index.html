@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Enviar Hoja de Respuestas / マークシート提出</title>
+<style>
+:root {
+  --primary: #c0392b;
+  --secondary: #2563eb;
+  --accent: #059669;
+  --bg: #f8fafc;
+  --card-bg: #ffffff;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.container {
+  max-width: 540px;
+  margin: 0 auto;
+  width: 100%;
+}
+.top-nav {
+  margin-bottom: 12px;
+}
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  text-decoration: none;
+  padding: 5px 10px;
+  background: #e2e8f0;
+  border-radius: 6px;
+}
+header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+.badge-header {
+  display: inline-block;
+  background: #eff6ff;
+  color: #1e40af;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+h1 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+.subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.upload-card {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.step-box {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+}
+.step-title {
+  font-weight: 800;
+  font-size: 0.92rem;
+  color: #1e293b;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Level Toggle Buttons */
+.level-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.btn-level {
+  padding: 12px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  background: white;
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition: all 0.15s;
+}
+.btn-level .sub {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #64748b;
+}
+.btn-level.selected.lvl-N5 {
+  background: #f0fdf4;
+  border-color: #22c55e;
+  color: #15803d;
+}
+.btn-level.selected.lvl-N5 .sub { color: #16a34a; }
+.btn-level.selected.lvl-N4 {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+}
+.btn-level.selected.lvl-N4 .sub { color: #2563eb; }
+
+/* Student Select */
+.select-input, .text-input {
+  width: 100%;
+  padding: 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: white;
+  color: #0f172a;
+  font-weight: 600;
+  outline: none;
+}
+.select-input:focus, .text-input:focus {
+  border-color: var(--secondary);
+}
+
+/* Photo Upload Box */
+.photo-box {
+  border: 2px dashed #94a3b8;
+  border-radius: 12px;
+  padding: 18px 12px;
+  text-align: center;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.photo-box:hover {
+  border-color: var(--secondary);
+  background: #f8fafc;
+}
+.photo-box.has-file {
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+.file-input {
+  display: none;
+}
+.preview-img {
+  max-width: 100%;
+  max-height: 240px;
+  border-radius: 8px;
+  margin-top: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  display: none;
+}
+
+/* Photo Tips */
+.tips-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+.tip-item {
+  background: white;
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.74rem;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Submit Button */
+.btn-submit {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(5,150,105,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.15s, opacity 0.15s;
+}
+.btn-submit:disabled {
+  background: #94a3b8;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.btn-submit:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Progress / Status Modal */
+.status-box {
+  display: none;
+  text-align: center;
+  padding: 30px 16px;
+}
+.status-icon {
+  font-size: 3.5rem;
+  margin-bottom: 8px;
+}
+.status-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.status-desc {
+  font-size: 0.88rem;
+  color: #64748b;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="top-nav">
+    <a href="../" class="btn-back">← Portal de Estudio</a>
+  </div>
+
+  <header>
+    <div class="badge-header">SISTEMA DE CALIFICACIÓN JLPT</div>
+    <h1>📄 Enviar Hoja de Respuestas</h1>
+    <p class="subtitle">Sube tu hoja de respuestas para ver tu calificación en la pantalla del salón</p>
+  </header>
+
+  <!-- Upload Form Card -->
+  <div class="upload-card" id="formCard">
+    
+    <!-- Paso 1: Nivel -->
+    <div class="step-box">
+      <div class="step-title">
+        <span>1. 🎯 Selecciona tu Examen (Nivel)</span>
+      </div>
+      <div class="level-toggle">
+        <button type="button" class="btn-level lvl-N5 selected" id="btnN5" onclick="selectLevel('N5')">
+          <span>🟢 Nivel N5</span>
+          <span class="sub">Principiante (9:00 - 9:30)</span>
+        </button>
+        <button type="button" class="btn-level lvl-N4" id="btnN4" onclick="selectLevel('N4')">
+          <span>🔵 Nivel N4</span>
+          <span class="sub">Intermedio (12:00 - 12:30)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Paso 2: Alumno -->
+    <div class="step-box">
+      <div class="step-title">
+        <span>2. 👤 Selecciona tu Nombre y No. de Lista</span>
+      </div>
+      <select class="select-input" id="studentSelect" onchange="onStudentChange()">
+        <option value="">-- Toca aquí para elegir tu nombre --</option>
+        <option value="1|CERNA PIZARRO VICTOR">No. 1: CERNA PIZARRO VICTOR</option>
+        <option value="2|JARAMILLO MARTINEZ NERI ZADQUIEL">No. 2: JARAMILLO MARTINEZ NERI ZADQUIEL</option>
+        <option value="3|GUERECA ROJAS ETHAN MANUEL">No. 3: GUERECA ROJAS ETHAN MANUEL</option>
+        <option value="4|ORTEGA MIRANDA ABEL JOSUA">No. 4: ORTEGA MIRANDA ABEL JOSUA</option>
+        <option value="5|ELIAN JACKANDREE MONTOYA TALAMANTES">No. 5: ELIAN JACKANDREE MONTOYA TALAMANTES</option>
+        <option value="6|REYES CHAVEZ PERLA KARELY">No. 6: REYES CHAVEZ PERLA KARELY</option>
+        <option value="7|CASTRELLON YONEMOTO LUIS FERNANDO">No. 7: CASTRELLON YONEMOTO LUIS FERNANDO</option>
+        <option value="8|CASTRELLON YONEMOTO VALERIA">No. 8: CASTRELLON YONEMOTO VALERIA</option>
+        <option value="9|CASTRO GOMEZ ARATH ALEJANDRO">No. 9: CASTRO GOMEZ ARATH ALEJANDRO</option>
+        <option value="other">Otro alumno (Ingresar número y nombre manual)</option>
+      </select>
+      
+      <div id="otherInputs" style="display:none; margin-top:8px; display:none; gap:6px;">
+        <input type="number" id="manualNo" placeholder="No. de lista (Ej: 10)" class="text-input" style="width:35%;">
+        <input type="text" id="manualName" placeholder="Tu Nombre y Apellido" class="text-input" style="width:65%;">
+      </div>
+    </div>
+
+    <!-- Paso 3: Foto de la Hoja -->
+    <div class="step-box">
+      <div class="step-title">
+        <span>3. 📸 Toma la Foto de tu Hoja de Respuestas</span>
+      </div>
+      
+      <div class="photo-box" id="dropArea" onclick="document.getElementById('photoInput').click()">
+        <div id="photoPrompt">
+          <div style="font-size:2.4rem;margin-bottom:4px;">📷</div>
+          <div style="font-weight:700;font-size:0.95rem;color:#1e40af;">Toca aquí para Tomar Foto</div>
+          <div style="font-size:0.75rem;color:#64748b;margin-top:2px;">O selecciona una imagen de tu galería</div>
+        </div>
+        <img id="previewImg" class="preview-img" alt="Vista previa">
+        <input type="file" id="photoInput" class="file-input" accept="image/*" capture="environment" onchange="handleFileSelect(event)">
+      </div>
+
+      <!-- Tips para que la foto salga perfecta -->
+      <div class="tips-grid">
+        <div class="tip-item"><span>📐</span><span>Toma desde arriba (sin ángulo)</span></div>
+        <div class="tip-item"><span>💡</span><span>Buena luz (sin sombras oscuras)</span></div>
+        <div class="tip-item"><span>⬛</span><span>Los 4 cuadros de las esquinas visibles</span></div>
+        <div class="tip-item"><span>🖐️</span><span>Sin dedos encima de la hoja</span></div>
+      </div>
+    </div>
+
+    <!-- Botón de Envío -->
+    <button class="btn-submit" id="btnSubmit" onclick="submitSheet()">
+      <span>🚀 Enviar Hoja de Respuestas</span>
+    </button>
+  </div>
+
+  <!-- Estado de Éxito / Cargando -->
+  <div class="upload-card status-box" id="statusCard">
+    <div class="status-icon" id="statusIcon">⏳</div>
+    <div class="status-title" id="statusTitle">Enviando hoja...</div>
+    <div class="status-desc" id="statusDesc">Por favor espera un momento mientras se sube tu examen.</div>
+    <button class="btn-submit" id="btnAnother" style="display:none;" onclick="resetForm()">
+      🔄 Enviar otra foto (Si quieres corregir)
+    </button>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = "https://jpggxosenzbbxvtwtgrj.supabase.co";
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwZ2d4b3NlbnpiYnh2dHd0Z3JqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMzMDk4NDIsImV4cCI6MjEwODg4NTg0Mn0.8xSevsRv0u42rgyY3mKjHpb5khXeoy6RRwQTvURAH0A";
+
+// Default Date - Se puede pasar por URL ?date=NOVEMBER%207
+const urlParams = new URLSearchParams(window.location.search);
+let selectedDate = urlParams.get('date') || "NOVEMBER 7";
+let selectedLevel = urlParams.get('level') || "N5";
+let selectedFileBlob = null;
+
+// Inicializar selección de nivel
+selectLevel(selectedLevel);
+
+function selectLevel(lvl) {
+  selectedLevel = lvl;
+  document.getElementById('btnN5').classList.toggle('selected', lvl === 'N5');
+  document.getElementById('btnN4').classList.toggle('selected', lvl === 'N4');
+}
+
+function onStudentChange() {
+  const val = document.getElementById('studentSelect').value;
+  const otherDiv = document.getElementById('otherInputs');
+  if (val === 'other') {
+    otherDiv.style.display = 'flex';
+  } else {
+    otherDiv.style.display = 'none';
+  }
+}
+
+// Pre-cargar si el alumno ya tiene nombre guardado en la app
+try {
+  const profileRaw = localStorage.getItem('jp_app_student_profile');
+  if (profileRaw) {
+    const prof = JSON.parse(profileRaw);
+    if (prof && prof.name && prof.name !== 'Estudiante') {
+      const select = document.getElementById('studentSelect');
+      for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].text.toLowerCase().includes(prof.name.toLowerCase())) {
+          select.selectedIndex = i;
+          break;
+        }
+      }
+    }
+  }
+} catch(e) {}
+
+// Manejo y compresión de imagen en el cliente (Canvas)
+function handleFileSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const img = new Image();
+    img.onload = function() {
+      // Redimensionar a máx 1600px en el lado largo para subir súper rápido
+      const MAX_SIZE = 1600;
+      let width = img.width;
+      let height = img.height;
+      if (width > height) {
+        if (width > MAX_SIZE) {
+          height = Math.round((height * MAX_SIZE) / width);
+          width = MAX_SIZE;
+        }
+      } else {
+        if (height > MAX_SIZE) {
+          width = Math.round((width * MAX_SIZE) / height);
+          height = MAX_SIZE;
+        }
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Comprimir a JPEG (calidad 85% - súper nítido para OMR y pesa ~400KB)
+      canvas.toBlob(function(blob) {
+        selectedFileBlob = blob;
+        const preview = document.getElementById('previewImg');
+        preview.src = URL.createObjectURL(blob);
+        preview.style.display = 'block';
+        document.getElementById('photoPrompt').style.display = 'none';
+        document.getElementById('dropArea').classList.add('has-file');
+      }, 'image/jpeg', 0.85);
+    };
+    img.src = event.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function submitSheet() {
+  const selectVal = document.getElementById('studentSelect').value;
+  if (!selectVal) {
+    alert('Por favor selecciona tu nombre y número de lista.');
+    return;
+  }
+
+  let studentNo = 0;
+  let studentName = '';
+
+  if (selectVal === 'other') {
+    studentNo = parseInt(document.getElementById('manualNo').value);
+    studentName = document.getElementById('manualName').value.trim();
+    if (!studentNo || !studentName) {
+      alert('Por favor escribe tu número de lista y tu nombre.');
+      return;
+    }
+  } else {
+    const parts = selectVal.split('|');
+    studentNo = parseInt(parts[0]);
+    studentName = parts[1];
+  }
+
+  if (!selectedFileBlob) {
+    alert('Por favor toma o selecciona una foto de tu hoja de respuestas.');
+    return;
+  }
+
+  // Desactivar botón y mostrar estado
+  document.getElementById('formCard').style.display = 'none';
+  const statusCard = document.getElementById('statusCard');
+  statusCard.style.display = 'block';
+  document.getElementById('statusIcon').textContent = '⏳';
+  document.getElementById('statusTitle').textContent = 'Subiendo examen...';
+  document.getElementById('statusDesc').textContent = 'Tu hoja se está procesando en el servidor del profesor.';
+
+  // Formato de nombre de archivo limpio:
+  // e.g., "mock-sheets/NOVEMBER_7/N5/No01 - CERNA PIZARRO VICTOR - 1730000000.jpg"
+  const cleanDate = selectedDate.replace(/\s+/g, '_');
+  const cleanName = studentName.replace(/[^\w\s-]/g, '').trim();
+  const timestamp = Math.floor(Date.now() / 1000);
+  const padNo = String(studentNo).padStart(2, '0');
+  const filename = `No${padNo} - ${cleanName} - ${timestamp}.jpg`;
+  const storagePath = `${cleanDate}/${selectedLevel}/${filename}`;
+  const safePath = encodeURI(storagePath);
+
+  try {
+    const uploadUrl = `${SUPABASE_URL}/storage/v1/object/mock-sheets/${safePath}`;
+    const response = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${SUPABASE_ANON}`,
+        'Content-Type': 'image/jpeg',
+        'x-upsert': 'true'
+      },
+      body: selectedFileBlob
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error en el servidor: ${response.status}`);
+    }
+
+    // Éxito
+    document.getElementById('statusIcon').textContent = '🎉';
+    document.getElementById('statusTitle').textContent = '¡Hoja Enviada con Éxito!';
+    document.getElementById('statusDesc').innerHTML = `
+      Recibido: <b>No.${studentNo} ${studentName}</b> (${selectedLevel})<br><br>
+      El profesor ya tiene tu hoja. En unos momentos verás tus resultados en la pantalla del salón.<br>
+      <i>(Recuerda entregar también tu hoja en papel al terminar)</i>
+    `;
+    document.getElementById('btnAnother').style.display = 'flex';
+
+  } catch (err) {
+    console.error('Error al subir:', err);
+    document.getElementById('statusIcon').textContent = '❌';
+    document.getElementById('statusTitle').textContent = 'Error al enviar';
+    document.getElementById('statusDesc').textContent = 'Hubo un problema de conexión. Por favor inténtalo de nuevo.';
+    document.getElementById('btnAnother').style.display = 'flex';
+    document.getElementById('btnAnother').textContent = 'Reintentar Envío 🔄';
+  }
+}
+
+function resetForm() {
+  document.getElementById('statusCard').style.display = 'none';
+  document.getElementById('formCard').style.display = 'flex';
+  document.getElementById('previewImg').style.display = 'none';
+  document.getElementById('photoPrompt').style.display = 'block';
+  document.getElementById('dropArea').classList.remove('has-file');
+  document.getElementById('photoInput').value = '';
+  selectedFileBlob = null;
+}
+</script>
+</body>
+</html>
