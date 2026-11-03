@@ -543,10 +543,10 @@ async function submitSheet() {
   let studentName = '';
 
   if (selectVal === 'other') {
-    studentNo = parseInt(document.getElementById('manualNo').value);
+    studentNo = parseInt(document.getElementById('manualNo').value) || 0;
     studentName = document.getElementById('manualName').value.trim();
-    if (!studentNo || !studentName) {
-      alert('Por favor escribe tu número de lista y tu nombre.');
+    if (!studentName) {
+      alert('Por favor escribe tu nombre y apellido.');
       return;
     }
   } else {
@@ -570,11 +570,19 @@ async function submitSheet() {
   document.getElementById('statusDesc').textContent = 'Subiendo tu hoja a la nube del profesor...';
 
   // Supabase Storage (S3互換) はキーにASCII文字のみ許可するため、安全なファイル名に正規化
+  // 日本語等のマルチバイト文字はURLエンコードでS3安全にし、Python側で完全復元
   function sanitizeForStorage(name, no) {
-    if (!name) return `Alumno_${no}`;
-    let s = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    if (!name || !name.trim()) return `Alumno_${no}`;
+    let s = name.trim();
+    // スペイン語のアクセント記号を展開
+    s = s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     s = s.replace(/ñ/g, "n").replace(/Ñ/g, "N");
-    s = s.replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "");
+    // 日本語・マルチバイト文字はS3安全のためURLエンコード
+    if (/[^\x00-\x7F]/.test(s)) {
+      return encodeURIComponent(s);
+    }
+    // ASCII英数字とアンダースコア・ハイフンに正規化
+    s = s.replace(/[\s\t\n]+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "");
     return s || `Alumno_${no}`;
   }
 
