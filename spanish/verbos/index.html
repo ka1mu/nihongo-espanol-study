@@ -1,0 +1,4675 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DELE スペイン語 重要動詞・活用完全マスター表</title>
+<style>
+  @media print {
+    .web-nav { display: none !important; }
+  }
+  .web-nav {
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  .web-nav a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .web-nav a:hover {
+    text-decoration: underline;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 5mm 6mm 5mm 6mm;
+    @bottom-right {
+      content: "Página " counter(page);
+      font-size: 7pt;
+      color: #666;
+    }
+    @bottom-left {
+      content: "DELE A1-B1 Verbos y Conjugaciones de Referencia";
+      font-size: 7pt;
+      color: #666;
+    }
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", Arial, sans-serif;
+    color: #111;
+    background: #fff;
+    margin: 0;
+    padding: 0;
+    font-size: 7.5pt;
+    line-height: 1.15;
+  }
+
+  /* ドキュメントタイトルヘッダー */
+  .doc-header {
+    border-bottom: 2px solid #111;
+    padding-bottom: 2.5px;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .doc-title {
+    font-size: 13.5pt;
+    font-weight: 800;
+    margin: 0 0 1px 0;
+    color: #0b2545;
+    letter-spacing: -0.3px;
+  }
+  .doc-subtitle {
+    font-size: 7.2pt;
+    color: #444;
+    margin: 0;
+  }
+  .doc-badge {
+    font-size: 7.2pt;
+    font-weight: bold;
+    background: #0b2545;
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  /* セクション見出し */
+  .section-title {
+    font-size: 8.5pt;
+    font-weight: 700;
+    background-color: #2b3a4a;
+    color: #ffffff;
+    padding: 2px 6px;
+    margin: 0 0 3px 0;
+    border-radius: 2px;
+  }
+
+  .page-break {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  /* 動詞ブロック（1ページに6動詞が上下ぎっちり余白なく入る設計） */
+  .verb-block {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: 0.9px solid #555;
+    border-radius: 2.5px;
+    margin-bottom: 3.2px;
+    padding: 2.5px 5px;
+    background: #ffffff;
+  }
+
+  .verb-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 0.8px solid #ddd;
+    padding-bottom: 1.5px;
+    margin-bottom: 1.5px;
+  }
+  .verb-title-left {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+  .verb-num {
+    font-size: 8pt;
+    font-weight: bold;
+    color: #666;
+  }
+  .verb-name {
+    font-size: 11pt;
+    font-weight: 900;
+    color: #990000;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .verb-meaning {
+    font-size: 8pt;
+    font-weight: 600;
+    color: #222;
+  }
+  .verb-meta {
+    font-size: 7.2pt;
+    color: #333;
+    margin-bottom: 2px;
+    background: #f6f8fa;
+    padding: 1.8px 4.5px;
+    border-left: 2.5px solid #0056b3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .verb-meta span {
+    white-space: nowrap;
+  }
+  .verb-meta strong {
+    color: #111;
+  }
+  .verb-note {
+    font-size: 6.8pt;
+    color: #444;
+    margin-top: 1.5px;
+    line-height: 1.1;
+  }
+
+  /* テーブル共通スタイル */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    font-size: 7.3pt;
+  }
+
+  th, td {
+    border: 0.6px solid #777;
+    padding: 2px 3px;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  th {
+    background-color: #eaecef;
+    font-weight: 700;
+    color: #111;
+    text-align: center;
+  }
+
+  tr:nth-child(even) td {
+    background-color: #fbfcfd;
+  }
+
+  .col-person {
+    width: 10.5%;
+    font-weight: bold;
+    text-align: center;
+    background-color: #f1f3f5;
+  }
+  .col-tense {
+    width: 12.7%;
+  }
+
+  .strong-form {
+    font-weight: 700;
+    color: #111;
+  }
+
+  /* 規則動詞一覧表などのスタイル */
+  .rule-table th {
+    background-color: #dbe4ee;
+    font-size: 7.4pt;
+    padding: 2px 3px;
+  }
+  .rule-table td {
+    font-size: 7.2pt;
+    line-height: 1.15;
+    padding: 1.8px 3px;
+  }
+
+  /* インデックス表 */
+  .index-table th {
+    background-color: #e2e8f0;
+    font-size: 7pt;
+    padding: 1.5px 2.5px;
+  }
+  .index-table td {
+    font-size: 6.8pt;
+    padding: 1.2px 2.5px;
+    line-height: 1.12;
+  }
+
+  /* 50選テーブル（1ページ全収録用） */
+  .v50-table th {
+    background-color: #e2e8f0;
+    font-size: 7pt;
+    padding: 1.8px 2.5px;
+  }
+  .v50-table td {
+    font-size: 6.7pt;
+    padding: 1.4px 2.5px;
+    line-height: 1.12;
+  }
+
+  /* グループボックス */
+  .group-box {
+    margin-bottom: 3.5px;
+  }
+</style>
+</head>
+<body>
+<div class="web-nav">
+  <a href="../">← スペイン語ハブへ戻る</a>
+  <span style="font-weight: 700; color: #0b2545;">📖 DELE 動詞活用表</span>
+</div>
+
+
+<div class="doc-header">
+  <div>
+    <h1 class="doc-title">🇪🇸 DELE スペイン語 重要動詞・活用完全マスター表（1ページ6動詞版）</h1>
+    <p class="doc-subtitle">DELE A1〜B1 必須動詞一覧（全人称 × 直説法現在・点過去・線過去・未来・条件法・接続法現在・接続法過去・命令法）</p>
+  </div>
+  <div class="doc-badge">主要30動詞 完全収録</div>
+</div>
+
+<div class="group-box">
+  <div class="section-title">1. 規則動詞の活用語尾一覧（-ar, -er, -ir 動詞）</div>
+  <table class="rule-table">
+    <thead>
+      <tr>
+        <th style="width:17%;">時制（Tiempo）</th>
+        <th style="width:26%;">-ar 動詞（例: hablar）</th>
+        <th style="width:26%;">-er 動詞（例: comer）</th>
+        <th style="width:26%;">-ir 動詞（例: vivir）</th>
+        <th>備考・用法</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>直説法 現在</strong></td>
+        <td>-o, -as, -a, -amos, -áis, -an</td>
+        <td>-o, -es, -e, -emos, -éis, -en</td>
+        <td>-o, -es, -e, -imos, -ís, -en</td>
+        <td>現在の動作・習慣・近い未来</td>
+      </tr>
+      <tr>
+        <td><strong>点過去（完了過去）</strong></td>
+        <td>-é, -aste, -ó, -amos, -asteis, -aron</td>
+        <td>-í, -iste, -ió, -imos, -isteis, -ieron</td>
+        <td>-í, -iste, -ió, -imos, -isteis, -ieron</td>
+        <td>過去の完了した1回限りの行為（-er/-ir 同形）</td>
+      </tr>
+      <tr>
+        <td><strong>線過去（不完了過去）</strong></td>
+        <td>-aba, -abas, -aba, -ábamos, -abais, -aban</td>
+        <td>-ía, -ías, -ía, -íamos, -íais, -ían</td>
+        <td>-ía, -ías, -ía, -íamos, -íais, -ían</td>
+        <td>過去の継続・習慣・状況（不規則は ser, ir, ver のみ）</td>
+      </tr>
+      <tr>
+        <td><strong>未来</strong></td>
+        <td colspan="3" style="text-align:center;"><strong>原形（不定詞）＋</strong> -é, -ás, -á, -emos, -éis, -án</td>
+        <td>全動詞共通語尾。未来の予定・推量</td>
+      </tr>
+      <tr>
+        <td><strong>過去未来（条件法）</strong></td>
+        <td colspan="3" style="text-align:center;"><strong>原形（不定詞）＋</strong> -ía, -ías, -ía, -íamos, -íais, -ían</td>
+        <td>全動詞共通語尾。丁寧な依頼（¿Podría...?）</td>
+      </tr>
+      <tr>
+        <td><strong>接続法 現在</strong></td>
+        <td>-e, -es, -e, -emos, -éis, -en</td>
+        <td>-a, -as, -a, -amos, -áis, -an</td>
+        <td>-a, -as, -a, -amos, -áis, -an</td>
+        <td>母音が逆転（-ar➔e, -er/-ir➔a）。願望・感情・目的</td>
+      </tr>
+      <tr>
+        <td><strong>接続法 過去 (-ra)</strong></td>
+        <td>-ara, -aras, -ara, -áramos, -arais, -aran</td>
+        <td>-iera, -ieras, -iera, -iéramos, -ierais, -ieran</td>
+        <td>-iera, -ieras, -iera, -iéramos, -ierais, -ieran</td>
+        <td>点過去3人称複数 -ron を取って語尾を付加</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="group-box" style="margin-top:3.5px;">
+  <div class="section-title">主要不規則動詞 30選 収録一覧＆変化パターン早見インデックス</div>
+  <table class="index-table">
+    <thead>
+      <tr>
+        <th style="width:4%;">#</th>
+        <th style="width:11%;">動詞</th>
+        <th style="width:18%;">主な意味</th>
+        <th style="width:28%;">不規則の型・特徴</th>
+        <th style="width:4%;">#</th>
+        <th style="width:11%;">動詞</th>
+        <th style="width:18%;">主な意味</th>
+        <th>不規則の型・特徴</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td style="text-align:center; font-weight:bold;">1</td>
+        <td><strong>SER</strong></td>
+        <td>〜である</td>
+        <td>IR と点過去が完全に同形。線過去・接続法も超</td>
+        <td style="text-align:center; font-weight:bold;">16</td>
+        <td><strong>OÍR</strong></td>
+        <td>聞こえる</td>
+        <td>母音に挟まれた i ➔ y 変化（oyes, </td>
+      </tr>
+
+      <tr>
+        <td style="text-align:center; font-weight:bold;">2</td>
+        <td><strong>ESTAR</strong></td>
+        <td>〜である</td>
+        <td>点過去は tuv- と同系統の estuv-（</td>
+        <td style="text-align:center; font-weight:bold;">17</td>
+        <td><strong>TRAER</strong></td>
+        <td>持ってくる</td>
+        <td>現在1人称 traigo ➔ 接続法 trai</td>
+      </tr>
+
+      <tr>
+        <td style="text-align:center; font-weight:bold;">3</td>
+        <td><strong>IR</strong></td>
+        <td>行く</td>
+        <td>SER と点過去同形。現在分詞 yendo も</td>
+        <td style="text-align:center; font-weight:bold;">18</td>
+        <td><strong>CONOCER</strong></td>
+        <td>知っている</td>
+        <td>-zco 型動詞の代表。現在1人称 conoz</td>
+      </tr>
+
+      <tr>
+        <td style="text-align:center; font-weight:bold;">4</td>
+        <td><strong>HABER</strong></td>
+        <td>完了時制の助動詞 </td>
+        <td>存在を表す無人称形: hay (現在), hu</td>
+        <td style="text-align:center; font-weight:bold;">19</td>
+        <td><strong>PEDIR</strong></td>
+        <td>頼む</td>
+        <td>e➔i 母音変化動詞（点過去3人称 pidió</td>
+      </tr>
+
+      <tr>
+        <td style="text-align:center; font-weight:bold;">5</td>
+        <td><strong>TENER</strong></td>
+        <td>持つ </td>
+        <td>未来/条件法は tendr-。点過去は tuv</td>
+        <td style="text-align:center; font-weight:bold;">20</td>
+        <td><strong>DORMIR</strong></td>
+        <td>眠る</td>
+        <td>現在 o➔ue。点過去3人称 durmió/d</td>
+      </tr>
+
+      <tr>
+        <td style="text-align:center; font-weight:bold;">6</td>
+        <td><strong>HACER</strong></td>
+        <td>する</td>
+        <td>過去分詞 hecho。点過去3人称単数は hi</td>
+        <td style="text-align:center; font-weight:bold;">21</td>
+        <td><strong>VOLVER</strong></td>
+        <td>戻る</td>
+        <td>現在 o➔ue。過去分詞 vuelto（不規則</td>
+      </tr>
+
+      <tr>
+        <td style="text-align:center; font-weight:bold;">7</td>
+        <td><strong>PODER</strong></td>
+        <td>〜できる</td>
+        <td>現在 o➔ue。点過去 pud-。未来/条件法</td>
+        <td style="text-align:center; font-weight:bold;">22</td>
+        <td><strong>SENTIR</strong></td>
+        <td>感じる</td>
+        <td>現在 e➔ie。点過去3人称 sintió/s</td>
+      </tr>
+
+      <tr>
+        <td style="text-align:center; font-weight:bold;">8</td>
+        <td><strong>DECIR</strong></td>
+        <td>言う</td>
+        <td>過去分詞 dicho。点過去 dij-（3人称</td>
+        <td style="text-align:center; font-weight:bold;">23</td>
+        <td><strong>PENSAR</strong></td>
+        <td>考える</td>
+        <td>現在 e➔ie。点過去・線過去・未来は規則的。</td>
+      </tr>
+
+      <tr>
+        <td style="text-align:center; font-weight:bold;">9</td>
+        <td><strong>PONER</strong></td>
+        <td>置く</td>
+        <td>過去分詞 puesto。点過去 pus-。未来</td>
+        <td style="text-align:center; font-weight:bold;">24</td>
+        <td><strong>SEGUIR</strong></td>
+        <td>続ける</td>
+        <td>現在1人称 sigo（gu➔g）。e➔i 変化</td>
+      </tr>
+
+      <tr>
+        <td style="text-align:center; font-weight:bold;">10</td>
+        <td><strong>SABER</strong></td>
+        <td>知る</td>
+        <td>現在1人称 sé（アクセント必須）。点過去 s</td>
+        <td style="text-align:center; font-weight:bold;">25</td>
+        <td><strong>CONDUCIR</strong></td>
+        <td>運転する</td>
+        <td>現在1人称 conduzco。点過去 cond</td>
+      </tr>
+
+      <tr>
+        <td style="text-align:center; font-weight:bold;">11</td>
+        <td><strong>QUERER</strong></td>
+        <td>〜したい </td>
+        <td>現在 e➔ie。点過去 quis-。未来 qu</td>
+        <td style="text-align:center; font-weight:bold;">26</td>
+        <td><strong>CAER</strong></td>
+        <td>落ちる</td>
+        <td>現在1人称 caigo ➔ 接続法 caiga</td>
+      </tr>
+
+      <tr>
+        <td style="text-align:center; font-weight:bold;">12</td>
+        <td><strong>VENIR</strong></td>
+        <td>来る</td>
+        <td>現在1人称 vengo ➔ 接続法 venga</td>
+        <td style="text-align:center; font-weight:bold;">27</td>
+        <td><strong>JUGAR</strong></td>
+        <td>遊ぶ</td>
+        <td>スペイン語で唯一の u➔ue 変化。点過去1人</td>
+      </tr>
+
+      <tr>
+        <td style="text-align:center; font-weight:bold;">13</td>
+        <td><strong>VER</strong></td>
+        <td>見る</td>
+        <td>過去分詞 visto。点過去 vi, vio（</td>
+        <td style="text-align:center; font-weight:bold;">28</td>
+        <td><strong>ENTENDER</strong></td>
+        <td>理解する</td>
+        <td>現在 e➔ie 語幹母音変化。点過去・線過去・</td>
+      </tr>
+
+      <tr>
+        <td style="text-align:center; font-weight:bold;">14</td>
+        <td><strong>DAR</strong></td>
+        <td>与える</td>
+        <td>点過去は -er/-ir 型活用（di, di</td>
+        <td style="text-align:center; font-weight:bold;">29</td>
+        <td><strong>SERVIR</strong></td>
+        <td>役立つ</td>
+        <td>現在 e➔i 変化。点過去3人称 sirvió</td>
+      </tr>
+
+      <tr>
+        <td style="text-align:center; font-weight:bold;">15</td>
+        <td><strong>SALIR</strong></td>
+        <td>出る</td>
+        <td>現在1人称 salgo ➔ 接続法 salga</td>
+        <td style="text-align:center; font-weight:bold;">30</td>
+        <td><strong>MORIR</strong></td>
+        <td>死ぬ</td>
+        <td>過去分詞 muerto（超重要不規則）。o➔u</td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+<div class="page-break"></div>
+<div class="section-title">2. 【最重要】主要不規則動詞 フル活用表（P.2：#01 〜 #06）</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#1</span>
+      <span class="verb-name">SER</span>
+      <span class="verb-meaning">【〜である（本質・性格・国籍・職業）】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>siendo</strong></span>
+    <span>過去分詞: <strong>sido</strong></span>
+    <span>命令法: tú: <strong>sé</strong> / Ud.: <strong>sea</strong> / vos.: <strong>sed</strong> / Uds.: <strong>sean</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">soy</span></td>
+        <td><span class="strong-form">fui</span></td>
+        <td>era</td>
+        <td><span class="strong-form">seré</span></td>
+        <td>sería</td>
+        <td><span class="strong-form">sea</span></td>
+        <td><span class="strong-form">fuera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">eres</span></td>
+        <td><span class="strong-form">fuiste</span></td>
+        <td>eras</td>
+        <td><span class="strong-form">serás</span></td>
+        <td>serías</td>
+        <td><span class="strong-form">seas</span></td>
+        <td><span class="strong-form">fueras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">es</span></td>
+        <td><span class="strong-form">fue</span></td>
+        <td>era</td>
+        <td><span class="strong-form">será</span></td>
+        <td>sería</td>
+        <td><span class="strong-form">sea</span></td>
+        <td><span class="strong-form">fuera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">somos</span></td>
+        <td><span class="strong-form">fuimos</span></td>
+        <td>éramos</td>
+        <td><span class="strong-form">seremos</span></td>
+        <td>seríamos</td>
+        <td><span class="strong-form">seamos</span></td>
+        <td><span class="strong-form">fuéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">sois</span></td>
+        <td><span class="strong-form">fuisteis</span></td>
+        <td>erais</td>
+        <td><span class="strong-form">seréis</span></td>
+        <td>seríais</td>
+        <td><span class="strong-form">seáis</span></td>
+        <td><span class="strong-form">fuerais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">son</span></td>
+        <td><span class="strong-form">fueron</span></td>
+        <td>eran</td>
+        <td><span class="strong-form">serán</span></td>
+        <td>serían</td>
+        <td><span class="strong-form">sean</span></td>
+        <td><span class="strong-form">fueran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: IR と点過去が完全に同形。線過去・接続法も超重要不規則。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#2</span>
+      <span class="verb-name">ESTAR</span>
+      <span class="verb-meaning">【〜である（一時的状態・位置・所在・進行形助動詞）】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>estando</strong></span>
+    <span>過去分詞: <strong>estado</strong></span>
+    <span>命令法: tú: <strong>está</strong> / Ud.: <strong>esté</strong> / vos.: <strong>estad</strong> / Uds.: <strong>estén</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">estoy</span></td>
+        <td><span class="strong-form">estuve</span></td>
+        <td>estaba</td>
+        <td><span class="strong-form">estaré</span></td>
+        <td>estaría</td>
+        <td><span class="strong-form">esté</span></td>
+        <td><span class="strong-form">estuviera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">estás</span></td>
+        <td><span class="strong-form">estuviste</span></td>
+        <td>estabas</td>
+        <td><span class="strong-form">estarás</span></td>
+        <td>estarías</td>
+        <td><span class="strong-form">estés</span></td>
+        <td><span class="strong-form">estuvieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">está</span></td>
+        <td><span class="strong-form">estuvo</span></td>
+        <td>estaba</td>
+        <td><span class="strong-form">estará</span></td>
+        <td>estaría</td>
+        <td><span class="strong-form">esté</span></td>
+        <td><span class="strong-form">estuviera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">estamos</span></td>
+        <td><span class="strong-form">estuvimos</span></td>
+        <td>estábamos</td>
+        <td><span class="strong-form">estaremos</span></td>
+        <td>estaríamos</td>
+        <td><span class="strong-form">estemos</span></td>
+        <td><span class="strong-form">estuviéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">estáis</span></td>
+        <td><span class="strong-form">estuvisteis</span></td>
+        <td>estabais</td>
+        <td><span class="strong-form">estaréis</span></td>
+        <td>estaríais</td>
+        <td><span class="strong-form">estéis</span></td>
+        <td><span class="strong-form">estuvierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">están</span></td>
+        <td><span class="strong-form">estuvieron</span></td>
+        <td>estaban</td>
+        <td><span class="strong-form">estarán</span></td>
+        <td>estarían</td>
+        <td><span class="strong-form">estén</span></td>
+        <td><span class="strong-form">estuvieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 点過去は tuv- と同系統の estuv-（無アクセント語尾）。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#3</span>
+      <span class="verb-name">IR</span>
+      <span class="verb-meaning">【行く（ir a + 不定詞: 〜する予定）】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>yendo</strong></span>
+    <span>過去分詞: <strong>ido</strong></span>
+    <span>命令法: tú: <strong>ve</strong> / Ud.: <strong>vaya</strong> / vos.: <strong>id</strong> / Uds.: <strong>vayan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">voy</span></td>
+        <td><span class="strong-form">fui</span></td>
+        <td>iba</td>
+        <td><span class="strong-form">iré</span></td>
+        <td>iría</td>
+        <td><span class="strong-form">vaya</span></td>
+        <td><span class="strong-form">fuera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">vas</span></td>
+        <td><span class="strong-form">fuiste</span></td>
+        <td>ibas</td>
+        <td><span class="strong-form">irás</span></td>
+        <td>irías</td>
+        <td><span class="strong-form">vayas</span></td>
+        <td><span class="strong-form">fueras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">va</span></td>
+        <td><span class="strong-form">fue</span></td>
+        <td>iba</td>
+        <td><span class="strong-form">irá</span></td>
+        <td>iría</td>
+        <td><span class="strong-form">vaya</span></td>
+        <td><span class="strong-form">fuera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">vamos</span></td>
+        <td><span class="strong-form">fuimos</span></td>
+        <td>íbamos</td>
+        <td><span class="strong-form">iremos</span></td>
+        <td>iríamos</td>
+        <td><span class="strong-form">vayamos</span></td>
+        <td><span class="strong-form">fuéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">vais</span></td>
+        <td><span class="strong-form">fuisteis</span></td>
+        <td>ibais</td>
+        <td><span class="strong-form">iréis</span></td>
+        <td>iríais</td>
+        <td><span class="strong-form">vayáis</span></td>
+        <td><span class="strong-form">fuerais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">van</span></td>
+        <td><span class="strong-form">fueron</span></td>
+        <td>iban</td>
+        <td><span class="strong-form">irán</span></td>
+        <td>irían</td>
+        <td><span class="strong-form">vayan</span></td>
+        <td><span class="strong-form">fueran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: SER と点過去同形。現在分詞 yendo も頻出。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#4</span>
+      <span class="verb-name">HABER</span>
+      <span class="verb-meaning">【完了時制の助動詞 / 存在（hay, hubo, había...）】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>habiendo</strong></span>
+    <span>過去分詞: <strong>habido</strong></span>
+    <span>命令法: tú: <strong>he</strong> / Ud.: <strong>haya</strong> / vos.: <strong>habed</strong> / Uds.: <strong>hayan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">he</span></td>
+        <td><span class="strong-form">hube</span></td>
+        <td>había</td>
+        <td><span class="strong-form">habré</span></td>
+        <td>habría</td>
+        <td><span class="strong-form">haya</span></td>
+        <td><span class="strong-form">hubiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">has</span></td>
+        <td><span class="strong-form">hubiste</span></td>
+        <td>habías</td>
+        <td><span class="strong-form">habrás</span></td>
+        <td>habrías</td>
+        <td><span class="strong-form">hayas</span></td>
+        <td><span class="strong-form">hubieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">ha (hay)</span></td>
+        <td><span class="strong-form">hubo</span></td>
+        <td>había</td>
+        <td><span class="strong-form">habrá</span></td>
+        <td>habría</td>
+        <td><span class="strong-form">haya</span></td>
+        <td><span class="strong-form">hubiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">hemos</span></td>
+        <td><span class="strong-form">hubimos</span></td>
+        <td>habíamos</td>
+        <td><span class="strong-form">habremos</span></td>
+        <td>habríamos</td>
+        <td><span class="strong-form">hayamos</span></td>
+        <td><span class="strong-form">hubiéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">habéis</span></td>
+        <td><span class="strong-form">hubisteis</span></td>
+        <td>habíais</td>
+        <td><span class="strong-form">habréis</span></td>
+        <td>habríais</td>
+        <td><span class="strong-form">hayáis</span></td>
+        <td><span class="strong-form">hubierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">han</span></td>
+        <td><span class="strong-form">hubieron</span></td>
+        <td>habían</td>
+        <td><span class="strong-form">habrán</span></td>
+        <td>habrían</td>
+        <td><span class="strong-form">hayan</span></td>
+        <td><span class="strong-form">hubieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 存在を表す無人称形: hay (現在), hubo (点過去), había (線過去), habrá (未来), haya (接続法)。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#5</span>
+      <span class="verb-name">TENER</span>
+      <span class="verb-meaning">【持つ / tener que + 不定詞: 〜しなければならない】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>teniendo</strong></span>
+    <span>過去分詞: <strong>tenido</strong></span>
+    <span>命令法: tú: <strong>ten</strong> / Ud.: <strong>tenga</strong> / vos.: <strong>tened</strong> / Uds.: <strong>tengan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">tengo</span></td>
+        <td><span class="strong-form">tuve</span></td>
+        <td>tenía</td>
+        <td><span class="strong-form">tendré</span></td>
+        <td>tendría</td>
+        <td><span class="strong-form">tenga</span></td>
+        <td><span class="strong-form">tuviera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">tienes</span></td>
+        <td><span class="strong-form">tuviste</span></td>
+        <td>tenías</td>
+        <td><span class="strong-form">tendrás</span></td>
+        <td>tendrías</td>
+        <td><span class="strong-form">tengas</span></td>
+        <td><span class="strong-form">tuvieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">tiene</span></td>
+        <td><span class="strong-form">tuvo</span></td>
+        <td>tenía</td>
+        <td><span class="strong-form">tendrá</span></td>
+        <td>tendría</td>
+        <td><span class="strong-form">tenga</span></td>
+        <td><span class="strong-form">tuviera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">tenemos</span></td>
+        <td><span class="strong-form">tuvimos</span></td>
+        <td>teníamos</td>
+        <td><span class="strong-form">tendremos</span></td>
+        <td>tendríamos</td>
+        <td><span class="strong-form">tengamos</span></td>
+        <td><span class="strong-form">tuviéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">tenéis</span></td>
+        <td><span class="strong-form">tuvisteis</span></td>
+        <td>teníais</td>
+        <td><span class="strong-form">tendréis</span></td>
+        <td>tendríais</td>
+        <td><span class="strong-form">tengáis</span></td>
+        <td><span class="strong-form">tuvierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">tienen</span></td>
+        <td><span class="strong-form">tuvieron</span></td>
+        <td>tenían</td>
+        <td><span class="strong-form">tendrán</span></td>
+        <td>tendrían</td>
+        <td><span class="strong-form">tengan</span></td>
+        <td><span class="strong-form">tuvieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 未来/条件法は tendr-。点過去は tuv-。現在1人称 tengo ➔ 接続法 tenga。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#6</span>
+      <span class="verb-name">HACER</span>
+      <span class="verb-meaning">【する・作る・気候（hace frío / calor）】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>haciendo</strong></span>
+    <span>過去分詞: <strong>hecho</strong></span>
+    <span>命令法: tú: <strong>haz</strong> / Ud.: <strong>haga</strong> / vos.: <strong>haced</strong> / Uds.: <strong>hagan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">hago</span></td>
+        <td><span class="strong-form">hice</span></td>
+        <td>hacía</td>
+        <td><span class="strong-form">haré</span></td>
+        <td>haría</td>
+        <td><span class="strong-form">haga</span></td>
+        <td><span class="strong-form">hiciera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">haces</span></td>
+        <td><span class="strong-form">hiciste</span></td>
+        <td>hacías</td>
+        <td><span class="strong-form">harás</span></td>
+        <td>harías</td>
+        <td><span class="strong-form">hagas</span></td>
+        <td><span class="strong-form">hicieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">hace</span></td>
+        <td><span class="strong-form">hizo</span></td>
+        <td>hacía</td>
+        <td><span class="strong-form">hará</span></td>
+        <td>haría</td>
+        <td><span class="strong-form">haga</span></td>
+        <td><span class="strong-form">hiciera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">hacemos</span></td>
+        <td><span class="strong-form">hicimos</span></td>
+        <td>hacíamos</td>
+        <td><span class="strong-form">haremos</span></td>
+        <td>haríamos</td>
+        <td><span class="strong-form">hagamos</span></td>
+        <td><span class="strong-form">hiciéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">hacéis</span></td>
+        <td><span class="strong-form">hicisteis</span></td>
+        <td>hacíais</td>
+        <td><span class="strong-form">haréis</span></td>
+        <td>haríais</td>
+        <td><span class="strong-form">hagáis</span></td>
+        <td><span class="strong-form">hicierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">hacen</span></td>
+        <td><span class="strong-form">hicieron</span></td>
+        <td>hacían</td>
+        <td><span class="strong-form">harán</span></td>
+        <td>harían</td>
+        <td><span class="strong-form">hagan</span></td>
+        <td><span class="strong-form">hicieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 過去分詞 hecho。点過去3人称単数は hizo（c➔z）。未来/条件法は har-。</div>
+</div>
+
+<div class="page-break"></div>
+<div class="section-title">2. 【最重要】主要不規則動詞 フル活用表（P.3：#07 〜 #12）</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#7</span>
+      <span class="verb-name">PODER</span>
+      <span class="verb-meaning">【〜できる（可能・許可）】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>pudiendo</strong></span>
+    <span>過去分詞: <strong>podido</strong></span>
+    <span>命令法: tú: <strong>puede</strong> / Ud.: <strong>pueda</strong> / vos.: <strong>poded</strong> / Uds.: <strong>puedan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">puedo</span></td>
+        <td><span class="strong-form">pude</span></td>
+        <td>podía</td>
+        <td><span class="strong-form">podré</span></td>
+        <td>podría</td>
+        <td><span class="strong-form">pueda</span></td>
+        <td><span class="strong-form">pudiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">puedes</span></td>
+        <td><span class="strong-form">pudiste</span></td>
+        <td>podías</td>
+        <td><span class="strong-form">podrás</span></td>
+        <td>podrías</td>
+        <td><span class="strong-form">puedas</span></td>
+        <td><span class="strong-form">pudieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">puede</span></td>
+        <td><span class="strong-form">pudo</span></td>
+        <td>podía</td>
+        <td><span class="strong-form">podrá</span></td>
+        <td>podría</td>
+        <td><span class="strong-form">pueda</span></td>
+        <td><span class="strong-form">pudiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">podemos</span></td>
+        <td><span class="strong-form">pudimos</span></td>
+        <td>podíamos</td>
+        <td><span class="strong-form">podremos</span></td>
+        <td>podríamos</td>
+        <td><span class="strong-form">podamos</span></td>
+        <td><span class="strong-form">pudiéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">podéis</span></td>
+        <td><span class="strong-form">pudisteis</span></td>
+        <td>podíais</td>
+        <td><span class="strong-form">podréis</span></td>
+        <td>podríais</td>
+        <td><span class="strong-form">podáis</span></td>
+        <td><span class="strong-form">pudierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">pueden</span></td>
+        <td><span class="strong-form">pudieron</span></td>
+        <td>podían</td>
+        <td><span class="strong-form">podrán</span></td>
+        <td>podrían</td>
+        <td><span class="strong-form">puedan</span></td>
+        <td><span class="strong-form">pudieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 現在 o➔ue。点過去 pud-。未来/条件法 podr-（¿Podría...? で丁寧な依頼）。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#8</span>
+      <span class="verb-name">DECIR</span>
+      <span class="verb-meaning">【言う・伝える】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>diciendo</strong></span>
+    <span>過去分詞: <strong>dicho</strong></span>
+    <span>命令法: tú: <strong>di</strong> / Ud.: <strong>diga</strong> / vos.: <strong>decid</strong> / Uds.: <strong>digan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">digo</span></td>
+        <td><span class="strong-form">dije</span></td>
+        <td>decía</td>
+        <td><span class="strong-form">diré</span></td>
+        <td>diría</td>
+        <td><span class="strong-form">diga</span></td>
+        <td><span class="strong-form">dijera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">dices</span></td>
+        <td><span class="strong-form">dijiste</span></td>
+        <td>decías</td>
+        <td><span class="strong-form">dirás</span></td>
+        <td>dirías</td>
+        <td><span class="strong-form">digas</span></td>
+        <td><span class="strong-form">dijeras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">dice</span></td>
+        <td><span class="strong-form">dijo</span></td>
+        <td>decía</td>
+        <td><span class="strong-form">dirá</span></td>
+        <td>diría</td>
+        <td><span class="strong-form">diga</span></td>
+        <td><span class="strong-form">dijera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">decimos</span></td>
+        <td><span class="strong-form">dijimos</span></td>
+        <td>decíamos</td>
+        <td><span class="strong-form">diremos</span></td>
+        <td>diríamos</td>
+        <td><span class="strong-form">digamos</span></td>
+        <td><span class="strong-form">dijéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">decís</span></td>
+        <td><span class="strong-form">dijisteis</span></td>
+        <td>decíais</td>
+        <td><span class="strong-form">diréis</span></td>
+        <td>diríais</td>
+        <td><span class="strong-form">digáis</span></td>
+        <td><span class="strong-form">dijerais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">dicen</span></td>
+        <td><span class="strong-form">dijeron</span></td>
+        <td>decían</td>
+        <td><span class="strong-form">dirán</span></td>
+        <td>dirían</td>
+        <td><span class="strong-form">digan</span></td>
+        <td><span class="strong-form">dijeran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 過去分詞 dicho。点過去 dij-（3人称複数は dijeron）。未来/条件法 dir-。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#9</span>
+      <span class="verb-name">PONER</span>
+      <span class="verb-meaning">【置く・身につける(ponerse)・〜し始める(ponerse a)】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>poniendo</strong></span>
+    <span>過去分詞: <strong>puesto</strong></span>
+    <span>命令法: tú: <strong>pon</strong> / Ud.: <strong>ponga</strong> / vos.: <strong>poned</strong> / Uds.: <strong>pongan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">pongo</span></td>
+        <td><span class="strong-form">puse</span></td>
+        <td>ponía</td>
+        <td><span class="strong-form">pondré</span></td>
+        <td>pondría</td>
+        <td><span class="strong-form">ponga</span></td>
+        <td><span class="strong-form">pusiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">pones</span></td>
+        <td><span class="strong-form">pusiste</span></td>
+        <td>ponías</td>
+        <td><span class="strong-form">pondrás</span></td>
+        <td>pondrías</td>
+        <td><span class="strong-form">pongas</span></td>
+        <td><span class="strong-form">pusieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">pone</span></td>
+        <td><span class="strong-form">puso</span></td>
+        <td>ponía</td>
+        <td><span class="strong-form">pondrá</span></td>
+        <td>pondría</td>
+        <td><span class="strong-form">ponga</span></td>
+        <td><span class="strong-form">pusiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">ponemos</span></td>
+        <td><span class="strong-form">pusimos</span></td>
+        <td>poníamos</td>
+        <td><span class="strong-form">pondremos</span></td>
+        <td>pondríamos</td>
+        <td><span class="strong-form">pongamos</span></td>
+        <td><span class="strong-form">pusiéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">ponéis</span></td>
+        <td><span class="strong-form">pusisteis</span></td>
+        <td>poníais</td>
+        <td><span class="strong-form">pondréis</span></td>
+        <td>pondríais</td>
+        <td><span class="strong-form">pongáis</span></td>
+        <td><span class="strong-form">pusierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">ponen</span></td>
+        <td><span class="strong-form">pusieron</span></td>
+        <td>ponían</td>
+        <td><span class="strong-form">pondrán</span></td>
+        <td>pondrían</td>
+        <td><span class="strong-form">pongan</span></td>
+        <td><span class="strong-form">pusieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 過去分詞 puesto。点過去 pus-。未来/条件法 pondr-。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#10</span>
+      <span class="verb-name">SABER</span>
+      <span class="verb-meaning">【知る・知識がある・〜する能力がある】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>sabiendo</strong></span>
+    <span>過去分詞: <strong>sabido</strong></span>
+    <span>命令法: tú: <strong>sabe</strong> / Ud.: <strong>sepa</strong> / vos.: <strong>sabed</strong> / Uds.: <strong>sepan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">sé</span></td>
+        <td><span class="strong-form">supe</span></td>
+        <td>sabía</td>
+        <td><span class="strong-form">sabré</span></td>
+        <td>sabría</td>
+        <td><span class="strong-form">sepa</span></td>
+        <td><span class="strong-form">supiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">sabes</span></td>
+        <td><span class="strong-form">supiste</span></td>
+        <td>sabías</td>
+        <td><span class="strong-form">sabrás</span></td>
+        <td>sabrías</td>
+        <td><span class="strong-form">sepas</span></td>
+        <td><span class="strong-form">supieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">sabe</span></td>
+        <td><span class="strong-form">supo</span></td>
+        <td>sabía</td>
+        <td><span class="strong-form">sabrá</span></td>
+        <td>sabría</td>
+        <td><span class="strong-form">sepa</span></td>
+        <td><span class="strong-form">supiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">sabemos</span></td>
+        <td><span class="strong-form">supimos</span></td>
+        <td>sabíamos</td>
+        <td><span class="strong-form">sabremos</span></td>
+        <td>sabríamos</td>
+        <td><span class="strong-form">sepamos</span></td>
+        <td><span class="strong-form">supiéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">sabéis</span></td>
+        <td><span class="strong-form">supisteis</span></td>
+        <td>sabíais</td>
+        <td><span class="strong-form">sabréis</span></td>
+        <td>sabríais</td>
+        <td><span class="strong-form">sepáis</span></td>
+        <td><span class="strong-form">supierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">saben</span></td>
+        <td><span class="strong-form">supieron</span></td>
+        <td>sabían</td>
+        <td><span class="strong-form">sabrán</span></td>
+        <td>sabrían</td>
+        <td><span class="strong-form">sepan</span></td>
+        <td><span class="strong-form">supieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 現在1人称 sé（アクセント必須）。点過去 sup-。接続法 sepa。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#11</span>
+      <span class="verb-name">QUERER</span>
+      <span class="verb-meaning">【〜したい / 欲する / 愛する】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>queriendo</strong></span>
+    <span>過去分詞: <strong>querido</strong></span>
+    <span>命令法: tú: <strong>quiere</strong> / Ud.: <strong>quiera</strong> / vos.: <strong>quered</strong> / Uds.: <strong>quieran</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">quiero</span></td>
+        <td><span class="strong-form">quise</span></td>
+        <td>quería</td>
+        <td><span class="strong-form">querré</span></td>
+        <td>querría</td>
+        <td><span class="strong-form">quiera</span></td>
+        <td><span class="strong-form">quisiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">quieres</span></td>
+        <td><span class="strong-form">quisiste</span></td>
+        <td>querías</td>
+        <td><span class="strong-form">querrás</span></td>
+        <td>querrías</td>
+        <td><span class="strong-form">quieras</span></td>
+        <td><span class="strong-form">quisieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">quiere</span></td>
+        <td><span class="strong-form">quiso</span></td>
+        <td>quería</td>
+        <td><span class="strong-form">querrá</span></td>
+        <td>querría</td>
+        <td><span class="strong-form">quiera</span></td>
+        <td><span class="strong-form">quisiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">queremos</span></td>
+        <td><span class="strong-form">quisimos</span></td>
+        <td>queríamos</td>
+        <td><span class="strong-form">querremos</span></td>
+        <td>querríamos</td>
+        <td><span class="strong-form">queramos</span></td>
+        <td><span class="strong-form">quisiéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">queréis</span></td>
+        <td><span class="strong-form">quisisteis</span></td>
+        <td>queríais</td>
+        <td><span class="strong-form">querréis</span></td>
+        <td>querríais</td>
+        <td><span class="strong-form">queráis</span></td>
+        <td><span class="strong-form">quisierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">quieren</span></td>
+        <td><span class="strong-form">quisieron</span></td>
+        <td>querían</td>
+        <td><span class="strong-form">querrán</span></td>
+        <td>querrían</td>
+        <td><span class="strong-form">quieran</span></td>
+        <td><span class="strong-form">quisieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 現在 e➔ie。点過去 quis-。未来 querr-。接続法過去 quisiera は丁寧な表現に頻出。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#12</span>
+      <span class="verb-name">VENIR</span>
+      <span class="verb-meaning">【来る】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>viniendo</strong></span>
+    <span>過去分詞: <strong>venido</strong></span>
+    <span>命令法: tú: <strong>ven</strong> / Ud.: <strong>venga</strong> / vos.: <strong>venid</strong> / Uds.: <strong>vengan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">vengo</span></td>
+        <td><span class="strong-form">vine</span></td>
+        <td>venía</td>
+        <td><span class="strong-form">vendré</span></td>
+        <td>vendría</td>
+        <td><span class="strong-form">venga</span></td>
+        <td><span class="strong-form">viniera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">vienes</span></td>
+        <td><span class="strong-form">viniste</span></td>
+        <td>venías</td>
+        <td><span class="strong-form">vendrás</span></td>
+        <td>vendrías</td>
+        <td><span class="strong-form">vengas</span></td>
+        <td><span class="strong-form">vinieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">viene</span></td>
+        <td><span class="strong-form">vino</span></td>
+        <td>venía</td>
+        <td><span class="strong-form">vendrá</span></td>
+        <td>vendría</td>
+        <td><span class="strong-form">venga</span></td>
+        <td><span class="strong-form">viniera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">venimos</span></td>
+        <td><span class="strong-form">vinimos</span></td>
+        <td>veníamos</td>
+        <td><span class="strong-form">vendremos</span></td>
+        <td>vendríamos</td>
+        <td><span class="strong-form">vengamos</span></td>
+        <td><span class="strong-form">viniéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">venís</span></td>
+        <td><span class="strong-form">vinisteis</span></td>
+        <td>veníais</td>
+        <td><span class="strong-form">vendréis</span></td>
+        <td>vendríais</td>
+        <td><span class="strong-form">vengáis</span></td>
+        <td><span class="strong-form">vinierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">vienen</span></td>
+        <td><span class="strong-form">vinieron</span></td>
+        <td>venían</td>
+        <td><span class="strong-form">vendrán</span></td>
+        <td>vendrían</td>
+        <td><span class="strong-form">vengan</span></td>
+        <td><span class="strong-form">vinieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 現在1人称 vengo ➔ 接続法 venga。点過去 vin-。未来 vendr-。</div>
+</div>
+
+<div class="page-break"></div>
+<div class="section-title">2. 【最重要】主要不規則動詞 フル活用表（P.4：#13 〜 #18）</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#13</span>
+      <span class="verb-name">VER</span>
+      <span class="verb-meaning">【見る・会う】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>viendo</strong></span>
+    <span>過去分詞: <strong>visto</strong></span>
+    <span>命令法: tú: <strong>ve</strong> / Ud.: <strong>vea</strong> / vos.: <strong>ved</strong> / Uds.: <strong>vean</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">veo</span></td>
+        <td><span class="strong-form">vi</span></td>
+        <td>veía</td>
+        <td><span class="strong-form">veré</span></td>
+        <td>vería</td>
+        <td><span class="strong-form">vea</span></td>
+        <td><span class="strong-form">viera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">ves</span></td>
+        <td><span class="strong-form">viste</span></td>
+        <td>veías</td>
+        <td><span class="strong-form">verás</span></td>
+        <td>verías</td>
+        <td><span class="strong-form">veas</span></td>
+        <td><span class="strong-form">vieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">ve</span></td>
+        <td><span class="strong-form">vio</span></td>
+        <td>veía</td>
+        <td><span class="strong-form">verá</span></td>
+        <td>vería</td>
+        <td><span class="strong-form">vea</span></td>
+        <td><span class="strong-form">viera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">vemos</span></td>
+        <td><span class="strong-form">vimos</span></td>
+        <td>veíamos</td>
+        <td><span class="strong-form">veremos</span></td>
+        <td>veríamos</td>
+        <td><span class="strong-form">veamos</span></td>
+        <td><span class="strong-form">viéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">veis</span></td>
+        <td><span class="strong-form">visteis</span></td>
+        <td>veíais</td>
+        <td><span class="strong-form">veréis</span></td>
+        <td>veríais</td>
+        <td><span class="strong-form">veáis</span></td>
+        <td><span class="strong-form">vierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">ven</span></td>
+        <td><span class="strong-form">vieron</span></td>
+        <td>veían</td>
+        <td><span class="strong-form">verán</span></td>
+        <td>verían</td>
+        <td><span class="strong-form">vean</span></td>
+        <td><span class="strong-form">vieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 過去分詞 visto。点過去 vi, vio（アクセント記号なし）。線過去 veía（eが残る）。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#14</span>
+      <span class="verb-name">DAR</span>
+      <span class="verb-meaning">【与える・あげる / 散歩する(dar un paseo)】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>dando</strong></span>
+    <span>過去分詞: <strong>dado</strong></span>
+    <span>命令法: tú: <strong>da</strong> / Ud.: <strong>dé</strong> / vos.: <strong>dad</strong> / Uds.: <strong>den</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">doy</span></td>
+        <td><span class="strong-form">di</span></td>
+        <td>daba</td>
+        <td><span class="strong-form">daré</span></td>
+        <td>daría</td>
+        <td><span class="strong-form">dé</span></td>
+        <td><span class="strong-form">diera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">das</span></td>
+        <td><span class="strong-form">diste</span></td>
+        <td>dabas</td>
+        <td><span class="strong-form">darás</span></td>
+        <td>darías</td>
+        <td><span class="strong-form">des</span></td>
+        <td><span class="strong-form">dieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">da</span></td>
+        <td><span class="strong-form">dio</span></td>
+        <td>daba</td>
+        <td><span class="strong-form">dará</span></td>
+        <td>daría</td>
+        <td><span class="strong-form">dé</span></td>
+        <td><span class="strong-form">diera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">damos</span></td>
+        <td><span class="strong-form">dimos</span></td>
+        <td>dábamos</td>
+        <td><span class="strong-form">daremos</span></td>
+        <td>daríamos</td>
+        <td><span class="strong-form">demos</span></td>
+        <td><span class="strong-form">diéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">dais</span></td>
+        <td><span class="strong-form">disteis</span></td>
+        <td>dabais</td>
+        <td><span class="strong-form">daréis</span></td>
+        <td>daríais</td>
+        <td><span class="strong-form">deis</span></td>
+        <td><span class="strong-form">dierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">dan</span></td>
+        <td><span class="strong-form">dieron</span></td>
+        <td>daban</td>
+        <td><span class="strong-form">darán</span></td>
+        <td>darían</td>
+        <td><span class="strong-form">den</span></td>
+        <td><span class="strong-form">dieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 点過去は -er/-ir 型活用（di, dio）。接続法 dé はアクセントあり。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#15</span>
+      <span class="verb-name">SALIR</span>
+      <span class="verb-meaning">【出る・出発する】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>saliendo</strong></span>
+    <span>過去分詞: <strong>salido</strong></span>
+    <span>命令法: tú: <strong>sal</strong> / Ud.: <strong>salga</strong> / vos.: <strong>salid</strong> / Uds.: <strong>salgan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">salgo</span></td>
+        <td><span class="strong-form">salí</span></td>
+        <td>salía</td>
+        <td><span class="strong-form">saldré</span></td>
+        <td>saldría</td>
+        <td><span class="strong-form">salga</span></td>
+        <td><span class="strong-form">saliera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">sales</span></td>
+        <td><span class="strong-form">saliste</span></td>
+        <td>salías</td>
+        <td><span class="strong-form">saldrás</span></td>
+        <td>saldrías</td>
+        <td><span class="strong-form">salgas</span></td>
+        <td><span class="strong-form">salieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">sale</span></td>
+        <td><span class="strong-form">salió</span></td>
+        <td>salía</td>
+        <td><span class="strong-form">saldrá</span></td>
+        <td>saldría</td>
+        <td><span class="strong-form">salga</span></td>
+        <td><span class="strong-form">saliera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">salimos</span></td>
+        <td><span class="strong-form">salimos</span></td>
+        <td>salíamos</td>
+        <td><span class="strong-form">saldremos</span></td>
+        <td>saldríamos</td>
+        <td><span class="strong-form">salgamos</span></td>
+        <td><span class="strong-form">saliéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">salís</span></td>
+        <td><span class="strong-form">salisteis</span></td>
+        <td>salíais</td>
+        <td><span class="strong-form">saldréis</span></td>
+        <td>saldríais</td>
+        <td><span class="strong-form">salgáis</span></td>
+        <td><span class="strong-form">salierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">salen</span></td>
+        <td><span class="strong-form">salieron</span></td>
+        <td>salían</td>
+        <td><span class="strong-form">saldrán</span></td>
+        <td>saldrían</td>
+        <td><span class="strong-form">salgan</span></td>
+        <td><span class="strong-form">salieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 現在1人称 salgo ➔ 接続法 salga。未来/条件法 saldr-。命令法短縮 sal。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#16</span>
+      <span class="verb-name">OÍR</span>
+      <span class="verb-meaning">【聞こえる・聞く】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>oyendo</strong></span>
+    <span>過去分詞: <strong>oído</strong></span>
+    <span>命令法: tú: <strong>oye</strong> / Ud.: <strong>oiga</strong> / vos.: <strong>oíd</strong> / Uds.: <strong>oigan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">oigo</span></td>
+        <td><span class="strong-form">oí</span></td>
+        <td>oía</td>
+        <td><span class="strong-form">oiré</span></td>
+        <td>oiría</td>
+        <td><span class="strong-form">oiga</span></td>
+        <td><span class="strong-form">oyera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">oyes</span></td>
+        <td><span class="strong-form">oíste</span></td>
+        <td>oías</td>
+        <td><span class="strong-form">oirás</span></td>
+        <td>oirías</td>
+        <td><span class="strong-form">oigas</span></td>
+        <td><span class="strong-form">oyeras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">oye</span></td>
+        <td><span class="strong-form">oyó</span></td>
+        <td>oía</td>
+        <td><span class="strong-form">oirá</span></td>
+        <td>oiría</td>
+        <td><span class="strong-form">oiga</span></td>
+        <td><span class="strong-form">oyera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">oímos</span></td>
+        <td><span class="strong-form">oímos</span></td>
+        <td>oíamos</td>
+        <td><span class="strong-form">oiremos</span></td>
+        <td>oiríamos</td>
+        <td><span class="strong-form">oigamos</span></td>
+        <td><span class="strong-form">oyéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">oís</span></td>
+        <td><span class="strong-form">oísteis</span></td>
+        <td>oíais</td>
+        <td><span class="strong-form">oiréis</span></td>
+        <td>oiríais</td>
+        <td><span class="strong-form">oigáis</span></td>
+        <td><span class="strong-form">oyerais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">oyen</span></td>
+        <td><span class="strong-form">oyeron</span></td>
+        <td>oían</td>
+        <td><span class="strong-form">oirán</span></td>
+        <td>oirían</td>
+        <td><span class="strong-form">oigan</span></td>
+        <td><span class="strong-form">oyeran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 母音に挟まれた i ➔ y 変化（oyes, oye, oyó, oyeron, oyendo）。現在1人称 oigo。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#17</span>
+      <span class="verb-name">TRAER</span>
+      <span class="verb-meaning">【持ってくる・連れてくる】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>trayendo</strong></span>
+    <span>過去分詞: <strong>traído</strong></span>
+    <span>命令法: tú: <strong>trae</strong> / Ud.: <strong>traiga</strong> / vos.: <strong>traed</strong> / Uds.: <strong>traigan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">traigo</span></td>
+        <td><span class="strong-form">traje</span></td>
+        <td>traía</td>
+        <td><span class="strong-form">traeré</span></td>
+        <td>traería</td>
+        <td><span class="strong-form">traiga</span></td>
+        <td><span class="strong-form">trajera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">traes</span></td>
+        <td><span class="strong-form">trajiste</span></td>
+        <td>traías</td>
+        <td><span class="strong-form">traerás</span></td>
+        <td>traerías</td>
+        <td><span class="strong-form">traigas</span></td>
+        <td><span class="strong-form">trajeras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">trae</span></td>
+        <td><span class="strong-form">trajo</span></td>
+        <td>traía</td>
+        <td><span class="strong-form">traerá</span></td>
+        <td>traería</td>
+        <td><span class="strong-form">traiga</span></td>
+        <td><span class="strong-form">trajera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">traemos</span></td>
+        <td><span class="strong-form">trajimos</span></td>
+        <td>traíamos</td>
+        <td><span class="strong-form">traeremos</span></td>
+        <td>traeríamos</td>
+        <td><span class="strong-form">traigamos</span></td>
+        <td><span class="strong-form">trajéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">traéis</span></td>
+        <td><span class="strong-form">trajisteis</span></td>
+        <td>traíais</td>
+        <td><span class="strong-form">traeréis</span></td>
+        <td>traeríais</td>
+        <td><span class="strong-form">traigáis</span></td>
+        <td><span class="strong-form">trajerais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">traen</span></td>
+        <td><span class="strong-form">trajeron</span></td>
+        <td>traían</td>
+        <td><span class="strong-form">traerán</span></td>
+        <td>traerían</td>
+        <td><span class="strong-form">traigan</span></td>
+        <td><span class="strong-form">trajeran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 現在1人称 traigo ➔ 接続法 traiga。点過去 traj-（3複は trajeron）。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#18</span>
+      <span class="verb-name">CONOCER</span>
+      <span class="verb-meaning">【知っている・知り合う（点過去: 初めて知った）】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>conociendo</strong></span>
+    <span>過去分詞: <strong>conocido</strong></span>
+    <span>命令法: tú: <strong>conoce</strong> / Ud.: <strong>conozca</strong> / vos.: <strong>conoced</strong> / Uds.: <strong>conozcan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">conozco</span></td>
+        <td><span class="strong-form">conocí</span></td>
+        <td>conocía</td>
+        <td><span class="strong-form">conoceré</span></td>
+        <td>conocería</td>
+        <td><span class="strong-form">conozca</span></td>
+        <td><span class="strong-form">conociera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">conoces</span></td>
+        <td><span class="strong-form">conociste</span></td>
+        <td>conocías</td>
+        <td><span class="strong-form">conocerás</span></td>
+        <td>conocerías</td>
+        <td><span class="strong-form">conozcas</span></td>
+        <td><span class="strong-form">conocieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">conoce</span></td>
+        <td><span class="strong-form">conoció</span></td>
+        <td>conocía</td>
+        <td><span class="strong-form">conocerá</span></td>
+        <td>conocería</td>
+        <td><span class="strong-form">conozca</span></td>
+        <td><span class="strong-form">conociera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">conocemos</span></td>
+        <td><span class="strong-form">conocimos</span></td>
+        <td>conocíamos</td>
+        <td><span class="strong-form">conoceremos</span></td>
+        <td>conoceríamos</td>
+        <td><span class="strong-form">conozcamos</span></td>
+        <td><span class="strong-form">conociéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">conocéis</span></td>
+        <td><span class="strong-form">conocisteis</span></td>
+        <td>conocíais</td>
+        <td><span class="strong-form">conoceréis</span></td>
+        <td>conoceríais</td>
+        <td><span class="strong-form">conozcáis</span></td>
+        <td><span class="strong-form">conocierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">conocen</span></td>
+        <td><span class="strong-form">conocieron</span></td>
+        <td>conocían</td>
+        <td><span class="strong-form">conocerán</span></td>
+        <td>conocerían</td>
+        <td><span class="strong-form">conozcan</span></td>
+        <td><span class="strong-form">conocieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: -zco 型動詞の代表。現在1人称 conozco ➔ 接続法 conozca。</div>
+</div>
+
+<div class="page-break"></div>
+<div class="section-title">2. 【最重要】主要不規則動詞 フル活用表（P.5：#19 〜 #24）</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#19</span>
+      <span class="verb-name">PEDIR</span>
+      <span class="verb-meaning">【頼む・要求する・注文する】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>pidiendo</strong></span>
+    <span>過去分詞: <strong>pedido</strong></span>
+    <span>命令法: tú: <strong>pide</strong> / Ud.: <strong>pida</strong> / vos.: <strong>pedid</strong> / Uds.: <strong>pidan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">pido</span></td>
+        <td><span class="strong-form">pedí</span></td>
+        <td>pedía</td>
+        <td><span class="strong-form">pediré</span></td>
+        <td>pediría</td>
+        <td><span class="strong-form">pida</span></td>
+        <td><span class="strong-form">pidiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">pides</span></td>
+        <td><span class="strong-form">pediste</span></td>
+        <td>pedías</td>
+        <td><span class="strong-form">pedirás</span></td>
+        <td>pedirías</td>
+        <td><span class="strong-form">pidas</span></td>
+        <td><span class="strong-form">pidieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">pide</span></td>
+        <td><span class="strong-form">pidió</span></td>
+        <td>pedía</td>
+        <td><span class="strong-form">pedirá</span></td>
+        <td>pediría</td>
+        <td><span class="strong-form">pida</span></td>
+        <td><span class="strong-form">pidiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">pedimos</span></td>
+        <td><span class="strong-form">pedimos</span></td>
+        <td>pedíamos</td>
+        <td><span class="strong-form">pediremos</span></td>
+        <td>pediríamos</td>
+        <td><span class="strong-form">pidamos</span></td>
+        <td><span class="strong-form">pidiéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">pedís</span></td>
+        <td><span class="strong-form">pedisteis</span></td>
+        <td>pedíais</td>
+        <td><span class="strong-form">pediréis</span></td>
+        <td>pediríais</td>
+        <td><span class="strong-form">pidáis</span></td>
+        <td><span class="strong-form">pidierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">piden</span></td>
+        <td><span class="strong-form">pidieron</span></td>
+        <td>pedían</td>
+        <td><span class="strong-form">pedirán</span></td>
+        <td>pedirían</td>
+        <td><span class="strong-form">pidan</span></td>
+        <td><span class="strong-form">pidieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: e➔i 母音変化動詞（点過去3人称 pidió/pidieron、現在分詞 pidiendo でも i 変化）。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#20</span>
+      <span class="verb-name">DORMIR</span>
+      <span class="verb-meaning">【眠る（dormirse: 寝入る）】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>durmiendo</strong></span>
+    <span>過去分詞: <strong>dormido</strong></span>
+    <span>命令法: tú: <strong>duerme</strong> / Ud.: <strong>duerma</strong> / vos.: <strong>dormid</strong> / Uds.: <strong>duerman</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">duermo</span></td>
+        <td><span class="strong-form">dormí</span></td>
+        <td>dormía</td>
+        <td><span class="strong-form">dormiré</span></td>
+        <td>dormiría</td>
+        <td><span class="strong-form">duerma</span></td>
+        <td><span class="strong-form">durmiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">duermes</span></td>
+        <td><span class="strong-form">dormiste</span></td>
+        <td>dormías</td>
+        <td><span class="strong-form">dormirás</span></td>
+        <td>dormirías</td>
+        <td><span class="strong-form">duermas</span></td>
+        <td><span class="strong-form">durmieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">duerme</span></td>
+        <td><span class="strong-form">durmió</span></td>
+        <td>dormía</td>
+        <td><span class="strong-form">dormirá</span></td>
+        <td>dormiría</td>
+        <td><span class="strong-form">duerma</span></td>
+        <td><span class="strong-form">durmiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">dormimos</span></td>
+        <td><span class="strong-form">dormimos</span></td>
+        <td>dormíamos</td>
+        <td><span class="strong-form">dormiremos</span></td>
+        <td>dormiríamos</td>
+        <td><span class="strong-form">durmamos</span></td>
+        <td><span class="strong-form">durmiéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">dormís</span></td>
+        <td><span class="strong-form">dormisteis</span></td>
+        <td>dormíais</td>
+        <td><span class="strong-form">dormiréis</span></td>
+        <td>dormiríais</td>
+        <td><span class="strong-form">durmáis</span></td>
+        <td><span class="strong-form">durmierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">duermen</span></td>
+        <td><span class="strong-form">durmieron</span></td>
+        <td>dormían</td>
+        <td><span class="strong-form">dormirán</span></td>
+        <td>dormirían</td>
+        <td><span class="strong-form">duerman</span></td>
+        <td><span class="strong-form">durmieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 現在 o➔ue。点過去3人称 durmió/durmieron（o➔u）。現在分詞 durmiendo。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#21</span>
+      <span class="verb-name">VOLVER</span>
+      <span class="verb-meaning">【戻る・帰る / volver a + inf: 再び〜する】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>volviendo</strong></span>
+    <span>過去分詞: <strong>vuelto</strong></span>
+    <span>命令法: tú: <strong>vuelve</strong> / Ud.: <strong>vuelva</strong> / vos.: <strong>volved</strong> / Uds.: <strong>vuelvan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">vuelvo</span></td>
+        <td><span class="strong-form">volví</span></td>
+        <td>volvía</td>
+        <td><span class="strong-form">volveré</span></td>
+        <td>volvería</td>
+        <td><span class="strong-form">vuelva</span></td>
+        <td><span class="strong-form">volviera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">vuelves</span></td>
+        <td><span class="strong-form">volviste</span></td>
+        <td>volvías</td>
+        <td><span class="strong-form">volverás</span></td>
+        <td>volverías</td>
+        <td><span class="strong-form">vuelvas</span></td>
+        <td><span class="strong-form">volvieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">vuelve</span></td>
+        <td><span class="strong-form">volvió</span></td>
+        <td>volvía</td>
+        <td><span class="strong-form">volverá</span></td>
+        <td>volvería</td>
+        <td><span class="strong-form">vuelva</span></td>
+        <td><span class="strong-form">volviera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">volvemos</span></td>
+        <td><span class="strong-form">volvimos</span></td>
+        <td>volvíamos</td>
+        <td><span class="strong-form">volveremos</span></td>
+        <td>volveríamos</td>
+        <td><span class="strong-form">volvamos</span></td>
+        <td><span class="strong-form">volviéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">volvéis</span></td>
+        <td><span class="strong-form">volvisteis</span></td>
+        <td>volvíais</td>
+        <td><span class="strong-form">volveréis</span></td>
+        <td>volveríais</td>
+        <td><span class="strong-form">volváis</span></td>
+        <td><span class="strong-form">volvierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">vuelven</span></td>
+        <td><span class="strong-form">volvieron</span></td>
+        <td>volvían</td>
+        <td><span class="strong-form">volverán</span></td>
+        <td>volverían</td>
+        <td><span class="strong-form">vuelvan</span></td>
+        <td><span class="strong-form">volvieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 現在 o➔ue。過去分詞 vuelto（不規則）。点過去は規則的。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#22</span>
+      <span class="verb-name">SENTIR</span>
+      <span class="verb-meaning">【感じる・残念に思う（Lo siento）】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>sintiendo</strong></span>
+    <span>過去分詞: <strong>sentido</strong></span>
+    <span>命令法: tú: <strong>siente</strong> / Ud.: <strong>sienta</strong> / vos.: <strong>sentid</strong> / Uds.: <strong>sientan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">siento</span></td>
+        <td><span class="strong-form">sentí</span></td>
+        <td>sentía</td>
+        <td><span class="strong-form">sentiré</span></td>
+        <td>sentiría</td>
+        <td><span class="strong-form">sienta</span></td>
+        <td><span class="strong-form">sintiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">sientes</span></td>
+        <td><span class="strong-form">sentiste</span></td>
+        <td>sentías</td>
+        <td><span class="strong-form">sentirás</span></td>
+        <td>sentirías</td>
+        <td><span class="strong-form">sientas</span></td>
+        <td><span class="strong-form">sintieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">siente</span></td>
+        <td><span class="strong-form">sintió</span></td>
+        <td>sentía</td>
+        <td><span class="strong-form">sentirá</span></td>
+        <td>sentiría</td>
+        <td><span class="strong-form">sienta</span></td>
+        <td><span class="strong-form">sintiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">sentimos</span></td>
+        <td><span class="strong-form">sentimos</span></td>
+        <td>sentíamos</td>
+        <td><span class="strong-form">sentiremos</span></td>
+        <td>sentiríamos</td>
+        <td><span class="strong-form">sintamos</span></td>
+        <td><span class="strong-form">sintiéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">sentís</span></td>
+        <td><span class="strong-form">sentisteis</span></td>
+        <td>sentíais</td>
+        <td><span class="strong-form">sentiréis</span></td>
+        <td>sentiríais</td>
+        <td><span class="strong-form">sintáis</span></td>
+        <td><span class="strong-form">sintierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">sienten</span></td>
+        <td><span class="strong-form">sintieron</span></td>
+        <td>sentían</td>
+        <td><span class="strong-form">sentirán</span></td>
+        <td>sentirían</td>
+        <td><span class="strong-form">sientan</span></td>
+        <td><span class="strong-form">sintieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 現在 e➔ie。点過去3人称 sintió/sintieron（e➔i）。現在分詞 sintiendo。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#23</span>
+      <span class="verb-name">PENSAR</span>
+      <span class="verb-meaning">【考える・思う / pensar + inf: 〜するつもり】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>pensando</strong></span>
+    <span>過去分詞: <strong>pensado</strong></span>
+    <span>命令法: tú: <strong>piensa</strong> / Ud.: <strong>piense</strong> / vos.: <strong>pensad</strong> / Uds.: <strong>piensen</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">pienso</span></td>
+        <td><span class="strong-form">pensé</span></td>
+        <td>pensaba</td>
+        <td><span class="strong-form">pensaré</span></td>
+        <td>pensaría</td>
+        <td><span class="strong-form">piense</span></td>
+        <td><span class="strong-form">pensara</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">piensas</span></td>
+        <td><span class="strong-form">pensaste</span></td>
+        <td>pensabas</td>
+        <td><span class="strong-form">pensarás</span></td>
+        <td>pensarías</td>
+        <td><span class="strong-form">pienses</span></td>
+        <td><span class="strong-form">pensaras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">piensa</span></td>
+        <td><span class="strong-form">pensó</span></td>
+        <td>pensaba</td>
+        <td><span class="strong-form">pensará</span></td>
+        <td>pensaría</td>
+        <td><span class="strong-form">piense</span></td>
+        <td><span class="strong-form">pensara</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">pensamos</span></td>
+        <td><span class="strong-form">pensamos</span></td>
+        <td>pensábamos</td>
+        <td><span class="strong-form">pensaremos</span></td>
+        <td>pensaríamos</td>
+        <td><span class="strong-form">pensemos</span></td>
+        <td><span class="strong-form">pensáramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">pensáis</span></td>
+        <td><span class="strong-form">pensasteis</span></td>
+        <td>pensabais</td>
+        <td><span class="strong-form">pensaréis</span></td>
+        <td>pensaríais</td>
+        <td><span class="strong-form">penséis</span></td>
+        <td><span class="strong-form">pensarais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">piensan</span></td>
+        <td><span class="strong-form">pensaron</span></td>
+        <td>pensaban</td>
+        <td><span class="strong-form">pensarán</span></td>
+        <td>pensarían</td>
+        <td><span class="strong-form">piensen</span></td>
+        <td><span class="strong-form">pensaran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 現在 e➔ie。点過去・線過去・未来は規則的。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#24</span>
+      <span class="verb-name">SEGUIR</span>
+      <span class="verb-meaning">【続ける・従う / seguir + 現在分詞: 〜し続ける】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>siguiendo</strong></span>
+    <span>過去分詞: <strong>seguido</strong></span>
+    <span>命令法: tú: <strong>sigue</strong> / Ud.: <strong>siga</strong> / vos.: <strong>seguid</strong> / Uds.: <strong>sigan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">sigo</span></td>
+        <td><span class="strong-form">seguí</span></td>
+        <td>seguía</td>
+        <td><span class="strong-form">seguiré</span></td>
+        <td>seguiría</td>
+        <td><span class="strong-form">siga</span></td>
+        <td><span class="strong-form">siguiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">sigues</span></td>
+        <td><span class="strong-form">seguiste</span></td>
+        <td>seguías</td>
+        <td><span class="strong-form">seguirás</span></td>
+        <td>seguirías</td>
+        <td><span class="strong-form">sigas</span></td>
+        <td><span class="strong-form">siguieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">sigue</span></td>
+        <td><span class="strong-form">siguió</span></td>
+        <td>seguía</td>
+        <td><span class="strong-form">seguirá</span></td>
+        <td>seguiría</td>
+        <td><span class="strong-form">siga</span></td>
+        <td><span class="strong-form">siguiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">seguimos</span></td>
+        <td><span class="strong-form">seguimos</span></td>
+        <td>seguíamos</td>
+        <td><span class="strong-form">seguiremos</span></td>
+        <td>seguiríamos</td>
+        <td><span class="strong-form">sigamos</span></td>
+        <td><span class="strong-form">siguiéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">seguís</span></td>
+        <td><span class="strong-form">seguisteis</span></td>
+        <td>seguíais</td>
+        <td><span class="strong-form">seguiréis</span></td>
+        <td>seguiríais</td>
+        <td><span class="strong-form">sigáis</span></td>
+        <td><span class="strong-form">siguierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">siguen</span></td>
+        <td><span class="strong-form">siguieron</span></td>
+        <td>seguían</td>
+        <td><span class="strong-form">seguirán</span></td>
+        <td>seguirían</td>
+        <td><span class="strong-form">sigan</span></td>
+        <td><span class="strong-form">siguieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 現在1人称 sigo（gu➔g）。e➔i 変化（siguió, siguiendo）。</div>
+</div>
+
+<div class="page-break"></div>
+<div class="section-title">2. 【最重要】主要不規則動詞 フル活用表（P.6：#25 〜 #30）</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#25</span>
+      <span class="verb-name">CONDUCIR</span>
+      <span class="verb-meaning">【運転する・導く】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>conduciendo</strong></span>
+    <span>過去分詞: <strong>conducido</strong></span>
+    <span>命令法: tú: <strong>conduce</strong> / Ud.: <strong>conduzca</strong> / vos.: <strong>conducid</strong> / Uds.: <strong>conduzcan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">conduzco</span></td>
+        <td><span class="strong-form">conduje</span></td>
+        <td>conducía</td>
+        <td><span class="strong-form">conduciré</span></td>
+        <td>conduciría</td>
+        <td><span class="strong-form">conduzca</span></td>
+        <td><span class="strong-form">condujera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">conduces</span></td>
+        <td><span class="strong-form">condujiste</span></td>
+        <td>conducías</td>
+        <td><span class="strong-form">conducirás</span></td>
+        <td>conducirías</td>
+        <td><span class="strong-form">conduzcas</span></td>
+        <td><span class="strong-form">condujeras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">conduce</span></td>
+        <td><span class="strong-form">condujo</span></td>
+        <td>conducía</td>
+        <td><span class="strong-form">conducirá</span></td>
+        <td>conduciría</td>
+        <td><span class="strong-form">conduzca</span></td>
+        <td><span class="strong-form">condujera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">conducimos</span></td>
+        <td><span class="strong-form">condujimos</span></td>
+        <td>conducíamos</td>
+        <td><span class="strong-form">conduciremos</span></td>
+        <td>conduciríamos</td>
+        <td><span class="strong-form">conduzcamos</span></td>
+        <td><span class="strong-form">condujéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">conducís</span></td>
+        <td><span class="strong-form">condujisteis</span></td>
+        <td>conducíais</td>
+        <td><span class="strong-form">conduciréis</span></td>
+        <td>conduciríais</td>
+        <td><span class="strong-form">conduzcáis</span></td>
+        <td><span class="strong-form">condujerais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">conducen</span></td>
+        <td><span class="strong-form">condujeron</span></td>
+        <td>conducían</td>
+        <td><span class="strong-form">conducirán</span></td>
+        <td>conducirían</td>
+        <td><span class="strong-form">conduzcan</span></td>
+        <td><span class="strong-form">condujeran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 現在1人称 conduzco。点過去 conduj-（3複は condujeron）。traducir, producir も同型。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#26</span>
+      <span class="verb-name">CAER</span>
+      <span class="verb-meaning">【落ちる・倒れる / caer bien（好感が持てる）】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>cayendo</strong></span>
+    <span>過去分詞: <strong>caído</strong></span>
+    <span>命令法: tú: <strong>cae</strong> / Ud.: <strong>caiga</strong> / vos.: <strong>caed</strong> / Uds.: <strong>caigan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">caigo</span></td>
+        <td><span class="strong-form">caí</span></td>
+        <td>caía</td>
+        <td><span class="strong-form">caeré</span></td>
+        <td>caería</td>
+        <td><span class="strong-form">caiga</span></td>
+        <td><span class="strong-form">cayera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">caes</span></td>
+        <td><span class="strong-form">caíste</span></td>
+        <td>caías</td>
+        <td><span class="strong-form">caerás</span></td>
+        <td>caerías</td>
+        <td><span class="strong-form">caigas</span></td>
+        <td><span class="strong-form">cayeras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">cae</span></td>
+        <td><span class="strong-form">cayó</span></td>
+        <td>caía</td>
+        <td><span class="strong-form">caerá</span></td>
+        <td>caería</td>
+        <td><span class="strong-form">caiga</span></td>
+        <td><span class="strong-form">cayera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">caemos</span></td>
+        <td><span class="strong-form">caímos</span></td>
+        <td>caíamos</td>
+        <td><span class="strong-form">caeremos</span></td>
+        <td>caeríamos</td>
+        <td><span class="strong-form">caigamos</span></td>
+        <td><span class="strong-form">cayéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">caéis</span></td>
+        <td><span class="strong-form">caísteis</span></td>
+        <td>caíais</td>
+        <td><span class="strong-form">caeréis</span></td>
+        <td>caeríais</td>
+        <td><span class="strong-form">caigáis</span></td>
+        <td><span class="strong-form">cayerais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">caen</span></td>
+        <td><span class="strong-form">cayeron</span></td>
+        <td>caían</td>
+        <td><span class="strong-form">caerán</span></td>
+        <td>caerían</td>
+        <td><span class="strong-form">caigan</span></td>
+        <td><span class="strong-form">cayeran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 現在1人称 caigo ➔ 接続法 caiga。点過去3人称 cayó, cayeron。現在分詞 cayendo。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#27</span>
+      <span class="verb-name">JUGAR</span>
+      <span class="verb-meaning">【遊ぶ・スポーツをする（jugar a + 競技）】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>jugando</strong></span>
+    <span>過去分詞: <strong>jugado</strong></span>
+    <span>命令法: tú: <strong>juega</strong> / Ud.: <strong>juegue</strong> / vos.: <strong>jugad</strong> / Uds.: <strong>jueguen</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">juego</span></td>
+        <td><span class="strong-form">jugué</span></td>
+        <td>jugaba</td>
+        <td><span class="strong-form">jugaré</span></td>
+        <td>jugaría</td>
+        <td><span class="strong-form">juegue</span></td>
+        <td><span class="strong-form">jugara</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">juegas</span></td>
+        <td><span class="strong-form">jugaste</span></td>
+        <td>jugabas</td>
+        <td><span class="strong-form">jugarás</span></td>
+        <td>jugarías</td>
+        <td><span class="strong-form">juegues</span></td>
+        <td><span class="strong-form">jugaras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">juega</span></td>
+        <td><span class="strong-form">jugó</span></td>
+        <td>jugaba</td>
+        <td><span class="strong-form">jugará</span></td>
+        <td>jugaría</td>
+        <td><span class="strong-form">juegue</span></td>
+        <td><span class="strong-form">jugara</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">jugamos</span></td>
+        <td><span class="strong-form">jugamos</span></td>
+        <td>jugábamos</td>
+        <td><span class="strong-form">jugaremos</span></td>
+        <td>jugaríamos</td>
+        <td><span class="strong-form">juguemos</span></td>
+        <td><span class="strong-form">jugáramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">jugáis</span></td>
+        <td><span class="strong-form">jugasteis</span></td>
+        <td>jugabais</td>
+        <td><span class="strong-form">jugaréis</span></td>
+        <td>jugaríais</td>
+        <td><span class="strong-form">juguéis</span></td>
+        <td><span class="strong-form">jugarais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">juegan</span></td>
+        <td><span class="strong-form">jugaron</span></td>
+        <td>jugaban</td>
+        <td><span class="strong-form">jugarán</span></td>
+        <td>jugarían</td>
+        <td><span class="strong-form">jueguen</span></td>
+        <td><span class="strong-form">jugaran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: スペイン語で唯一の u➔ue 変化。点過去1人称 jugué (g➔gu)。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#28</span>
+      <span class="verb-name">ENTENDER</span>
+      <span class="verb-meaning">【理解する・わかる（= comprender）】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>entendiendo</strong></span>
+    <span>過去分詞: <strong>entendido</strong></span>
+    <span>命令法: tú: <strong>entiende</strong> / Ud.: <strong>entienda</strong> / vos.: <strong>entended</strong> / Uds.: <strong>entiendan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">entiendo</span></td>
+        <td><span class="strong-form">entendí</span></td>
+        <td>entendía</td>
+        <td><span class="strong-form">entenderé</span></td>
+        <td>entendería</td>
+        <td><span class="strong-form">entienda</span></td>
+        <td><span class="strong-form">entendiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">entiendes</span></td>
+        <td><span class="strong-form">entendiste</span></td>
+        <td>entendías</td>
+        <td><span class="strong-form">entenderás</span></td>
+        <td>entenderías</td>
+        <td><span class="strong-form">entiendas</span></td>
+        <td><span class="strong-form">entendieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">entiende</span></td>
+        <td><span class="strong-form">entendió</span></td>
+        <td>entendía</td>
+        <td><span class="strong-form">entenderá</span></td>
+        <td>entendería</td>
+        <td><span class="strong-form">entienda</span></td>
+        <td><span class="strong-form">entendiera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">entendemos</span></td>
+        <td><span class="strong-form">entendimos</span></td>
+        <td>entendíamos</td>
+        <td><span class="strong-form">entenderemos</span></td>
+        <td>entenderíamos</td>
+        <td><span class="strong-form">entendamos</span></td>
+        <td><span class="strong-form">entendiéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">entendéis</span></td>
+        <td><span class="strong-form">entendisteis</span></td>
+        <td>entendíais</td>
+        <td><span class="strong-form">entenderéis</span></td>
+        <td>entenderíais</td>
+        <td><span class="strong-form">entendáis</span></td>
+        <td><span class="strong-form">entendierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">entienden</span></td>
+        <td><span class="strong-form">entendieron</span></td>
+        <td>entendían</td>
+        <td><span class="strong-form">entenderán</span></td>
+        <td>entenderían</td>
+        <td><span class="strong-form">entiendan</span></td>
+        <td><span class="strong-form">entendieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 現在 e➔ie 語幹母音変化。点過去・線過去・未来は規則変化。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#29</span>
+      <span class="verb-name">SERVIR</span>
+      <span class="verb-meaning">【役立つ（servir para）・仕える・出す】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>sirviendo</strong></span>
+    <span>過去分詞: <strong>servido</strong></span>
+    <span>命令法: tú: <strong>sirve</strong> / Ud.: <strong>sirva</strong> / vos.: <strong>servid</strong> / Uds.: <strong>sirvan</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">sirvo</span></td>
+        <td><span class="strong-form">serví</span></td>
+        <td>servía</td>
+        <td><span class="strong-form">serviré</span></td>
+        <td>serviría</td>
+        <td><span class="strong-form">sirva</span></td>
+        <td><span class="strong-form">sirviera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">sirves</span></td>
+        <td><span class="strong-form">serviste</span></td>
+        <td>servías</td>
+        <td><span class="strong-form">servirás</span></td>
+        <td>servirías</td>
+        <td><span class="strong-form">sirvas</span></td>
+        <td><span class="strong-form">sirvieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">sirve</span></td>
+        <td><span class="strong-form">sirvió</span></td>
+        <td>servía</td>
+        <td><span class="strong-form">servirá</span></td>
+        <td>serviría</td>
+        <td><span class="strong-form">sirva</span></td>
+        <td><span class="strong-form">sirviera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">servimos</span></td>
+        <td><span class="strong-form">servimos</span></td>
+        <td>servíamos</td>
+        <td><span class="strong-form">serviremos</span></td>
+        <td>serviríamos</td>
+        <td><span class="strong-form">sirvamos</span></td>
+        <td><span class="strong-form">sirviéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">servís</span></td>
+        <td><span class="strong-form">servisteis</span></td>
+        <td>servíais</td>
+        <td><span class="strong-form">serviréis</span></td>
+        <td>serviríais</td>
+        <td><span class="strong-form">sirváis</span></td>
+        <td><span class="strong-form">sirvierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">sirven</span></td>
+        <td><span class="strong-form">sirvieron</span></td>
+        <td>servían</td>
+        <td><span class="strong-form">servirán</span></td>
+        <td>servirían</td>
+        <td><span class="strong-form">sirvan</span></td>
+        <td><span class="strong-form">sirvieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 現在 e➔i 変化。点過去3人称 sirvió, sirvieron。現在分詞 sirviendo。</div>
+</div>
+
+<div class="verb-block">
+  <div class="verb-header">
+    <div class="verb-title-left">
+      <span class="verb-num">#30</span>
+      <span class="verb-name">MORIR</span>
+      <span class="verb-meaning">【死ぬ・亡くなる】</span>
+    </div>
+  </div>
+  <div class="verb-meta">
+    <span>現在分詞: <strong>muriendo</strong></span>
+    <span>過去分詞: <strong>muerto</strong></span>
+    <span>命令法: tú: <strong>muere</strong> / Ud.: <strong>muera</strong> / vos.: <strong>morid</strong> / Uds.: <strong>mueran</strong></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-person">人称</th>
+        <th class="col-tense">直説法 現在</th>
+        <th class="col-tense">点過去 (Indef.)</th>
+        <th class="col-tense">線過去 (Imperf.)</th>
+        <th class="col-tense">未来 (Futuro)</th>
+        <th class="col-tense">条件法 (Condic.)</th>
+        <th class="col-tense">接続法 現在</th>
+        <th class="col-tense">接続法 過去 (-ra)</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="col-person">yo</td>
+        <td><span class="strong-form">muero</span></td>
+        <td><span class="strong-form">morí</span></td>
+        <td>moría</td>
+        <td><span class="strong-form">moriré</span></td>
+        <td>moriría</td>
+        <td><span class="strong-form">muera</span></td>
+        <td><span class="strong-form">muriera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">tú</td>
+        <td><span class="strong-form">mueres</span></td>
+        <td><span class="strong-form">moriste</span></td>
+        <td>morías</td>
+        <td><span class="strong-form">morirás</span></td>
+        <td>morirías</td>
+        <td><span class="strong-form">mueras</span></td>
+        <td><span class="strong-form">murieras</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">él/ella/Ud.</td>
+        <td><span class="strong-form">muere</span></td>
+        <td><span class="strong-form">murió</span></td>
+        <td>moría</td>
+        <td><span class="strong-form">morirá</span></td>
+        <td>moriría</td>
+        <td><span class="strong-form">muera</span></td>
+        <td><span class="strong-form">muriera</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">nosotros</td>
+        <td><span class="strong-form">morimos</span></td>
+        <td><span class="strong-form">morimos</span></td>
+        <td>moríamos</td>
+        <td><span class="strong-form">moriremos</span></td>
+        <td>moriríamos</td>
+        <td><span class="strong-form">muramos</span></td>
+        <td><span class="strong-form">muriéramos</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">vosotros</td>
+        <td><span class="strong-form">morís</span></td>
+        <td><span class="strong-form">moristeis</span></td>
+        <td>moríais</td>
+        <td><span class="strong-form">moriréis</span></td>
+        <td>moriríais</td>
+        <td><span class="strong-form">muráis</span></td>
+        <td><span class="strong-form">murierais</span></td>
+      </tr>
+
+      <tr>
+        <td class="col-person">ellos/Uds.</td>
+        <td><span class="strong-form">mueren</span></td>
+        <td><span class="strong-form">murieron</span></td>
+        <td>morían</td>
+        <td><span class="strong-form">morirán</span></td>
+        <td>morirían</td>
+        <td><span class="strong-form">mueran</span></td>
+        <td><span class="strong-form">murieran</span></td>
+      </tr>
+
+    </tbody>
+  </table>
+  <div class="verb-note">💡 ポイント: 過去分詞 muerto（超重要不規則）。o➔ue 変化。点過去3人称 murió, murieron。</div>
+</div>
+
+<div class="page-break"></div>
+<div class="section-title">3. 直説法 未来・過去未来（条件法）不規則語幹一覧表</div>
+<p style="font-size:7pt; margin:1px 0 2.5px 0;">※未来・条件法は全動詞共通語尾（未来: -é, -ás, -á, -emos, -éis, -án / 条件法: -ía, -ías, -ía, -íamos, -íais, -ían）ですが、以下の動詞は<strong>語幹そのものが変化</strong>します。</p>
+<table class="rule-table">
+  <thead>
+    <tr>
+      <th style="width:17%;">変化グループ</th>
+      <th style="width:16%;">動詞（原形）</th>
+      <th style="width:16%;">不規則語幹</th>
+      <th style="width:24%;">未来 (yo / él)</th>
+      <th>条件法 (yo / nosotros)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="4" style="text-align:center; font-weight:bold; background:#eef2f7;">-d- 挿入型<br>(-dr-)</td>
+      <td><strong>tener</strong> (持つ)</td>
+      <td><strong>tendr-</strong></td>
+      <td>tendré / tendrá</td>
+      <td>tendría / tendríamos</td>
+    </tr>
+    <tr>
+      <td><strong>poner</strong> (置く)</td>
+      <td><strong>pondr-</strong></td>
+      <td>pondré / pondrá</td>
+      <td>pondría / pondríamos</td>
+    </tr>
+    <tr>
+      <td><strong>salir</strong> (出る)</td>
+      <td><strong>saldr-</strong></td>
+      <td>saldré / saldrá</td>
+      <td>saldría / saldríamos</td>
+    </tr>
+    <tr>
+      <td><strong>venir</strong> (来る)</td>
+      <td><strong>vendr-</strong></td>
+      <td>vendré / vendrá</td>
+      <td>vendría / vendríamos</td>
+    </tr>
+    <tr>
+      <td rowspan="3" style="text-align:center; font-weight:bold; background:#f4f0ec;">母音脱落型<br>(-r-)</td>
+      <td><strong>poder</strong> (できる)</td>
+      <td><strong>podr-</strong></td>
+      <td>podré / podrá</td>
+      <td>podría / podríamos (¿Podría...?)</td>
+    </tr>
+    <tr>
+      <td><strong>saber</strong> (知る)</td>
+      <td><strong>sabr-</strong></td>
+      <td>sabré / sabrá</td>
+      <td>sabría / sabríamos</td>
+    </tr>
+    <tr>
+      <td><strong>haber</strong> (ある/完了)</td>
+      <td><strong>habr-</strong></td>
+      <td>habré / habrá</td>
+      <td>habría / habríamos</td>
+    </tr>
+    <tr>
+      <td rowspan="2" style="text-align:center; font-weight:bold; background:#f7eeed;">語幹短縮型</td>
+      <td><strong>hacer</strong> (する/作る)</td>
+      <td><strong>har-</strong></td>
+      <td>haré / hará</td>
+      <td>haría / haríamos</td>
+    </tr>
+    <tr>
+      <td><strong>decir</strong> (言う)</td>
+      <td><strong>dir-</strong></td>
+      <td>diré / dirá</td>
+      <td>diría / diríamos</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="group-box" style="margin-top:4px;">
+  <div class="section-title">4. 点過去（Pretérito Indefinido）特殊語幹不規則動詞 一覧表</div>
+  <p style="font-size:7pt; margin:1px 0 2.5px 0;">※人称語尾が共通して <strong>-e, -iste, -o, -imos, -isteis, -ieron</strong>（※J系は -eron）となり、<strong>1人称・3人称単数にアクセントが付きません</strong>。</p>
+  <table class="rule-table">
+    <thead>
+      <tr>
+        <th style="width:12%;">語幹タイプ</th>
+        <th style="width:14%;">動詞（原形）</th>
+        <th style="width:12%;">不規則語幹</th>
+        <th style="width:14%;">1人称単数 (yo)</th>
+        <th style="width:14%;">3人称単数 (él)</th>
+        <th style="width:16%;">3人称複数 (ellos)</th>
+        <th>備考・特記事項</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="6" style="text-align:center; font-weight:bold; background:#eef2f7;">U 語幹グループ</td>
+        <td><strong>tener</strong></td>
+        <td><strong>tuv-</strong></td>
+        <td>tuve</td>
+        <td>tuvo</td>
+        <td>tuvieron</td>
+        <td>最頻出（tuv-）</td>
+      </tr>
+      <tr>
+        <td><strong>estar</strong></td>
+        <td><strong>estuv-</strong></td>
+        <td>estuve</td>
+        <td>estuvo</td>
+        <td>estuvieron</td>
+        <td>tener と完全同型</td>
+      </tr>
+      <tr>
+        <td><strong>poder</strong></td>
+        <td><strong>pud-</strong></td>
+        <td>pude</td>
+        <td>pudo</td>
+        <td>pudieron</td>
+        <td>o ➔ u</td>
+      </tr>
+      <tr>
+        <td><strong>poner</strong></td>
+        <td><strong>pus-</strong></td>
+        <td>puse</td>
+        <td>puso</td>
+        <td>pusieron</td>
+        <td>n ➔ s</td>
+      </tr>
+      <tr>
+        <td><strong>saber</strong></td>
+        <td><strong>sup-</strong></td>
+        <td>supe</td>
+        <td>supo</td>
+        <td>supieron</td>
+        <td>点過去:「知った（知らされた）」</td>
+      </tr>
+      <tr>
+        <td><strong>haber</strong></td>
+        <td><strong>hub-</strong></td>
+        <td>hube</td>
+        <td><strong>hubo</strong></td>
+        <td>hubieron</td>
+        <td>存在表現: hubo（〜があった）</td>
+      </tr>
+      <tr>
+        <td rowspan="3" style="text-align:center; font-weight:bold; background:#f4f0ec;">I 語幹グループ</td>
+        <td><strong>hacer</strong></td>
+        <td><strong>hic-</strong></td>
+        <td>hice</td>
+        <td><strong>hizo</strong></td>
+        <td>hicieron</td>
+        <td>3人称単数は c ➔ z（hizo）</td>
+      </tr>
+      <tr>
+        <td><strong>querer</strong></td>
+        <td><strong>quis-</strong></td>
+        <td>quise</td>
+        <td>quiso</td>
+        <td>quisieron</td>
+        <td>点過去否定:「どうしても嫌だった」</td>
+      </tr>
+      <tr>
+        <td><strong>venir</strong></td>
+        <td><strong>vin-</strong></td>
+        <td>vine</td>
+        <td>vino</td>
+        <td>vinieron</td>
+        <td>e ➔ i</td>
+      </tr>
+      <tr>
+        <td rowspan="3" style="text-align:center; font-weight:bold; background:#f7eeed;">J 語幹グループ<br><span style="font-size:6.3pt; color:#c00;">※3複は -eron</span></td>
+        <td><strong>decir</strong></td>
+        <td><strong>dij-</strong></td>
+        <td>dije</td>
+        <td>dijo</td>
+        <td><strong>dijeron</strong></td>
+        <td>dijieron ではなく dijeron</td>
+      </tr>
+      <tr>
+        <td><strong>traer</strong></td>
+        <td><strong>traj-</strong></td>
+        <td>traje</td>
+        <td>trajo</td>
+        <td><strong>trajeron</strong></td>
+        <td>trajeron（i が脱落）</td>
+      </tr>
+      <tr>
+        <td><strong>conducir</strong></td>
+        <td><strong>conduj-</strong></td>
+        <td>conduje</td>
+        <td>condujo</td>
+        <td><strong>condujeron</strong></td>
+        <td>-ducir 変化動詞共通（traducir等）</td>
+      </tr>
+      <tr>
+        <td rowspan="3" style="text-align:center; font-weight:bold; background:#e8f4ec;">完全不規則</td>
+        <td><strong>ser / ir</strong></td>
+        <td>—</td>
+        <td><strong>fui</strong></td>
+        <td><strong>fue</strong></td>
+        <td><strong>fueron</strong></td>
+        <td>ser と ir は点過去が完全に同一</td>
+      </tr>
+      <tr>
+        <td><strong>dar</strong></td>
+        <td>—</td>
+        <td><strong>di</strong></td>
+        <td><strong>dio</strong></td>
+        <td>dieron</td>
+        <td>アクセント記号なし（1音節）</td>
+      </tr>
+      <tr>
+        <td><strong>ver</strong></td>
+        <td>—</td>
+        <td><strong>vi</strong></td>
+        <td><strong>vio</strong></td>
+        <td>vieron</td>
+        <td>アクセント記号なし（1音節）</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="group-box" style="margin-top:4px;">
+  <div class="section-title">5. 1人称単数（yo）不規則動詞 ＆ 接続法現在連動表</div>
+  <p style="font-size:7pt; margin:1px 0 2.5px 0;">※直説法現在 1人称単数（yo）の語尾から -o を取った語幹が、そのまま<strong>接続法現在の全人称の語幹</strong>になります。</p>
+  <table class="rule-table">
+    <thead>
+      <tr>
+        <th style="width:13%;">型</th>
+        <th style="width:14%;">動詞（原形）</th>
+        <th style="width:14%;">直説法 現在 (yo)</th>
+        <th style="width:18%;">接続法 現在 (yo / él)</th>
+        <th style="width:20%;">接続法 現在 (nosotros)</th>
+        <th>派生動詞・特記事項</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td rowspan="7" style="text-align:center; font-weight:bold;">-go 型</td>
+        <td><strong>tener</strong></td>
+        <td>ten<strong>go</strong></td>
+        <td>ten<strong>ga</strong></td>
+        <td>tengamos</td>
+        <td>obtener, mantener</td>
+      </tr>
+      <tr>
+        <td><strong>poner</strong></td>
+        <td>pon<strong>go</strong></td>
+        <td>pon<strong>ga</strong></td>
+        <td>pongamos</td>
+        <td>proponer, suponer</td>
+      </tr>
+      <tr>
+        <td><strong>hacer</strong></td>
+        <td>ha<strong>go</strong></td>
+        <td>ha<strong>ga</strong></td>
+        <td>hagamos</td>
+        <td>deshacer</td>
+      </tr>
+      <tr>
+        <td><strong>salir</strong></td>
+        <td>sal<strong>go</strong></td>
+        <td>sal<strong>ga</strong></td>
+        <td>salgamos</td>
+        <td>sobresalir</td>
+      </tr>
+      <tr>
+        <td><strong>venir</strong></td>
+        <td>ven<strong>go</strong></td>
+        <td>ven<strong>ga</strong></td>
+        <td>vengamos</td>
+        <td>convenir</td>
+      </tr>
+      <tr>
+        <td><strong>decir</strong></td>
+        <td>di<strong>go</strong></td>
+        <td>di<strong>ga</strong></td>
+        <td>digamos</td>
+        <td>predecir</td>
+      </tr>
+      <tr>
+        <td><strong>traer</strong></td>
+        <td>trai<strong>go</strong></td>
+        <td>trai<strong>ga</strong></td>
+        <td>traigamos</td>
+        <td>atraer</td>
+      </tr>
+      <tr>
+        <td rowspan="3" style="text-align:center; font-weight:bold;">-zco 型<br><span style="font-size:6.3pt;">(-cer / -cir)</span></td>
+        <td><strong>conocer</strong></td>
+        <td>conoz<strong>co</strong></td>
+        <td>conoz<strong>ca</strong></td>
+        <td>conozcamos</td>
+        <td>reconocer</td>
+      </tr>
+      <tr>
+        <td><strong>conducir</strong></td>
+        <td>conduz<strong>co</strong></td>
+        <td>conduz<strong>ca</strong></td>
+        <td>conduzcamos</td>
+        <td>traducir, producir</td>
+      </tr>
+      <tr>
+        <td><strong>parecer</strong></td>
+        <td>parez<strong>co</strong></td>
+        <td>parez<strong>ca</strong></td>
+        <td>parezcamos</td>
+        <td>desaparecer</td>
+      </tr>
+      <tr>
+        <td rowspan="2" style="text-align:center; font-weight:bold;">完全不規則</td>
+        <td><strong>saber</strong></td>
+        <td><strong>sé</strong></td>
+        <td><strong>sepa</strong></td>
+        <td>sepamos</td>
+        <td>接続法は sep- 語幹</td>
+      </tr>
+      <tr>
+        <td><strong>ver</strong></td>
+        <td><strong>veo</strong></td>
+        <td><strong>vea</strong></td>
+        <td>veamos</td>
+        <td>直説法現在 yo は veo</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="page-break"></div>
+<div class="section-title">6. 語幹母音変化動詞（Cambio Vocálico）パターン一覧表</div>
+<p style="font-size:7pt; margin:1px 0 2.5px 0;">※直説法現在において、強勢が置かれる人称（yo, tú, él, ellos）で語幹母音が変化します（<strong>nosotros, vosotros は不変化</strong>）。</p>
+<table class="rule-table">
+  <thead>
+    <tr>
+      <th style="width:14%;">パターン</th>
+      <th style="width:17%;">動詞（原形）</th>
+      <th style="width:20%;">直説法 現在 (yo / nosotros)</th>
+      <th style="width:20%;">点過去 (él / ellos)</th>
+      <th>同型変化の代表動詞</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="3" style="text-align:center; font-weight:bold;">e ➔ ie</td>
+      <td><strong>pensar</strong> (考える)</td>
+      <td>p<strong>ie</strong>nso / pensamos</td>
+      <td>pensó / pensaron (規則)</td>
+      <td>empezar, comenzar, cerrar</td>
+    </tr>
+    <tr>
+      <td><strong>querer</strong> (欲しい/愛する)</td>
+      <td>q<strong>uie</strong>ro / queremos</td>
+      <td>quiso / quisieron (特殊)</td>
+      <td>entender, perder</td>
+    </tr>
+    <tr>
+      <td><strong>sentir</strong> (感じる)</td>
+      <td>s<strong>ie</strong>nto / sentimos</td>
+      <td>s<strong>i</strong>ntió / s<strong>i</strong>ntieron</td>
+      <td>preferir, mentir (-ir動詞は点過去3人称も変化)</td>
+    </tr>
+    <tr>
+      <td rowspan="3" style="text-align:center; font-weight:bold;">o ➔ ue</td>
+      <td><strong>poder</strong> (できる)</td>
+      <td>p<strong>ue</strong>do / podemos</td>
+      <td>pudo / pudieron (特殊)</td>
+      <td>volver, contar, recordar, costar</td>
+    </tr>
+    <tr>
+      <td><strong>dormir</strong> (眠る)</td>
+      <td>d<strong>ue</strong>rmo / dormimos</td>
+      <td>d<strong>u</strong>rmió / d<strong>u</strong>rmieron</td>
+      <td>morir (-ir動詞は点過去3人称で o➔u 変化)</td>
+    </tr>
+    <tr>
+      <td><strong>jugar</strong> (遊ぶ/スポーツ)</td>
+      <td>j<strong>ue</strong>go / jugamos</td>
+      <td>jugó / jugaron (規則)</td>
+      <td>※ u ➔ ue に変化する唯一の動詞</td>
+    </tr>
+    <tr>
+      <td rowspan="2" style="text-align:center; font-weight:bold;">e ➔ i</td>
+      <td><strong>pedir</strong> (頼む/注文する)</td>
+      <td>p<strong>i</strong>do / pedimos</td>
+      <td>p<strong>i</strong>dió / p<strong>i</strong>dieron</td>
+      <td>servir, repetir, vestir</td>
+    </tr>
+    <tr>
+      <td><strong>seguir</strong> (続ける)</td>
+      <td>s<strong>i</strong>go / seguimos</td>
+      <td>s<strong>i</strong>guió / s<strong>i</strong>guieron</td>
+      <td>conseguir, perseguir (現在分詞: siguiendo)</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="group-box" style="margin-top:4px;">
+  <div class="section-title">7. 不規則過去分詞（Participio Irregular）一覧表</div>
+  <table class="rule-table">
+    <thead>
+      <tr>
+        <th style="width:20%;">動詞（原形）</th>
+        <th style="width:20%;">過去分詞</th>
+        <th style="width:22%;">日本語の意味</th>
+        <th>例文・重要コロケーション</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>abrir</strong> (開ける)</td>
+        <td><strong>abierto</strong></td>
+        <td>開いた・開かれた</td>
+        <td>La puerta está abierta.（ドアが開いている）</td>
+      </tr>
+      <tr>
+        <td><strong>decir</strong> (言う)</td>
+        <td><strong>dicho</strong></td>
+        <td>言われた・言った</td>
+        <td>Ya te lo he dicho.（もう君に言ったよ）</td>
+      </tr>
+      <tr>
+        <td><strong>escribir</strong> (書く)</td>
+        <td><strong>escrito</strong></td>
+        <td>書かれた</td>
+        <td>He escrito una carta.（手紙を書いた）</td>
+      </tr>
+      <tr>
+        <td><strong>hacer</strong> (する/作る)</td>
+        <td><strong>hecho</strong></td>
+        <td>された・作られた</td>
+        <td>¿Qué has hecho?（何をしたの？）</td>
+      </tr>
+      <tr>
+        <td><strong>morir</strong> (死ぬ)</td>
+        <td><strong>muerto</strong></td>
+        <td>死んだ・亡くなった</td>
+        <td>El autor ha muerto.（著者は亡くなった）</td>
+      </tr>
+      <tr>
+        <td><strong>poner</strong> (置く/着る)</td>
+        <td><strong>puesto</strong></td>
+        <td>置かれた・着た</td>
+        <td>Me he puesto el abrigo.（コートを着た）</td>
+      </tr>
+      <tr>
+        <td><strong>romper</strong> (壊す/割る)</td>
+        <td><strong>roto</strong></td>
+        <td>壊れた・割れた</td>
+        <td>El reloj está roto.（時計が壊れている）</td>
+      </tr>
+      <tr>
+        <td><strong>ver</strong> (見る)</td>
+        <td><strong>visto</strong></td>
+        <td>見られた・見た</td>
+        <td>No he visto esa película.（その映画は見ていない）</td>
+      </tr>
+      <tr>
+        <td><strong>volver</strong> (戻る/帰る)</td>
+        <td><strong>vuelto</strong></td>
+        <td>戻った</td>
+        <td>Juan ha vuelto a México.（フアンはメキシコに戻った）</td>
+      </tr>
+      <tr>
+        <td><strong>resolver</strong> (解決する)</td>
+        <td><strong>resuelto</strong></td>
+        <td>解決された</td>
+        <td>El problema está resuelto.（問題は解決した）</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="group-box" style="margin-top:4px;">
+  <div class="section-title">8. 完全不規則な接続法現在 TOP 6（※直説法現在 yo が -o で終わらない動詞）</div>
+  <table class="rule-table">
+    <thead>
+      <tr>
+        <th style="width:14%;">動詞</th>
+        <th style="width:14%;">yo</th>
+        <th style="width:14%;">tú</th>
+        <th style="width:16%;">él / ella / Ud.</th>
+        <th style="width:15%;">nosotros</th>
+        <th style="width:13%;">vosotros</th>
+        <th>ellos / Uds.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>ser</strong></td>
+        <td>sea</td>
+        <td>seas</td>
+        <td>sea</td>
+        <td>seamos</td>
+        <td>seáis</td>
+        <td>sean</td>
+      </tr>
+      <tr>
+        <td><strong>estar</strong></td>
+        <td>esté</td>
+        <td>estés</td>
+        <td>esté</td>
+        <td>estemos</td>
+        <td>estéis</td>
+        <td>estén</td>
+      </tr>
+      <tr>
+        <td><strong>ir</strong></td>
+        <td>vaya</td>
+        <td>vayas</td>
+        <td>vaya</td>
+        <td>vayamos</td>
+        <td>vayáis</td>
+        <td>vayan</td>
+      </tr>
+      <tr>
+        <td><strong>haber</strong></td>
+        <td>haya</td>
+        <td>hayas</td>
+        <td>haya</td>
+        <td>hayamos</td>
+        <td>hayáis</td>
+        <td>hayan</td>
+      </tr>
+      <tr>
+        <td><strong>saber</strong></td>
+        <td>sepa</td>
+        <td>sepas</td>
+        <td>sepa</td>
+        <td>sepamos</td>
+        <td>sepáis</td>
+        <td>sepan</td>
+      </tr>
+      <tr>
+        <td><strong>dar</strong></td>
+        <td>dé</td>
+        <td>des</td>
+        <td>dé</td>
+        <td>demos</td>
+        <td>deis</td>
+        <td>den</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="group-box" style="margin-top:4px;">
+  <div class="section-title">9. 再帰動詞（Verbos Reflexivos）の基本活用ルール</div>
+  <table class="rule-table">
+    <thead>
+      <tr>
+        <th style="width:12%;">人称</th>
+        <th style="width:12%;">再帰代名詞</th>
+        <th style="width:23%;">直説法現在（例: llamarse）</th>
+        <th style="width:23%;">点過去（例: levantarse）</th>
+        <th>DELE頻出の代表的再帰動詞</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="text-align:center; font-weight:bold;">yo</td>
+        <td style="text-align:center;"><strong>me</strong></td>
+        <td><strong>me</strong> llamo (私は〜という名前)</td>
+        <td><strong>me</strong> levanté (私は起きた)</td>
+        <td rowspan="6" style="vertical-align:middle; font-size:6.7pt; line-height:1.2;">
+          ・<strong>llamarse</strong>（〜という名前である） ｜ ・<strong>levantarse</strong>（起床する）<br>
+          ・<strong>acostarse</strong> (o➔ue)（就寝する） ｜ ・<strong>ducharse / bañarse</strong>（シャワーを浴びる）<br>
+          ・<strong>vestirse</strong> (e➔i)（服を着る） ｜ ・<strong>quedarse</strong>（留まる・滞在する）<br>
+          ・<strong>sentirse</strong> (e➔ie)（気分が〜である） ｜ ・<strong>irse</strong>（立ち去る・帰る）<br>
+          ・<strong>acordarse de</strong>（〜を覚えている） ｜ ・<strong>olvidarse de</strong>（〜を忘れる）
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align:center; font-weight:bold;">tú</td>
+        <td style="text-align:center;"><strong>te</strong></td>
+        <td><strong>te</strong> llamas</td>
+        <td><strong>te</strong> levantaste</td>
+      </tr>
+      <tr>
+        <td style="text-align:center; font-weight:bold;">él / ella / Ud.</td>
+        <td style="text-align:center;"><strong>se</strong></td>
+        <td><strong>se</strong> llama</td>
+        <td><strong>se</strong> levantó</td>
+      </tr>
+      <tr>
+        <td style="text-align:center; font-weight:bold;">nosotros</td>
+        <td style="text-align:center;"><strong>nos</strong></td>
+        <td><strong>nos</strong> llamamos</td>
+        <td><strong>nos</strong> levantamos</td>
+      </tr>
+      <tr>
+        <td style="text-align:center; font-weight:bold;">vosotros</td>
+        <td style="text-align:center;"><strong>os</strong></td>
+        <td><strong>os</strong> llamáis</td>
+        <td><strong>os</strong> levantasteis</td>
+      </tr>
+      <tr>
+        <td style="text-align:center; font-weight:bold;">ellos / Uds.</td>
+        <td style="text-align:center;"><strong>se</strong></td>
+        <td><strong>se</strong> llaman</td>
+        <td><strong>se</strong> levantaron</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="page-break"></div>
+<div class="section-title">10. DELE頻出 重要動詞 50選 クイック活用対照表（全50語 完全一覧）</div>
+<table class="v50-table">
+  <thead>
+    <tr>
+      <th style="width:3%;">#</th>
+      <th style="width:11%;">動詞（原形）</th>
+      <th style="width:18%;">主な意味</th>
+      <th style="width:14%;">現在 (yo / él)</th>
+      <th style="width:14%;">点過去 (yo / él)</th>
+      <th style="width:14%;">接続法現在 (yo/él)</th>
+      <th style="width:10%;">過去分詞</th>
+      <th>重要構文・コロケーション</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr>
+      <td style="text-align:center;">1</td>
+      <td><strong>acabar</strong></td>
+      <td>終える・たった今〜した</td>
+      <td>acabo / acaba</td>
+      <td>acabé / acabó</td>
+      <td>acabe / acabe</td>
+      <td>acabado</td>
+      <td>acabar de + inf（〜したばかり）</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">2</td>
+      <td><strong>almorzar</strong></td>
+      <td>昼食をとる</td>
+      <td>almuerzo / almuerza</td>
+      <td>almorcé / almorzó</td>
+      <td>almuerce / almuerce</td>
+      <td>almorzado</td>
+      <td>o➔ue 母音変化</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">3</td>
+      <td><strong>aprender</strong></td>
+      <td>学ぶ・習得する</td>
+      <td>aprendo / aprende</td>
+      <td>aprendí / aprendió</td>
+      <td>aprenda / aprenda</td>
+      <td>aprendido</td>
+      <td>aprender a + inf</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">4</td>
+      <td><strong>ayudar</strong></td>
+      <td>助ける・手伝う</td>
+      <td>ayudo / ayuda</td>
+      <td>ayudé / ayudó</td>
+      <td>ayude / ayude</td>
+      <td>ayudado</td>
+      <td>ayudar a + 人 + a + inf</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">5</td>
+      <td><strong>buscar</strong></td>
+      <td>探す</td>
+      <td>busco / busca</td>
+      <td>busqué / buscó</td>
+      <td>busque / busque</td>
+      <td>buscado</td>
+      <td>1人称点過去 c➔qu</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">6</td>
+      <td><strong>cambiar</strong></td>
+      <td>変える・変わる</td>
+      <td>cambio / cambia</td>
+      <td>cambié / cambió</td>
+      <td>cambie / cambie</td>
+      <td>cambiado</td>
+      <td>cambiar de tren（乗り換え）</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">7</td>
+      <td><strong>comenzar</strong></td>
+      <td>始める</td>
+      <td>comienzo / comienza</td>
+      <td>comencé / comenzó</td>
+      <td>comience / comience</td>
+      <td>comenzado</td>
+      <td>comenzar a + inf (e➔ie)</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">8</td>
+      <td><strong>comprender</strong></td>
+      <td>理解する</td>
+      <td>comprendo / comprende</td>
+      <td>comprendí / comprendió</td>
+      <td>comprenda / comprenda</td>
+      <td>comprendido</td>
+      <td>= entender</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">9</td>
+      <td><strong>conocer</strong></td>
+      <td>知っている・知り合う</td>
+      <td>conozco / conoce</td>
+      <td>conocí / conoció</td>
+      <td>conozca / conozca</td>
+      <td>conocido</td>
+      <td>点過去: 知り合った</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">10</td>
+      <td><strong>conseguir</strong></td>
+      <td>得る・成功する</td>
+      <td>consigo / consigue</td>
+      <td>conseguí / consiguió</td>
+      <td>consiga / consiga</td>
+      <td>conseguido</td>
+      <td>conseguir + inf (e➔i)</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">11</td>
+      <td><strong>creer</strong></td>
+      <td>信じる・〜と思う</td>
+      <td>creo / cree</td>
+      <td>creí / creyó</td>
+      <td>crea / crea</td>
+      <td>creído</td>
+      <td>No creo que + 接続法</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">12</td>
+      <td><strong>deber</strong></td>
+      <td>〜すべき・義務がある</td>
+      <td>debo / debe</td>
+      <td>debí / debió</td>
+      <td>deba / deba</td>
+      <td>debido</td>
+      <td>deber + inf (義務)</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">13</td>
+      <td><strong>dejar</strong></td>
+      <td>残す・やめる</td>
+      <td>dejo / deja</td>
+      <td>dejé / dejó</td>
+      <td>deje / deje</td>
+      <td>dejado</td>
+      <td>dejar de + inf（〜をやめる）</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">14</td>
+      <td><strong>doler</strong></td>
+      <td>痛む</td>
+      <td>me duele / duelen</td>
+      <td>me dolió / dolieron</td>
+      <td>me duela / duelan</td>
+      <td>dolido</td>
+      <td>gustar型（間接目的語+duele）</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">15</td>
+      <td><strong>dormir</strong></td>
+      <td>眠る</td>
+      <td>duermo / duerme</td>
+      <td>dormí / durmió</td>
+      <td>duerma / duerma</td>
+      <td>dormido</td>
+      <td>点過去3人称: durmió</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">16</td>
+      <td><strong>empezar</strong></td>
+      <td>始める</td>
+      <td>empiezo / empieza</td>
+      <td>empecé / empezó</td>
+      <td>empiece / empiece</td>
+      <td>empezado</td>
+      <td>empezar a + inf</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">17</td>
+      <td><strong>encontrar</strong></td>
+      <td>見つける・会う</td>
+      <td>encuentro / encuentra</td>
+      <td>encontré / encontró</td>
+      <td>encuentre / encuentre</td>
+      <td>encontrado</td>
+      <td>encontrarse con（偶然会う）</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">18</td>
+      <td><strong>entender</strong></td>
+      <td>理解する</td>
+      <td>entiendo / entiende</td>
+      <td>entendí / entendió</td>
+      <td>entienda / entienda</td>
+      <td>entendido</td>
+      <td>e➔ie 母音変化</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">19</td>
+      <td><strong>entrar</strong></td>
+      <td>入る</td>
+      <td>entro / entra</td>
+      <td>entré / entró</td>
+      <td>entre / entre</td>
+      <td>entrado</td>
+      <td>entrar en（〜に入る）</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">20</td>
+      <td><strong>esperar</strong></td>
+      <td>待つ・望む</td>
+      <td>espero / espera</td>
+      <td>esperé / esperó</td>
+      <td>espere / espere</td>
+      <td>esperado</td>
+      <td>Espero que + 接続法</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">21</td>
+      <td><strong>explicar</strong></td>
+      <td>説明する</td>
+      <td>explico / explica</td>
+      <td>expliqué / explicó</td>
+      <td>explique / explique</td>
+      <td>explicado</td>
+      <td>c➔qu (点過去1人称)</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">22</td>
+      <td><strong>gustar</strong></td>
+      <td>好きである・気に入る</td>
+      <td>me gusta / gustan</td>
+      <td>me gustó / gustaron</td>
+      <td>me guste / gusten</td>
+      <td>gustado</td>
+      <td>逆格構文（A mí me gusta）</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">23</td>
+      <td><strong>intentar</strong></td>
+      <td>試みる・やってみる</td>
+      <td>intento / intenta</td>
+      <td>intenté / intentó</td>
+      <td>intente / intente</td>
+      <td>intentado</td>
+      <td>intentar + inf</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">24</td>
+      <td><strong>invitar</strong></td>
+      <td>招待する・おごる</td>
+      <td>invito / invita</td>
+      <td>invité / invitó</td>
+      <td>invite / invite</td>
+      <td>invitado</td>
+      <td>invitar a + 人 + a + inf</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">25</td>
+      <td><strong>jugar</strong></td>
+      <td>遊ぶ・スポーツする</td>
+      <td>juego / juega</td>
+      <td>jugué / jugó</td>
+      <td>juegue / juegue</td>
+      <td>jugado</td>
+      <td>jugar a + 競技 (u➔ue)</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">26</td>
+      <td><strong>leer</strong></td>
+      <td>読む</td>
+      <td>leo / lee</td>
+      <td>leí / leyó</td>
+      <td>lea / lea</td>
+      <td>leído</td>
+      <td>点過去3人称: leyó, leyeron</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">27</td>
+      <td><strong>llamar</strong></td>
+      <td>呼ぶ / 名前は〜</td>
+      <td>llamo / llama</td>
+      <td>llamé / llamó</td>
+      <td>llame / llame</td>
+      <td>llamado</td>
+      <td>¿Cómo te llamas?</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">28</td>
+      <td><strong>llegar</strong></td>
+      <td>着く・到達する</td>
+      <td>llego / llega</td>
+      <td>llegué / llegó</td>
+      <td>llegue / llegue</td>
+      <td>llegado</td>
+      <td>llegar a（〜に到着）</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">29</td>
+      <td><strong>llevar</strong></td>
+      <td>連れていく・身につける</td>
+      <td>llevo / lleva</td>
+      <td>llevé / llevó</td>
+      <td>lleve / lleve</td>
+      <td>llevado</td>
+      <td>llevar + 期間 + 現在分詞</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">30</td>
+      <td><strong>mandar</strong></td>
+      <td>送る・命じる</td>
+      <td>mando / manda</td>
+      <td>mandé / mandó</td>
+      <td>mande / mande</td>
+      <td>mandado</td>
+      <td>= enviar</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">31</td>
+      <td><strong>mirar</strong></td>
+      <td>見る・眺める</td>
+      <td>miro / mira</td>
+      <td>miré / miró</td>
+      <td>mire / mire</td>
+      <td>mirado</td>
+      <td>¡Mira!（ほら見て）</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">32</td>
+      <td><strong>necesitar</strong></td>
+      <td>必要とする</td>
+      <td>necesito / necesita</td>
+      <td>necesité / necesitó</td>
+      <td>necesite / necesite</td>
+      <td>necesitado</td>
+      <td>necesitar + inf</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">33</td>
+      <td><strong>oír</strong></td>
+      <td>聞こえる・聞く</td>
+      <td>oigo / oye</td>
+      <td>oí / oyó</td>
+      <td>oiga / oiga</td>
+      <td>oído</td>
+      <td>oigo, oyes, oye, oímos, oís, oyen</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">34</td>
+      <td><strong>olvidar</strong></td>
+      <td>忘れる</td>
+      <td>olvido / olvida</td>
+      <td>olvidé / olvidó</td>
+      <td>olvide / olvide</td>
+      <td>olvidado</td>
+      <td>olvidarse de</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">35</td>
+      <td><strong>pagar</strong></td>
+      <td>支払う</td>
+      <td>pago / paga</td>
+      <td>pagué / pagó</td>
+      <td>pague / pague</td>
+      <td>pagado</td>
+      <td>g➔gu (点過去1人称)</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">36</td>
+      <td><strong>parecer</strong></td>
+      <td>思われる</td>
+      <td>parezco / parece</td>
+      <td>pareció / parecieron</td>
+      <td>parezca / parezca</td>
+      <td>parecido</td>
+      <td>me parece que + 直説法</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">37</td>
+      <td><strong>pasar</strong></td>
+      <td>通る・過ごす・起きる</td>
+      <td>paso / pasa</td>
+      <td>pasé / pasó</td>
+      <td>pase / pase</td>
+      <td>pasado</td>
+      <td>¿Qué pasa? / pasarlo bien</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">38</td>
+      <td><strong>pedir</strong></td>
+      <td>頼む・注文する</td>
+      <td>pido / pide</td>
+      <td>pedí / pidió</td>
+      <td>pida / pida</td>
+      <td>pedido</td>
+      <td>pedir que + 接続法</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">39</td>
+      <td><strong>pensar</strong></td>
+      <td>考える・つもり</td>
+      <td>pienso / piensa</td>
+      <td>pensé / pensó</td>
+      <td>piense / piense</td>
+      <td>pensado</td>
+      <td>pensar en / pensar + inf</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">40</td>
+      <td><strong>perder</strong></td>
+      <td>失う・乗り遅れる</td>
+      <td>pierdo / pierde</td>
+      <td>perdí / perdió</td>
+      <td>pierda / pierda</td>
+      <td>perdido</td>
+      <td>e➔ie / perder el変</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">41</td>
+      <td><strong>preferir</strong></td>
+      <td>好む</td>
+      <td>prefiero / prefiere</td>
+      <td>preferí / prefirió</td>
+      <td>prefiera / prefiera</td>
+      <td>preferido</td>
+      <td>Prefiero que + 接続法</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">42</td>
+      <td><strong>proponer</strong></td>
+      <td>提案する</td>
+      <td>propongo / propone</td>
+      <td>propuse / propuso</td>
+      <td>proponga / proponga</td>
+      <td>propuesto</td>
+      <td>poner型不規則</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">43</td>
+      <td><strong>quedar</strong></td>
+      <td>残る・待ち合わせる</td>
+      <td>quedo / queda</td>
+      <td>quedé / quedó</td>
+      <td>quede / quede</td>
+      <td>quedado</td>
+      <td>quedar con / quedarse</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">44</td>
+      <td><strong>recordar</strong></td>
+      <td>思い出す</td>
+      <td>recuerdo / recuerda</td>
+      <td>recordé / recordó</td>
+      <td>recuerde / recuerde</td>
+      <td>recordado</td>
+      <td>o➔ue 母音変化</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">45</td>
+      <td><strong>seguir</strong></td>
+      <td>続ける・従う</td>
+      <td>sigo / sigue</td>
+      <td>seguí / siguió</td>
+      <td>siga / siga</td>
+      <td>seguido</td>
+      <td>seguir + 現在分詞</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">46</td>
+      <td><strong>sentir</strong></td>
+      <td>感じる・残念に思う</td>
+      <td>siento / siente</td>
+      <td>sentí / sintió</td>
+      <td>sienta / sienta</td>
+      <td>sentido</td>
+      <td>Lo siento (ごめんなさい)</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">47</td>
+      <td><strong>tardar</strong></td>
+      <td>（時間が）かかる</td>
+      <td>tardo / tarda</td>
+      <td>tardé / tardó</td>
+      <td>tarde / tarde</td>
+      <td>tardado</td>
+      <td>tardar + 時間 + en + inf</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">48</td>
+      <td><strong>tocar</strong></td>
+      <td>触る・演奏する</td>
+      <td>toco / toca</td>
+      <td>toqué / tocó</td>
+      <td>toque / toque</td>
+      <td>tocado</td>
+      <td>tocar la guitarra</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">49</td>
+      <td><strong>traer</strong></td>
+      <td>持ってくる</td>
+      <td>traigo / trae</td>
+      <td>traje / trajo</td>
+      <td>traiga / traiga</td>
+      <td>traído</td>
+      <td>点過去複: trajeron</td>
+    </tr>
+
+    <tr>
+      <td style="text-align:center;">50</td>
+      <td><strong>viajar</strong></td>
+      <td>旅行する</td>
+      <td>viajo / viaja</td>
+      <td>viajé / viajó</td>
+      <td>viaje / viaje</td>
+      <td>viajado</td>
+      <td>viajar por el mundo</td>
+    </tr>
+
+  </tbody>
+</table>
+</body>
+</html>
