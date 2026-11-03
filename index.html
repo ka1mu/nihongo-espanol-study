@@ -34,7 +34,7 @@ body {
 }
 header {
   text-align: center;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 .badge-portal {
   display: inline-block;
@@ -48,14 +48,14 @@ header {
   letter-spacing: 0.5px;
 }
 h1 {
-  font-size: 1.65rem;
+  font-size: 1.6rem;
   color: #0f172a;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   font-weight: 800;
 }
 .subtitle {
   color: var(--text-muted);
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   line-height: 1.4;
 }
 
@@ -63,28 +63,47 @@ h1 {
 .welcome-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 20px;
 }
 .welcome-card-es {
   background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-  border: 1px solid #86efac;
-  border-radius: 12px;
-  padding: 14px 16px;
+  border: 1.5px solid #86efac;
+  border-radius: 14px;
+  padding: 16px;
   color: #14532d;
-  font-size: 0.84rem;
-  line-height: 1.45;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
 }
 .welcome-title-es {
   font-weight: 800;
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: #166534;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.important-box-es {
+  background: #fffbeb;
+  border: 1.5px solid #f59e0b;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 10px;
+  color: #78350f;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+.important-title-es {
+  font-weight: 800;
+  color: #b45309;
   margin-bottom: 4px;
   display: flex;
   align-items: center;
   gap: 6px;
 }
+
 .welcome-card-ja {
   background: #eff6ff;
   border: 1px solid #bfdbfe;
@@ -246,14 +265,29 @@ footer a {
     <!-- Spanish Welcome for Mexican Students -->
     <div class="welcome-card-es">
       <div class="welcome-title-es">
-        <span>🇲🇽 ¡Bienvenido, estudiante de Japonés!</span>
+        <span>🇲🇽 ¡Bienvenido, estudiante de Japonés! (Aprende Kanji & Vocabulario)</span>
       </div>
       <p style="margin-bottom:6px;">
-        Para estudiar <b>Kanji</b> y <b>Vocabulario oficial JLPT (N5 & N4)</b> con pronunciación nativa, modo Quiz y ranking en vivo de tu clase, <b>toca la tarjeta verde de abajo: "Aprender Japonés (JLPT)"</b>.
+        Entra a la app con la <b>tarjeta verde de abajo: "Aprender Japonés (JLPT)"</b> para estudiar con voz nativa <b>🔊</b>, modo Quiz <b>⚡</b> y competir en el Ranking de la clase <b>🏆</b>.
       </p>
-      <div style="font-size:0.78rem;color:#166534;background:rgba(255,255,255,0.7);padding:6px 10px;border-radius:6px;margin-top:6px;display:flex;align-items:center;gap:6px;">
-        <span>📱</span>
-        <span><b>Consejo para celular:</b> En Safari o Chrome, toca <b>"Añadir a pantalla de inicio"</b> para usar la app a pantalla completa como una app real.</span>
+
+      <!-- Super Important Note on How it saves -->
+      <div class="important-box-es">
+        <div class="important-title-es">
+          <span>⚠️ ¡MUY IMPORTANTE PARA GUARDAR TUS AVANCES!</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div>
+            1. <b>Usa SIEMPRE el mismo navegador (Safari o Chrome):</b><br>
+            Tus palabras memorizadas se guardan en este navegador. <u>Si abres el link en otro navegador o dentro de WhatsApp/Instagram, tus palabras marcadas no se verán</u>.
+          </div>
+          <div style="background:white;padding:6px 10px;border-radius:6px;border:1px dashed #f59e0b;">
+            📲 <b>Recomendación para celular:</b> Toca <b>"Compartir"</b> en Safari/Chrome y selecciona <b>"Añadir a pantalla de inicio"</b>. Así no perderás nunca tus datos y abrirá en pantalla completa como una app real.
+          </div>
+          <div>
+            2. <b>Elige tu Nombre y Avatar:</b> Al abrir la app podrás poner tu apodo y elegir tu icono (🥷, 🍣, 🦊...) para aparecer en la clasificación.
+          </div>
+        </div>
       </div>
     </div>
 
@@ -263,7 +297,7 @@ footer a {
         <span>🇯🇵 スペイン語を学習される方へ</span>
       </div>
       <p>
-        DELE対策・単語暗記には、赤色のカード「<b>ターゲット1200 スペイン語版</b>」をご利用ください。ネイティブ音声、暗記マスク、全メモ日本語訳付きで快適に自習できます。
+        DELE対策・単語暗記には、赤色のカード「<b>ターゲット1200 スペイン語版</b>」をご利用ください。チェック内容はブラウザに自動保存されますので、毎回同じブラウザ（またはホーム画面追加アイコン）から開いて学習してください。
       </p>
     </div>
   </div>
@@ -284,12 +318,12 @@ footer a {
           Guía oficial interactiva para dominar Kanji y Vocabulario con audio nativo y competir con tus compañeros en tiempo real.
         </p>
         <ul class="card-features">
+          <li>🥷 <strong>Perfil y Avatar Personalizado</strong> (Configura tu personaje al entrar)</li>
           <li>🔊 <strong>Voz Nativa en un Toque</strong> (Kanji, lecturas On/Kun, vocabulario y ejemplos)</li>
           <li>⚡ <strong>Modo Quiz de 10 Preguntas</strong> (Gana puntos y sube en el ranking)</li>
           <li>🏆 <strong>Clasificación de la Clase en Vivo</strong> (Filtros por Kanji N5, N4 y Vocabulario N5, N4)</li>
           <li>🈸 <strong>400 Kanji & 1,718 Vocabulario</strong> (N5 y N4 completo con significado en español)</li>
           <li>🙈 <strong>Máscaras de Memoria</strong> (Oculta y voltea para ponerte a prueba)</li>
-          <li>🥷 <strong>Perfil de Alumno Personalizable</strong> (Elige tu avatar y apodo)</li>
         </ul>
       </div>
       <div class="btn-enter btn-japanese">🚀 Entrar a la App de Japonés →</div>
@@ -313,7 +347,7 @@ footer a {
           <li>🗣️ <strong>発音カタカナ表記</strong>（アクセント太字強調）</li>
           <li>📝 <strong>DELE対策メモ</strong>（全項目日本語訳付き）</li>
           <li>🙈 <strong>暗記マスク機能</strong>（西語/発音/意味）</li>
-          <li>✅ <strong>暗記チェック & 進捗バー</strong>（自動保存）</li>
+          <li>✅ <strong>暗記チェック & 進捗バー</strong>（ブラウザ自動保存）</li>
           <li>📂 <strong>Part別切り替え</strong>（100単語区切りで手軽に学習）</li>
         </ul>
       </div>

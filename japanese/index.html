@@ -905,13 +905,18 @@ th.col-kanji, td.col-kanji, th.col-v-word, td.col-v-word {
   </header>
 
   <!-- Welcome & Quick Spanish Guide Banner -->
-  <div class="welcome-guide-banner" style="background:linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);border:1px solid #86efac;border-radius:10px;padding:9px 12px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;box-shadow:0 1px 3px rgba(0,0,0,0.03);">
-    <div style="font-size:0.77rem;color:#14532d;line-height:1.35;">
-      <b>👋 ¡Bienvenido!</b> Marca <b>"Dominado"</b> ✅ para guardar tu avance, escucha la voz <b>🔊</b>, y compite en el <b>Quiz ⚡</b> y la <b>Clasificación 🏆</b>. Toca tu avatar arriba (🥷) para poner tu nombre.
+  <div class="welcome-guide-banner" style="background:linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);border:1.5px solid #86efac;border-radius:12px;padding:10px 12px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+    <div style="font-size:0.77rem;color:#14532d;line-height:1.4;">
+      <b>👋 ¡Bienvenido!</b> Configura tu <b>Avatar 🥷</b> y <b>Nombre</b> para el ranking. ⚠️ <b>Tip:</b> Usa siempre el <u>mismo navegador (Safari/Chrome)</u> o <u>Añade a inicio</u> para no perder tus avances.
     </div>
-    <button onclick="openGuideModal()" style="white-space:nowrap;padding:5px 9px;background:#059669;color:white;border:none;border-radius:6px;font-weight:700;font-size:0.75rem;cursor:pointer;flex-shrink:0;box-shadow:0 1px 2px rgba(0,0,0,0.1);">
-      📖 Ver Guía
-    </button>
+    <div style="display:flex;gap:5px;flex-shrink:0;">
+      <button onclick="openWelcomeModal()" style="white-space:nowrap;padding:6px 9px;background:#059669;color:white;border:none;border-radius:6px;font-weight:700;font-size:0.75rem;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.1);">
+        👤 Perfil
+      </button>
+      <button onclick="openGuideModal()" style="white-space:nowrap;padding:6px 9px;background:#ffffff;color:#166534;border:1px solid #86efac;border-radius:6px;font-weight:700;font-size:0.75rem;cursor:pointer;">
+        ❓ Guía
+      </button>
+    </div>
   </div>
 
   <!-- Quick Action Buttons -->
@@ -986,6 +991,71 @@ th.col-kanji, td.col-kanji, th.col-v-word, td.col-v-word {
 </div>
 
 <!-- ================= MODALS ================= -->
+
+<!-- 0. First-Time Welcome & Onboarding Modal -->
+<div class="modal-overlay" id="welcomeModal">
+  <div class="modal-card" style="max-width: 530px;">
+    <div class="modal-header" style="background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); color: white;">
+      <div class="modal-title" style="color: white; font-size: 1.15rem; gap: 8px;">
+        👋 ¡Bienvenido a la App de Japonés!
+      </div>
+      <button class="btn-close-modal" style="color: white;" onclick="closeModal('welcomeModal')">×</button>
+    </div>
+    <div class="modal-body" style="padding: 16px; display: flex; flex-direction: column; gap: 14px;">
+      
+      <!-- Paso 1: Configurar Perfil -->
+      <div style="background: #eff6ff; border: 1.5px solid #bfdbfe; border-radius: 12px; padding: 14px;">
+        <div style="font-weight: 800; font-size: 0.95rem; color: #1e40af; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+          <span>1. 👤 ¡Elige tu Nombre y Avatar!</span>
+        </div>
+        <p style="font-size: 0.78rem; color: #475569; margin-bottom: 8px;">
+          Tu nombre y avatar aparecerán en la <b>Clasificación de la clase (Ranking)</b> para competir con tus compañeros:
+        </p>
+        <input type="text" id="welcomeStudentName" placeholder="Escribe tu Nombre o Apodo (Ej: Carlos, Sofía...)" style="width: 100%; padding: 10px 12px; border: 1.5px solid #93c5fd; border-radius: 8px; font-size: 0.95rem; outline: none; margin-bottom: 8px; font-weight: 600;">
+        <div style="font-size: 0.76rem; font-weight: 700; color: #334155; margin-bottom: 4px;">Toca un icono para elegir tu avatar:</div>
+        <div class="avatar-grid" id="welcomeAvatarGrid">
+          <!-- Avatars injected by JS -->
+        </div>
+      </div>
+
+      <!-- Paso 2: Advertencia del navegador y almacenamiento -->
+      <div style="background: #fffbeb; border: 1.5px solid #f59e0b; border-radius: 12px; padding: 14px;">
+        <div style="font-weight: 800; font-size: 0.95rem; color: #b45309; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+          <span>2. ⚠️ ¡SÚPER IMPORTANTE! ¿Dónde se guarda?</span>
+        </div>
+        <div style="font-size: 0.8rem; color: #78350f; line-height: 1.5; display: flex; flex-direction: column; gap: 8px;">
+          <div>
+            🌐 <b>Usa SIEMPRE el mismo navegador (Safari o Chrome):</b><br>
+            Tus palabras memorizadas se guardan en la memoria de este navegador. <u>Si cambias de navegador o abres el enlace desde WhatsApp / Instagram, tus palabras marcadas no se verán</u>.
+          </div>
+          <div style="background: white; border: 1.5px dashed #f59e0b; padding: 9px 12px; border-radius: 8px;">
+            📲 <b>El mejor truco (Instalar en tu celular):</b><br>
+            Toca el botón <b>Compartir</b> de tu navegador y selecciona <b>"Añadir a pantalla de inicio"</b>. ¡Así la tendrás como app real, en pantalla completa y nunca perderás tus datos!
+          </div>
+        </div>
+      </div>
+
+      <!-- Paso 3: Cómo estudiar -->
+      <div style="background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 12px;">
+        <div style="font-weight: 800; font-size: 0.9rem; color: #334155; margin-bottom: 6px;">
+          3. 💡 ¿Cómo estudiar con la app?
+        </div>
+        <div style="font-size: 0.77rem; color: #475569; display: flex; flex-direction: column; gap: 5px; line-height: 1.4;">
+          <div>✅ <b>Marcar casilla:</b> Guarda la palabra como "Dominado" y aumenta tu porcentaje.</div>
+          <div>🔊 <b>Botón 🔊:</b> Escucha la pronunciación nativa japonesa al instante.</div>
+          <div>⚡ <b>Modo Quiz:</b> Responde 10 preguntas para ganar puntos de competición.</div>
+          <div>🏆 <b>Clasificación:</b> Compara tus puntos y avance con el resto de la clase.</div>
+        </div>
+      </div>
+
+      <!-- Botón de acción -->
+      <button style="width: 100%; padding: 14px; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; border: none; border-radius: 10px; font-weight: 800; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 12px rgba(5,150,105,0.25);" onclick="saveWelcomeOnboarding()">
+        🚀 ¡Guardar Perfil y Empezar a Estudiar!
+      </button>
+
+    </div>
+  </div>
+</div>
 
 <!-- 1. Student Profile Modal -->
 <div class="modal-overlay" id="profileModal">
@@ -1094,6 +1164,15 @@ th.col-kanji, td.col-kanji, th.col-v-word, td.col-v-word {
       <button class="btn-close-modal" onclick="closeModal('guideModal')">×</button>
     </div>
     <div class="modal-body" style="display:flex;flex-direction:column;gap:10px;padding:14px;">
+      <div class="guide-card" style="background:#fffbeb;border:1.5px solid #f59e0b;">
+        <div class="guide-icon" style="background:#fef3c7;">⚠️</div>
+        <div class="guide-content">
+          <div class="guide-title" style="color:#b45309;">¡IMPORTANTE! Dónde se guarda tu avance</div>
+          <div class="guide-desc" style="color:#78350f;">
+            Tus palabras memorizadas se guardan en <b>este navegador</b>. <u>Usa siempre el mismo navegador (Safari o Chrome)</u> o selecciona <b>"Añadir a pantalla de inicio"</b> en tu celular para no perder tus datos.
+          </div>
+        </div>
+      </div>
       <div class="guide-card">
         <div class="guide-icon">✅</div>
         <div class="guide-content">
@@ -1175,6 +1254,39 @@ function openProfileModal() {
     <div class="avatar-opt ${a === studentProfile.avatar ? 'selected' : ''}" onclick="selectAvatar('${a}')">${a}</div>
   `).join('');
   openModal('profileModal');
+}
+
+function openWelcomeModal() {
+  document.getElementById('welcomeStudentName').value = (studentProfile.name !== 'Estudiante') ? studentProfile.name : '';
+  const grid = document.getElementById('welcomeAvatarGrid');
+  grid.innerHTML = AVATARS.map(a => `
+    <div class="avatar-opt ${a === studentProfile.avatar ? 'selected' : ''}" onclick="selectWelcomeAvatar('${a}')">${a}</div>
+  `).join('');
+  openModal('welcomeModal');
+}
+
+function selectWelcomeAvatar(avatar) {
+  studentProfile.avatar = avatar;
+  document.querySelectorAll('#welcomeAvatarGrid .avatar-opt').forEach(el => {
+    el.classList.toggle('selected', el.textContent.trim() === avatar);
+  });
+  document.querySelectorAll('#avatarGrid .avatar-opt').forEach(el => {
+    el.classList.toggle('selected', el.textContent.trim() === avatar);
+  });
+}
+
+function saveWelcomeOnboarding() {
+  const nameVal = document.getElementById('welcomeStudentName').value.trim();
+  if (nameVal) {
+    studentProfile.name = nameVal;
+  }
+  try {
+    localStorage.setItem('jp_app_student_profile', JSON.stringify(studentProfile));
+    localStorage.setItem('jp_app_welcome_seen', 'true');
+  } catch(e) {}
+  updateProfileUI();
+  closeModal('welcomeModal');
+  triggerAutoSync();
 }
 
 function selectAvatar(avatar) {
@@ -2039,6 +2151,17 @@ updateProfileUI();
 renderMaskControls();
 updateProgressUI();
 renderTable();
+
+// Auto-show welcome onboarding if first time or default name
+try {
+  const hasSeenWelcome = localStorage.getItem('jp_app_welcome_seen');
+  const isDefaultName = (!studentProfile.name || studentProfile.name === 'Estudiante');
+  if (!hasSeenWelcome || isDefaultName) {
+    setTimeout(() => {
+      openWelcomeModal();
+    }, 400);
+  }
+} catch(e) {}
 </script>
 </body>
 </html>
