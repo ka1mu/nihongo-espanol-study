@@ -480,10 +480,13 @@ async function submitSheet() {
   document.getElementById('statusTitle').textContent = 'Subiendo examen...';
   document.getElementById('statusDesc').textContent = 'Tu hoja se está procesando en el servidor del profesor.';
 
-  // Formato de nombre de archivo limpio:
-  // e.g., "mock-sheets/NOVEMBER_7/N5/No01 - CERNA PIZARRO VICTOR - 1730000000.jpg"
+  // Formato de nombre de archivo seguro y compatible (conserva letras en español y japonés)
   const cleanDate = selectedDate.replace(/\s+/g, '_');
-  const cleanName = studentName.replace(/[^\w\s-]/g, '').trim();
+  // Prohibir sólo caracteres no válidos para nombres de archivo: / \ ? % * : | " < >
+  let cleanName = (studentName || '').replace(/[/\\?%*:|"<>]/g, '').replace(/\s+/g, ' ').trim();
+  if (!cleanName) {
+    cleanName = `Alumno_${studentNo}`;
+  }
   const timestamp = Math.floor(Date.now() / 1000);
   const padNo = String(studentNo).padStart(2, '0');
   const filename = `No${padNo} - ${cleanName} - ${timestamp}.jpg`;
