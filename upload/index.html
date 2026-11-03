@@ -268,11 +268,28 @@ h1 {
   <!-- Upload Form Card -->
   <div class="upload-card" id="formCard">
     
-    <!-- Paso 1: Nivel -->
+    <!-- Paso 1: Fecha y Nivel -->
     <div class="step-box">
       <div class="step-title">
-        <span>1. 🎯 Selecciona tu Examen (Nivel)</span>
+        <span>1. 📅 Fecha y Nivel del Examen / 日付とレベル</span>
       </div>
+      
+      <label style="font-size:0.78rem; font-weight:700; color:#475569; margin-bottom:4px; display:block;">
+        Fecha de la clase (Sábado) / 授業の土曜日:
+      </label>
+      <select class="select-input" id="dateSelect" onchange="onDateChange()" style="margin-bottom:10px;">
+        <option value="NOVEMBER 7">11月7日 (7 de Noviembre)</option>
+        <option value="NOVEMBER 14">11月14日 (14 de Noviembre)</option>
+        <option value="NOVEMBER 21">11月21日 (21 de Noviembre)</option>
+        <option value="NOVEMBER 28">11月28日 (28 de Noviembre)</option>
+        <option value="OCTOBER 31">10月31日 (31 de Octubre)</option>
+        <option value="other">Otra fecha (Escribir manual)</option>
+      </select>
+      <input type="text" id="manualDate" placeholder="Ej: NOVEMBER 7" class="text-input" style="display:none; margin-bottom:10px;" oninput="onManualDateInput()">
+
+      <label style="font-size:0.78rem; font-weight:700; color:#475569; margin-bottom:4px; display:block;">
+        Nivel del examen / レベル:
+      </label>
       <div class="level-toggle">
         <button type="button" class="btn-level lvl-N5 selected" id="btnN5" onclick="selectLevel('N5')">
           <span>🟢 Nivel N5</span>
@@ -356,14 +373,60 @@ h1 {
 const SUPABASE_URL = "https://jpggxosenzbbxvtwtgrj.supabase.co";
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwZ2d4b3NlbnpiYnh2dHd0Z3JqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMzMDk4NDIsImV4cCI6MjEwODg4NTg0Mn0.8xSevsRv0u42rgyY3mKjHpb5khXeoy6RRwQTvURAH0A";
 
-// Default Date - Se puede pasar por URL ?date=NOVEMBER%207
+function getUpcomingSaturday() {
+  const d = new Date();
+  const day = d.getDay(); // 0: 日, 1: 月, ..., 6: 土
+  const diff = (day === 0) ? -1 : (6 - day);
+  const sat = new Date(d);
+  sat.setDate(d.getDate() + diff);
+  const months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+  return `${months[sat.getMonth()]} ${sat.getDate()}`;
+}
+
+// Default Date - Se puede pasar por URL ?date=NOVEMBER%207 o se calcula el sábado actual
 const urlParams = new URLSearchParams(window.location.search);
-let selectedDate = urlParams.get('date') || "NOVEMBER 7";
+let selectedDate = urlParams.get('date') || getUpcomingSaturday();
 let selectedLevel = urlParams.get('level') || "N5";
 let selectedFileBlob = null;
 
-// Inicializar selección de nivel
+// Inicializar selección de fecha y nivel
+initDateSelect();
 selectLevel(selectedLevel);
+
+function initDateSelect() {
+  const select = document.getElementById('dateSelect');
+  let found = false;
+  for (let i = 0; i < select.options.length; i++) {
+    if (select.options[i].value === selectedDate) {
+      select.selectedIndex = i;
+      found = true;
+      break;
+    }
+  }
+  if (!found && selectedDate) {
+    const opt = document.createElement('option');
+    opt.value = selectedDate;
+    opt.text = `${selectedDate} (Seleccionado)`;
+    select.insertBefore(opt, select.firstChild);
+    select.selectedIndex = 0;
+  }
+}
+
+function onDateChange() {
+  const val = document.getElementById('dateSelect').value;
+  const manual = document.getElementById('manualDate');
+  if (val === 'other') {
+    manual.style.display = 'block';
+    selectedDate = manual.value.trim() || 'NOVEMBER 7';
+  } else {
+    manual.style.display = 'none';
+    selectedDate = val;
+  }
+}
+
+function onManualDateInput() {
+  selectedDate = document.getElementById('manualDate').value.trim() || 'NOVEMBER 7';
+}
 
 function selectLevel(lvl) {
   selectedLevel = lvl;
@@ -514,7 +577,7 @@ async function submitSheet() {
     document.getElementById('statusIcon').textContent = '🎉';
     document.getElementById('statusTitle').textContent = '¡Hoja Enviada con Éxito!';
     document.getElementById('statusDesc').innerHTML = `
-      Recibido: <b>No.${studentNo} ${studentName}</b> (${selectedLevel})<br><br>
+      Recibido: <b>No.${studentNo} ${studentName}</b> (${selectedLevel} · ${selectedDate})<br><br>
       El profesor ya tiene tu hoja. En unos momentos verás tus resultados en la pantalla del salón.<br>
       <i>(Recuerda entregar también tu hoja en papel al terminar)</i>
     `;
