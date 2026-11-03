@@ -543,21 +543,25 @@ async function submitSheet() {
   document.getElementById('statusTitle').textContent = 'Subiendo examen...';
   document.getElementById('statusDesc').textContent = 'Tu hoja se está procesando en el servidor del profesor.';
 
-  // Formato de nombre de archivo seguro y compatible (conserva letras en español y japonés)
-  const cleanDate = selectedDate.replace(/\s+/g, '_');
-  // Prohibir sólo caracteres no válidos para nombres de archivo: / \ ? % * : | " < >
-  let cleanName = (studentName || '').replace(/[/\\?%*:|"<>]/g, '').replace(/\s+/g, ' ').trim();
-  if (!cleanName) {
-    cleanName = `Alumno_${studentNo}`;
+  // Supabase Storage (S3互換) はキーにASCII文字のみ許可するため、安全なファイル名に正規化
+  function sanitizeForStorage(name, no) {
+    if (!name) return `Alumno_${no}`;
+    // アクセント記号（é➔e, ñ➔n など）を除去してASCII英数字に変換
+    let s = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    s = s.replace(/ñ/g, "n").replace(/Ñ/g, "N");
+    s = s.replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "");
+    return s || `Alumno_${no}`;
   }
-  const timestamp = Math.floor(Date.now() / 1000);
+
+  const cleanDate = (selectedDate || 'NOVEMBER 7').replace(/[^a-zA-Z0-9_-]/g, '_').replace(/_+/g, '_');
   const padNo = String(studentNo).padStart(2, '0');
-  const filename = `No${padNo} - ${cleanName} - ${timestamp}.jpg`;
+  const cleanName = sanitizeForStorage(studentName, padNo);
+  const timestamp = Math.floor(Date.now() / 1000);
+  const filename = `No${padNo}-${cleanName}-${timestamp}.jpg`;
   const storagePath = `${cleanDate}/${selectedLevel}/${filename}`;
-  const safePath = encodeURI(storagePath);
 
   try {
-    const uploadUrl = `${SUPABASE_URL}/storage/v1/object/mock-sheets/${safePath}`;
+    const uploadUrl = `${SUPABASE_URL}/storage/v1/object/mock-sheets/${encodeURIComponent(cleanDate)}/${encodeURIComponent(selectedLevel)}/${encodeURIComponent(filename)}`;
     const response = await fetch(uploadUrl, {
       method: 'POST',
       headers: {
@@ -570,7 +574,8 @@ async function submitSheet() {
     });
 
     if (!response.ok) {
-      throw new Error(`Error en el servidor: ${response.status}`);
+      const errBody = await response.text();
+      throw new Error(`Servidor ${response.status}: ${errBody}`);
     }
 
     // Éxito
@@ -587,7 +592,11 @@ async function submitSheet() {
     console.error('Error al subir:', err);
     document.getElementById('statusIcon').textContent = '❌';
     document.getElementById('statusTitle').textContent = 'Error al enviar';
-    document.getElementById('statusDesc').textContent = 'Hubo un problema de conexión. Por favor inténtalo de nuevo.';
+    document.getElementById('statusDesc').innerHTML = `
+      Hubo un problema al subir la foto.<br>
+      <span style="font-size:0.75rem; color:#dc2626; word-break:break-all;">${err.message || 'Error de conexión'}</span><br><br>
+      Por favor inténtalo de nuevo.
+    `;
     document.getElementById('btnAnother').style.display = 'flex';
     document.getElementById('btnAnother').textContent = 'Reintentar Envío 🔄';
   }
