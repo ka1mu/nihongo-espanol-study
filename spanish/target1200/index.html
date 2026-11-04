@@ -185,6 +185,7 @@ h1 {
 }
 table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   background: var(--card-bg);
   border-radius: 10px;
@@ -195,7 +196,9 @@ th, td {
   padding: 8px 6px;
   text-align: left;
   border-bottom: 1px solid var(--border);
-  vertical-align: middle;
+  vertical-align: top;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 th {
   background: #1e293b;
@@ -217,9 +220,9 @@ tr.is-learned .es-word {
   color: #166534;
 }
 .col-check {
-  width: 32px;
+  width: 34px;
   text-align: center;
-  padding: 8px 4px;
+  padding: 8px 2px;
 }
 .check-box {
   width: 18px;
@@ -228,7 +231,7 @@ tr.is-learned .es-word {
   accent-color: var(--accent);
 }
 .col-es {
-  width: 38%;
+  width: 25%;
 }
 .es-word {
   font-weight: 700;
@@ -258,7 +261,7 @@ tr.is-learned .es-word {
   font-weight: 700;
 }
 .col-ja-en {
-  width: 30%;
+  width: 25%;
 }
 .ja-word {
   font-weight: 600;
@@ -272,19 +275,19 @@ tr.is-learned .es-word {
   margin-top: 2px;
 }
 .col-note {
-  width: 28%;
+  width: 50%;
   color: var(--secondary);
-  font-size: 0.78rem;
-  line-height: 1.35;
+  font-size: 0.80rem;
+  line-height: 1.4;
 }
 .note-container {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
 }
 .note-row {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
   gap: 6px;
   line-height: 1.4;
 }
@@ -296,6 +299,7 @@ tr.is-learned .es-word {
   padding: 1px 5px;
   border-radius: 4px;
   flex-shrink: 0;
+  margin-top: 1px;
   border: 1px solid #bae6fd;
 }
 .badge-ex {
@@ -306,6 +310,7 @@ tr.is-learned .es-word {
   padding: 1px 5px;
   border-radius: 4px;
   flex-shrink: 0;
+  margin-top: 1px;
   border: 1px solid #bbf7d0;
 }
 .note-text {
@@ -333,15 +338,23 @@ tr.is-learned .es-word {
 @media (max-width: 600px) {
   body { padding: 4px 2px; }
   h1 { font-size: 1.2rem; }
-  .col-check { width: 28px; }
-  .col-es { width: 40%; }
-  .col-ja-en { width: 30%; }
-  .col-note { width: 26%; font-size: 0.74rem; }
-  th, td { padding: 6px 4px; }
-  .es-word { font-size: 0.88rem; }
-  .es-pron { font-size: 0.74rem; }
-  .ja-word { font-size: 0.84rem; }
-  .en-word { font-size: 0.7rem; }
+  .container { width: 100%; max-width: 100%; }
+  .col-check { width: 26px; padding: 6px 2px; }
+  .col-es { width: 25%; }
+  .col-ja-en { width: 25%; }
+  .col-note { width: 50%; font-size: 0.73rem; }
+  th, td { padding: 6px 3px; }
+  .check-box { width: 16px; height: 16px; }
+  .es-word { font-size: 0.82rem; }
+  .es-no { font-size: 0.68rem; margin-right: 1px; }
+  .pos-badge { font-size: 0.68rem; margin-left: 1px; }
+  .es-pron { font-size: 0.70rem; }
+  .ja-word { font-size: 0.80rem; }
+  .en-word { font-size: 0.68rem; }
+  .note-container { gap: 4px; }
+  .note-row { gap: 4px; }
+  .badge-expr, .badge-ex { font-size: 0.62rem; padding: 1px 3px; }
+  .note-text { font-size: 0.72rem; line-height: 1.35; }
 }
 </style>
 </head>
