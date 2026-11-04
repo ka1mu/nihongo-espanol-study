@@ -483,8 +483,20 @@ h1 {
       先生の画面にも自動で集計されました。お疲れ様でした！
     </div>
 
-    <button class="btn-submit" style="background:#475569;box-shadow:none;margin-top:4px;" onclick="resetForm()">
-      🔄 Enviar otra foto / もう一度送る
+    <!-- 1回のみ提出のロック通知バナー（正常採点完了時：再送信不可） -->
+    <div id="resLockedBanner" style="background:#f8fafc;border:2px dashed #94a3b8;border-radius:12px;padding:12px;margin-top:8px;text-align:center;">
+      <div style="font-size:0.95rem;font-weight:800;color:#334155;margin-bottom:3px;">
+        🔒 Entrega Registrada (1 solo intento) / 提出完了
+      </div>
+      <div style="font-size:0.78rem;color:#64748b;line-height:1.4;">
+        Tu calificación oficial ha sido guardada. <b>No se permiten correcciones ni reenvíos.</b><br>
+        成績が記録されました。修正や再送信はできません。
+      </div>
+    </div>
+
+    <!-- 読み取りエラー（四隅が切れている等）時のみ表示される撮り直しボタン -->
+    <button class="btn-submit" id="btnResubmitError" style="display:none;background:#2563eb;margin-top:8px;" onclick="resetForm()">
+      📸 Volver a tomar foto / 撮り直す
     </button>
   </div>
 </div>
@@ -565,6 +577,28 @@ function selectLevel(lvl) {
   document.getElementById('btnN4').classList.toggle('selected', lvl === 'N4');
 }
 
+function getSubmissionStorageKey(studentNo) {
+  const cleanDate = (selectedDate || '').replace(/\s+/g, '_');
+  return `submitted_${cleanDate}_${selectedLevel}_${studentNo}`;
+}
+
+function checkExistingSubmission(studentNo) {
+  if (!studentNo) return false;
+  const key = getSubmissionStorageKey(studentNo);
+  const saved = localStorage.getItem(key);
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      if (data && data.status !== 'error') {
+        document.getElementById('formCard').style.display = 'none';
+        displayScoreResult(data);
+        return true;
+      }
+    } catch(e) {}
+  }
+  return false;
+}
+
 function onStudentChange() {
   const val = document.getElementById('studentSelect').value;
   const otherDiv = document.getElementById('otherInputs');
@@ -572,6 +606,13 @@ function onStudentChange() {
     otherDiv.style.display = 'flex';
   } else {
     otherDiv.style.display = 'none';
+    if (val) {
+      const parts = val.split('|');
+      const studentNo = parts[0];
+      if (checkExistingSubmission(studentNo)) {
+        return;
+      }
+    }
   }
 }
 
@@ -668,6 +709,12 @@ async function submitSheet() {
     const parts = selectVal.split('|');
     studentNo = parseInt(parts[0]);
     studentName = parts[1];
+  }
+
+  // 二重送信・再提出防止チェック: 既に提出済みの場合は送信をブロック
+  if (studentNo && checkExistingSubmission(studentNo)) {
+    alert("⚠️ Ya has entregado tu examen anteriormente. Solo se permite 1 intento.\nすでに提出済みです。試験の送信は1回のみです。");
+    return;
   }
 
   const fileToUpload = selectedFileBlob || selectedRawFile;
@@ -825,7 +872,13 @@ function displayScoreResult(data) {
   const resultCard = document.getElementById('resultCard');
   resultCard.style.display = 'flex';
 
+  const lockedBanner = document.getElementById('resLockedBanner');
+  const btnResubmit = document.getElementById('btnResubmitError');
+
   if (data.status === 'error') {
+    if (lockedBanner) lockedBanner.style.display = 'none';
+    if (btnResubmit) btnResubmit.style.display = 'flex';
+
     document.getElementById('resStudentInfo').textContent = `${data.name || 'Estudiante'} (No. ${data.id || '-'})`;
     document.getElementById('resTotalScore').textContent = '⚠️ Error';
     document.getElementById('resPercentage').textContent = 'No se pudo leer la hoja';
@@ -838,6 +891,18 @@ function displayScoreResult(data) {
       </div>
     `;
     return;
+  }
+
+  // 正常採点完了: 再送信不可ロックバナーを表示し、撮り直しボタンは隠す
+  if (lockedBanner) lockedBanner.style.display = 'block';
+  if (btnResubmit) btnResubmit.style.display = 'none';
+
+  // localStorage に記録して、ページリロード後も提出済み状態を保持（カンニング防止）
+  if (data.id) {
+    try {
+      localStorage.setItem(getSubmissionStorageKey(data.id), JSON.stringify(data));
+      localStorage.setItem(`last_submission_${selectedLevel}`, JSON.stringify(data));
+    } catch(e) {}
   }
 
   document.getElementById('resStudentInfo').textContent = `No. ${data.id}: ${data.name}`;
