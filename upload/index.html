@@ -569,19 +569,26 @@ async function submitSheet() {
   document.getElementById('statusTitle').textContent = 'Subiendo examen...';
   document.getElementById('statusDesc').textContent = 'Subiendo tu hoja a la nube del profesor...';
 
-  // Supabase Storage (S3互換) はキーにASCII文字のみ許可するため、安全なファイル名に正規化
-  // 日本語等のマルチバイト文字はURLエンコードでS3安全にし、Python側で完全復元
+  // Supabase Storage (S3互換) はキーにASCII英数字・ハイフン・アンダースコアのみ許可
+  // 日本語等のマルチバイト文字は Hex 16進数英数字に変換し、Supabaseのキー規則（InvalidKeyエラー）を完全回避
   function sanitizeForStorage(name, no) {
     if (!name || !name.trim()) return `Alumno_${no}`;
     let s = name.trim();
     // スペイン語のアクセント記号を展開
     s = s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     s = s.replace(/ñ/g, "n").replace(/Ñ/g, "N");
-    // 日本語・マルチバイト文字はS3安全のためURLエンコード
-    if (/[^\x00-\x7F]/.test(s)) {
-      return encodeURIComponent(s);
+    // 日本語・マルチバイト文字・特殊記号が含まれる場合、Hex（16進数英数字）に変換
+    if (/[^a-zA-Z0-9_\-\s]/.test(s)) {
+      try {
+        const encoder = new TextEncoder();
+        const bytes = encoder.encode(s);
+        const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+        return `hex_${hex}`;
+      } catch (e) {
+        return `Alumno_${no}`;
+      }
     }
-    // ASCII英数字とアンダースコア・ハイフンに正規化
+    // 通常の英数字とアンダースコア・ハイフンに正規化
     s = s.replace(/[\s\t\n]+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "");
     return s || `Alumno_${no}`;
   }
