@@ -355,7 +355,542 @@ tr.is-learned .es-word {
   .note-row { gap: 4px; }
   .badge-expr, .badge-ex { font-size: 0.62rem; padding: 1px 3px; }
   .note-text { font-size: 0.72rem; line-height: 1.35; }
+  .main-tab { padding: 8px 10px; font-size: 0.88rem; }
+  .quiz-panel { padding: 12px 10px; }
+  .q-prompt-text { font-size: 1.35rem; }
+  .opt-btn { padding: 10px 12px; font-size: 0.90rem; }
+  .btn-start-quiz, .btn-next { padding: 11px; font-size: 0.95rem; }
 }
+
+/* Mode Tabs */
+.main-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.main-tab {
+  flex: 1;
+  padding: 10px 14px;
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.main-tab:hover {
+  background: #f1f5f9;
+}
+.main-tab.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  box-shadow: 0 2px 6px rgba(192, 57, 43, 0.25);
+}
+
+/* Quiz Panels */
+.quiz-panel {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  margin-bottom: 20px;
+}
+.quiz-title {
+  color: var(--primary);
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.quiz-desc {
+  color: #64748b;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+.quiz-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.form-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.form-select {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: white;
+  font-size: 0.9rem;
+  outline: none;
+  cursor: pointer;
+}
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #f8fafc;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+.count-selector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.btn-count {
+  flex: 1 1 calc(25% - 8px);
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+.btn-count.active {
+  background: var(--secondary);
+  color: white;
+  border-color: var(--secondary);
+}
+.checkbox-group {
+  background: #f0fdf4;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #bbf7d0;
+}
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #166534;
+  cursor: pointer;
+}
+.btn-start-quiz {
+  padding: 12px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(192, 57, 43, 0.3);
+  transition: all 0.2s;
+  margin-top: 6px;
+}
+.btn-start-quiz:hover {
+  background: #a93226;
+  transform: translateY(-1px);
+}
+
+/* Quiz Play Header */
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.quiz-progress-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.q-no {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+.q-score {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+.btn-quit {
+  padding: 5px 12px;
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #64748b;
+  cursor: pointer;
+  font-weight: 600;
+}
+.quiz-progress-bar-bg {
+  width: 100%;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.quiz-progress-bar-fill {
+  height: 100%;
+  background: var(--primary);
+  width: 0%;
+  transition: width 0.25s ease;
+}
+
+/* Question Card */
+.question-card {
+  background: #f8fafc;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 16px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+.q-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.q-word-no {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+.q-pos-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+}
+.q-prompt-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+.q-prompt-text {
+  font-size: 1.6rem;
+  color: var(--text);
+  font-weight: 700;
+}
+.btn-audio {
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.btn-audio:active {
+  transform: scale(0.9);
+}
+.q-sub-text {
+  color: var(--accent);
+  font-size: 0.92rem;
+  margin-top: 4px;
+}
+
+/* Options Grid */
+.options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.opt-btn {
+  padding: 12px 14px;
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1.3;
+}
+.opt-btn:hover:not(:disabled) {
+  border-color: var(--secondary);
+  background: #f0f9ff;
+}
+.opt-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #64748b;
+  flex-shrink: 0;
+}
+.opt-btn.correct {
+  background: #dcfce7 !important;
+  border-color: #22c55e !important;
+  color: #15803d !important;
+}
+.opt-btn.correct .opt-label {
+  background: #22c55e;
+  color: white;
+}
+.opt-btn.incorrect {
+  background: #fee2e2 !important;
+  border-color: #ef4444 !important;
+  color: #b91c1c !important;
+}
+.opt-btn.incorrect .opt-label {
+  background: #ef4444;
+  color: white;
+}
+.opt-btn:disabled {
+  cursor: default;
+}
+
+/* Feedback Area */
+.feedback-area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeIn 0.25s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.feedback-banner {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: center;
+}
+.feedback-banner.correct {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #86efac;
+}
+.feedback-banner.incorrect {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+
+/* Learned Toggle in Quiz */
+.learned-toggle-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.learned-status-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+}
+.btn-quiz-learned {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+.btn-quiz-learned.is-learned {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #86efac;
+}
+.btn-quiz-learned.not-learned {
+  background: #f1f5f9;
+  color: #64748b;
+  border-color: #cbd5e1;
+}
+
+/* Explanation Card */
+.quiz-explanation-card {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+}
+.exp-word-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.exp-notes {
+  margin-top: 6px;
+}
+
+.btn-next {
+  padding: 12px;
+  background: var(--secondary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(41, 128, 185, 0.25);
+  transition: all 0.15s;
+}
+.btn-next:hover {
+  background: #2471a3;
+}
+
+/* Result Screen */
+.result-card {
+  text-align: center;
+  padding: 20px 10px;
+}
+.result-badge {
+  font-size: 3rem;
+  margin-bottom: 6px;
+}
+.result-title {
+  font-size: 1.4rem;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.result-score {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+.result-msg {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+.result-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.btn-action {
+  padding: 11px;
+  border-radius: 8px;
+  font-size: 0.94rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+}
+.btn-action.primary {
+  background: var(--primary);
+  color: white;
+}
+.btn-action.secondary {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+.btn-action.outline {
+  background: white;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.details-heading {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+.result-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  gap: 8px;
+}
+.result-item.was-correct {
+  border-left: 4px solid #22c55e;
+}
+.result-item.was-incorrect {
+  border-left: 4px solid #ef4444;
+}
+.result-item-info {
+  flex: 1;
+  font-size: 0.85rem;
+}
+.result-item-main {
+  font-weight: 700;
+  color: var(--text);
+}
+.result-item-sub {
+  color: #64748b;
+  font-size: 0.78rem;
+}
+.result-item-btn {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: white;
+}
+.result-item-btn.is-learned {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #86efac;
+}
+
 </style>
 </head>
 <body>
@@ -365,6 +900,12 @@ tr.is-learned .es-word {
     <p class="subtitle">全1700語・暗記チェック機能・アクセント太字・全メモ日本語訳付き</p>
   </header>
 
+  <div class="main-tabs">
+    <button class="main-tab active" id="tabModeList" onclick="switchMainTab('list')">📑 単語帳一覧</button>
+    <button class="main-tab" id="tabModeQuiz" onclick="switchMainTab('quiz')">🎯 4択クイズ</button>
+  </div>
+
+  <div id="listView">
   <div class="controls">
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="検索 (西語、発音、日本語、英語、メモ)...">
@@ -451,6 +992,170 @@ tr.is-learned .es-word {
     <tbody id="tableBody">
     </tbody>
   </table>
+  </div> <!-- /#listView -->
+
+  <!-- クイズビュー -->
+  <div id="quizView" style="display: none;">
+    <!-- クイズ設定画面 -->
+    <div id="quizSetup" class="quiz-panel">
+      <h2 class="quiz-title">🎯 スペイン語 4択クイズ</h2>
+      <p class="quiz-desc">出題範囲や条件を設定して、実戦形式で暗記チェックを行いましょう！</p>
+      
+      <div class="quiz-form">
+        <div class="form-group">
+          <label class="form-label">出題パート (Part):</label>
+          <select id="quizPartSelect" class="form-select">
+            <option value="all">全1700語</option>
+            <option value="1">Part 1 (No. 1 - 100)</option>
+            <option value="2">Part 2 (No. 101 - 200)</option>
+            <option value="3">Part 3 (No. 201 - 300)</option>
+            <option value="4">Part 4 (No. 301 - 400)</option>
+            <option value="5">Part 5 (No. 401 - 500)</option>
+            <option value="6">Part 6 (No. 501 - 600)</option>
+            <option value="7">Part 7 (No. 601 - 700)</option>
+            <option value="8">Part 8 (No. 701 - 800)</option>
+            <option value="9">Part 9 (No. 801 - 900)</option>
+            <option value="10">Part 10 (No. 901 - 1000)</option>
+            <option value="11">Part 11 (No. 1001 - 1100)</option>
+            <option value="12">Part 12 (No. 1101 - 1200)</option>
+            <option value="13">Part 13 (No. 1201 - 1300)</option>
+            <option value="14">Part 14 (No. 1301 - 1400)</option>
+            <option value="15">Part 15 (No. 1401 - 1500)</option>
+            <option value="16">Part 16 (No. 1501 - 1600)</option>
+            <option value="17">Part 17 (No. 1601 - 1700)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">出題対象:</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="quizTarget" value="unlearned" checked>
+              <span>未暗記のみ (<span id="unlearnedCount">-</span>語)</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="quizTarget" value="all">
+              <span>すべての単語 (<span id="totalQuizCount">-</span>語)</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="quizTarget" value="learned">
+              <span>覚えた単語のみ復習 (<span id="learnedQuizCount">-</span>語)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">出題方向:</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="quizDirection" value="es2ja" checked>
+              <span>🇪🇸 スペイン語 ➔ 🇯🇵 日本語</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="quizDirection" value="ja2es">
+              <span>🇯🇵 日本語 ➔ 🇪🇸 スペイン語</span>
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="quizDirection" value="mixed">
+              <span>🔀 ランダム混合</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">問題数:</label>
+          <div class="count-selector" id="quizCountSelector">
+            <button type="button" class="btn-count active" data-count="10">10問</button>
+            <button type="button" class="btn-count" data-count="20">20問</button>
+            <button type="button" class="btn-count" data-count="50">50問</button>
+            <button type="button" class="btn-count" data-count="all">全問</button>
+          </div>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="autoMarkLearned" checked>
+            <span>正解したら自動で「済（覚えた）」に更新する</span>
+          </label>
+        </div>
+
+        <button type="button" id="btnStartQuiz" class="btn-start-quiz">クイズ開始 🚀</button>
+      </div>
+    </div>
+
+    <!-- クイズ実行画面 -->
+    <div id="quizPlay" class="quiz-panel" style="display: none;">
+      <div class="quiz-header">
+        <div class="quiz-progress-info">
+          <span id="quizQuestionNo" class="q-no">第 1 問 / 10問</span>
+          <span id="quizScoreText" class="q-score">正解: 0 | 不正解: 0</span>
+        </div>
+        <button type="button" id="btnQuitQuiz" class="btn-quit">中断する</button>
+      </div>
+      <div class="quiz-progress-bar-bg">
+        <div id="quizProgressBar" class="quiz-progress-bar-fill"></div>
+      </div>
+
+      <!-- 問題カード -->
+      <div class="question-card">
+        <div class="q-meta">
+          <span id="qWordNo" class="q-word-no">#1</span>
+          <span id="qPosBadge" class="q-pos-badge">(動)</span>
+        </div>
+        <div class="q-prompt-wrap">
+          <h3 id="qPromptText" class="q-prompt-text">cambiar</h3>
+          <button type="button" id="btnSpeakPrompt" class="btn-audio" title="発音を聞く">🔊</button>
+        </div>
+        <div id="qSubText" class="q-sub-text">(カンビ<b>アル</b>)</div>
+      </div>
+
+      <!-- 4択選択肢 -->
+      <div id="optionsContainer" class="options-grid"></div>
+
+      <!-- 回答後フィードバック・解説エリア -->
+      <div id="feedbackArea" class="feedback-area" style="display: none;">
+        <div id="feedbackBanner" class="feedback-banner"></div>
+
+        <!-- 済トグルスイッチ（ユーザーの核心要求！） -->
+        <div class="learned-toggle-card">
+          <span class="learned-status-title">この単語の暗記チェック:</span>
+          <button type="button" id="btnToggleQuizLearned" class="btn-quiz-learned">
+            <!-- 🟢 済（暗記済み） / ⚪️ 未暗記 -->
+          </button>
+        </div>
+
+        <!-- DELEメモ詳細解説 -->
+        <div class="quiz-explanation-card">
+          <div class="exp-word-title" id="expWordTitle"></div>
+          <div class="exp-notes" id="expNotes"></div>
+        </div>
+
+        <button type="button" id="btnNextQuestion" class="btn-next">次の問題へ ➔</button>
+      </div>
+    </div>
+
+    <!-- 結果画面 -->
+    <div id="quizResult" class="quiz-panel" style="display: none;">
+      <div class="result-card">
+        <div class="result-badge" id="resultBadge">🎉</div>
+        <h2 id="resultTitle" class="result-title">クイズ完了！</h2>
+        <div id="resultScore" class="result-score">8 / 10問 正解 (80%)</div>
+        <p id="resultMsg" class="result-msg">お疲れ様でした！</p>
+      </div>
+
+      <div class="result-actions">
+        <button type="button" id="btnRetryQuiz" class="btn-action primary">🔄 同じ条件でもう一度</button>
+        <button type="button" id="btnRetryMistakes" class="btn-action secondary" style="display:none;">❌ 間違えた問題だけ再挑戦</button>
+        <button type="button" id="btnBackToList" class="btn-action outline">📑 単語帳一覧に戻る</button>
+      </div>
+
+      <!-- 解答結果一覧（ここでも「済」の変更が可能！） -->
+      <div class="result-details">
+        <h3 class="details-heading">出題結果一覧（タップして「済」を変更できます）</h3>
+        <div id="resultListContainer" class="result-list"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -653,6 +1358,391 @@ btnResetLearned.addEventListener('click', () => {
 
 updateProgressBar();
 renderTable();
+
+// ==================== 音声読み上げ ====================
+function speakSpanish(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const clean = text.replace(/<[^>]+>/g, '').split('/')[0].trim();
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = 'es-ES';
+    u.rate = 0.9;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ==================== タブ切り替え ====================
+const tabModeList = document.getElementById('tabModeList');
+const tabModeQuiz = document.getElementById('tabModeQuiz');
+const listView = document.getElementById('listView');
+const quizView = document.getElementById('quizView');
+
+window.switchMainTab = function(mode) {
+  if (mode === 'list') {
+    tabModeList.classList.add('active');
+    tabModeQuiz.classList.remove('active');
+    listView.style.display = 'block';
+    quizView.style.display = 'none';
+    renderTable();
+  } else {
+    tabModeList.classList.remove('active');
+    tabModeQuiz.classList.add('active');
+    listView.style.display = 'none';
+    quizView.style.display = 'block';
+    // 現在選択中のPartをクイズ設定に反映
+    quizPartSelect.value = currentPart;
+    updateQuizSetupCounts();
+  }
+};
+
+// ==================== クイズロジック ====================
+const quizSetup = document.getElementById('quizSetup');
+const quizPlay = document.getElementById('quizPlay');
+const quizResult = document.getElementById('quizResult');
+
+const quizPartSelect = document.getElementById('quizPartSelect');
+const unlearnedCount = document.getElementById('unlearnedCount');
+const totalQuizCount = document.getElementById('totalQuizCount');
+const learnedQuizCount = document.getElementById('learnedQuizCount');
+const quizCountSelector = document.getElementById('quizCountSelector');
+const autoMarkLearned = document.getElementById('autoMarkLearned');
+const btnStartQuiz = document.getElementById('btnStartQuiz');
+
+const quizQuestionNo = document.getElementById('quizQuestionNo');
+const quizScoreText = document.getElementById('quizScoreText');
+const quizProgressBar = document.getElementById('quizProgressBar');
+const btnQuitQuiz = document.getElementById('btnQuitQuiz');
+
+const qWordNo = document.getElementById('qWordNo');
+const qPosBadge = document.getElementById('qPosBadge');
+const qPromptText = document.getElementById('qPromptText');
+const btnSpeakPrompt = document.getElementById('btnSpeakPrompt');
+const qSubText = document.getElementById('qSubText');
+const optionsContainer = document.getElementById('optionsContainer');
+
+const feedbackArea = document.getElementById('feedbackArea');
+const feedbackBanner = document.getElementById('feedbackBanner');
+const btnToggleQuizLearned = document.getElementById('btnToggleQuizLearned');
+const expWordTitle = document.getElementById('expWordTitle');
+const expNotes = document.getElementById('expNotes');
+const btnNextQuestion = document.getElementById('btnNextQuestion');
+
+const resultBadge = document.getElementById('resultBadge');
+const resultTitle = document.getElementById('resultTitle');
+const resultScore = document.getElementById('resultScore');
+const resultMsg = document.getElementById('resultMsg');
+const btnRetryQuiz = document.getElementById('btnRetryQuiz');
+const btnRetryMistakes = document.getElementById('btnRetryMistakes');
+const btnBackToList = document.getElementById('btnBackToList');
+const resultListContainer = document.getElementById('resultListContainer');
+
+let selectedQuizCount = 10;
+let quizQuestions = [];
+let currentQuestionIndex = 0;
+let quizScore = { correct: 0, incorrect: 0 };
+let currentQuizItem = null;
+let currentDirection = 'es2ja'; // 'es2ja' or 'ja2es'
+let quizAnswerHistory = []; // { item, isCorrect, chosenText }
+
+// 問題数セレクタ
+quizCountSelector.querySelectorAll('.btn-count').forEach(btn => {
+  btn.addEventListener('click', () => {
+    quizCountSelector.querySelectorAll('.btn-count').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedQuizCount = btn.dataset.count === 'all' ? 'all' : parseInt(btn.dataset.count);
+  });
+});
+
+quizPartSelect.addEventListener('change', updateQuizSetupCounts);
+document.querySelectorAll('input[name="quizTarget"]').forEach(r => {
+  r.addEventListener('change', updateQuizSetupCounts);
+});
+
+function getPoolWords(part) {
+  if (part === 'all') return rawData;
+  const p = parseInt(part);
+  const start = (p - 1) * 100 + 1;
+  const end = Math.min(p * 100, 1700);
+  return rawData.filter(it => it.no >= start && it.no <= end);
+}
+
+function updateQuizSetupCounts() {
+  const pool = getPoolWords(quizPartSelect.value);
+  const learnedInPool = pool.filter(it => learnedSet.has(it.no)).length;
+  const unlearnedInPool = pool.length - learnedInPool;
+
+  totalQuizCount.textContent = pool.length;
+  learnedQuizCount.textContent = learnedInPool;
+  unlearnedCount.textContent = unlearnedInPool;
+}
+
+btnStartQuiz.addEventListener('click', startQuiz);
+
+function startQuiz(mistakesOnlyPool = null) {
+  let pool;
+  if (Array.isArray(mistakesOnlyPool) && mistakesOnlyPool.length > 0) {
+    pool = mistakesOnlyPool;
+  } else {
+    const rawPool = getPoolWords(quizPartSelect.value);
+    const targetType = document.querySelector('input[name="quizTarget"]:checked').value;
+    
+    if (targetType === 'unlearned') {
+      pool = rawPool.filter(it => !learnedSet.has(it.no));
+      if (pool.length === 0) {
+        alert('この範囲の未暗記単語はすべて覚えました！すべての単語から出題します。');
+        pool = rawPool;
+      }
+    } else if (targetType === 'learned') {
+      pool = rawPool.filter(it => learnedSet.has(it.no));
+      if (pool.length === 0) {
+        alert('覚えた単語がまだありません。「未暗記」または「すべて」を選んでください。');
+        return;
+      }
+    } else {
+      pool = rawPool;
+    }
+  }
+
+  // シャッフル
+  const shuffled = [...pool].sort(() => 0.5 - Math.random());
+  const count = selectedQuizCount === 'all' ? shuffled.length : Math.min(parseInt(selectedQuizCount), shuffled.length);
+  quizQuestions = shuffled.slice(0, count);
+
+  currentQuestionIndex = 0;
+  quizScore = { correct: 0, incorrect: 0 };
+  quizAnswerHistory = [];
+
+  quizSetup.style.display = 'none';
+  quizResult.style.display = 'none';
+  quizPlay.style.display = 'block';
+
+  showQuestion();
+}
+
+btnQuitQuiz.addEventListener('click', () => {
+  if (confirm('クイズを中断して設定画面に戻りますか？')) {
+    quizPlay.style.display = 'none';
+    quizSetup.style.display = 'block';
+    updateQuizSetupCounts();
+  }
+});
+
+function showQuestion() {
+  if (currentQuestionIndex >= quizQuestions.length) {
+    showResult();
+    return;
+  }
+
+  currentQuizItem = quizQuestions[currentQuestionIndex];
+  const qNum = currentQuestionIndex + 1;
+  const total = quizQuestions.length;
+
+  quizQuestionNo.textContent = `第 ${qNum} 問 / 全 ${total} 問`;
+  quizScoreText.textContent = `正解: ${quizScore.correct} | 不正解: ${quizScore.incorrect}`;
+  quizProgressBar.style.width = `${((qNum - 1) / total) * 100}%`;
+
+  feedbackArea.style.display = 'none';
+
+  // 出題方向の決定
+  const dirChoice = document.querySelector('input[name="quizDirection"]:checked').value;
+  if (dirChoice === 'mixed') {
+    currentDirection = Math.random() < 0.5 ? 'es2ja' : 'ja2es';
+  } else {
+    currentDirection = dirChoice;
+  }
+
+  qWordNo.textContent = `#${currentQuizItem.no}`;
+  qPosBadge.textContent = currentQuizItem.pos_ja || '';
+
+  if (currentDirection === 'es2ja') {
+    // 問題: スペイン語 ➔ 正解: 日本語
+    qPromptText.textContent = currentQuizItem.es;
+    btnSpeakPrompt.style.display = 'inline-flex';
+    btnSpeakPrompt.onclick = () => speakSpanish(currentQuizItem.es);
+    qSubText.innerHTML = `(${currentQuizItem.pronunciation})`;
+    speakSpanish(currentQuizItem.es);
+  } else {
+    // 問題: 日本語 ➔ 正解: スペイン語
+    qPromptText.textContent = currentQuizItem.ja;
+    btnSpeakPrompt.style.display = 'none';
+    qSubText.innerHTML = `<span style="color:#64748b;">英語: ${currentQuizItem.en}</span>`;
+  }
+
+  // 4択選択肢の作成
+  generateOptions(currentQuizItem, currentDirection);
+}
+
+function generateOptions(correctItem, direction) {
+  optionsContainer.innerHTML = '';
+
+  // 同じ品詞のダミーを優先的に集める
+  let candidates = rawData.filter(it => it.no !== correctItem.no);
+  const samePos = candidates.filter(it => it.pos === correctItem.pos);
+  let dummyPool = samePos.length >= 3 ? samePos : candidates;
+
+  const shuffledDummies = [...dummyPool].sort(() => 0.5 - Math.random()).slice(0, 3);
+  const choices = [correctItem, ...shuffledDummies].sort(() => 0.5 - Math.random());
+
+  const labels = ['A', 'B', 'C', 'D'];
+  choices.forEach((item, idx) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'opt-btn';
+    
+    const text = direction === 'es2ja' ? item.ja : `${item.es} (${item.ja})`;
+    btn.innerHTML = `<span class="opt-label">${labels[idx]}</span> <span>${text}</span>`;
+
+    btn.addEventListener('click', () => handleAnswer(item, btn));
+    optionsContainer.appendChild(btn);
+  });
+}
+
+function handleAnswer(chosenItem, chosenBtn) {
+  // 全ボタン無効化
+  optionsContainer.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+
+  const isCorrect = chosenItem.no === currentQuizItem.no;
+  quizAnswerHistory.push({
+    item: currentQuizItem,
+    isCorrect: isCorrect,
+    chosenItem: chosenItem
+  });
+
+  if (isCorrect) {
+    quizScore.correct++;
+    chosenBtn.classList.add('correct');
+    feedbackBanner.className = 'feedback-banner correct';
+    feedbackBanner.innerHTML = '🎉 正解です！';
+    
+    // 自動で「済」にする設定がONの場合
+    if (autoMarkLearned.checked) {
+      learnedSet.add(currentQuizItem.no);
+      saveLearned();
+    }
+  } else {
+    quizScore.incorrect++;
+    chosenBtn.classList.add('incorrect');
+    feedbackBanner.className = 'feedback-banner incorrect';
+    const correctAnsText = currentDirection === 'es2ja' ? currentQuizItem.ja : `${currentQuizItem.es} (${currentQuizItem.ja})`;
+    feedbackBanner.innerHTML = `❌ 不正解... 正解は「<b>${correctAnsText}</b>」`;
+  }
+
+  // 「済」トグルボタンの表示更新
+  updateQuizLearnedButton();
+
+  // 解説エリアの表示
+  expWordTitle.innerHTML = `<span>#${currentQuizItem.no} <b>${currentQuizItem.es}</b> <small>(${currentQuizItem.pronunciation})</small> <span class="pos-badge">${currentQuizItem.pos_ja}</span></span> <span>➔ ${currentQuizItem.ja} / <small style="color:#64748b;">${currentQuizItem.en}</small></span>`;
+  expNotes.innerHTML = currentQuizItem.note;
+
+  feedbackArea.style.display = 'flex';
+  feedbackArea.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function updateQuizLearnedButton() {
+  const isLearned = learnedSet.has(currentQuizItem.no);
+  if (isLearned) {
+    btnToggleQuizLearned.className = 'btn-quiz-learned is-learned';
+    btnToggleQuizLearned.innerHTML = '🟢 覚えた（済）<small style="opacity:0.8;">(タップで未暗記に戻す)</small>';
+  } else {
+    btnToggleQuizLearned.className = 'btn-quiz-learned not-learned';
+    btnToggleQuizLearned.innerHTML = '⚪️ 未暗記 <small style="opacity:0.8;">(タップで「済」にする)</small>';
+  }
+}
+
+btnToggleQuizLearned.addEventListener('click', () => {
+  if (learnedSet.has(currentQuizItem.no)) {
+    learnedSet.delete(currentQuizItem.no);
+  } else {
+    learnedSet.add(currentQuizItem.no);
+  }
+  saveLearned();
+  updateQuizLearnedButton();
+});
+
+btnNextQuestion.addEventListener('click', () => {
+  currentQuestionIndex++;
+  showQuestion();
+});
+
+function showResult() {
+  quizProgressBar.style.width = '100%';
+  quizPlay.style.display = 'none';
+  quizResult.style.display = 'block';
+
+  const total = quizQuestions.length;
+  const pct = Math.round((quizScore.correct / total) * 100);
+  resultScore.textContent = `${quizScore.correct} / ${total} 問 正解 (${pct}%)`;
+
+  if (pct === 100) {
+    resultBadge.textContent = '🏆';
+    resultTitle.textContent = 'パーフェクト！完璧です！';
+    resultMsg.textContent = '全問正解達成！この調子でどんどん進めましょう！';
+  } else if (pct >= 80) {
+    resultBadge.textContent = '🎉';
+    resultTitle.textContent = '素晴らしい成績です！';
+    resultMsg.textContent = '高い理解度です！間違えた単語をしっかり復習しましょう。';
+  } else if (pct >= 50) {
+    resultBadge.textContent = '👍';
+    resultTitle.textContent = 'よく頑張りました！';
+    resultMsg.textContent = '繰り返し練習して定着させましょう！';
+  } else {
+    resultBadge.textContent = '📚';
+    resultTitle.textContent = '復習のチャンス！';
+    resultMsg.textContent = '間違えた問題をもう一度解いて覚え直しましょう。';
+  }
+
+  // 間違えた問題がある場合、「間違えた問題だけ再挑戦」ボタンを表示
+  const mistakes = quizAnswerHistory.filter(h => !h.isCorrect).map(h => h.item);
+  if (mistakes.length > 0) {
+    btnRetryMistakes.style.display = 'block';
+    btnRetryMistakes.textContent = `❌ 間違えた ${mistakes.length} 問だけ再挑戦`;
+    btnRetryMistakes.onclick = () => startQuiz(mistakes);
+  } else {
+    btnRetryMistakes.style.display = 'none';
+  }
+
+  // 結果一覧の生成
+  let html = '';
+  quizAnswerHistory.forEach((h, idx) => {
+    const item = h.item;
+    const isLearned = learnedSet.has(item.no);
+    const learnedClass = isLearned ? 'is-learned' : '';
+    const learnedBtnText = isLearned ? '🟢 済' : '⚪️ 未';
+    const statusClass = h.isCorrect ? 'was-correct' : 'was-incorrect';
+    const icon = h.isCorrect ? '⭕️' : '❌';
+
+    html += `<div class="result-item ${statusClass}">
+      <div class="result-item-info">
+        <div class="result-item-main">${icon} #${item.no} ${item.es} <small>(${item.ja})</small></div>
+        <div class="result-item-sub">${item.expr || ''}</div>
+      </div>
+      <button type="button" class="result-item-btn ${learnedClass}" id="res-btn-${item.no}" onclick="toggleResultLearned(${item.no})">
+        ${learnedBtnText}
+      </button>
+    </div>`;
+  });
+  resultListContainer.innerHTML = html;
+}
+
+window.toggleResultLearned = function(no) {
+  if (learnedSet.has(no)) {
+    learnedSet.delete(no);
+  } else {
+    learnedSet.add(no);
+  }
+  saveLearned();
+
+  const btn = document.getElementById(`res-btn-${no}`);
+  if (btn) {
+    const isLearned = learnedSet.has(no);
+    btn.className = `result-item-btn ${isLearned ? 'is-learned' : ''}`;
+    btn.textContent = isLearned ? '🟢 済' : '⚪️ 未';
+  }
+};
+
+btnRetryQuiz.addEventListener('click', () => startQuiz());
+btnBackToList.addEventListener('click', () => switchMainTab('list'));
+
 </script>
 </body>
 </html>
