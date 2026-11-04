@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Panel del Profesor · Resultados en Vivo JLPT</title>
+<style>
+:root {
+  --bg: #f8fafc;
+  --card-bg: #ffffff;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --grid: #e2e8f0;
+  --bar: #2563eb;
+  --low: #dc2626;
+  --border: #cbd5e1;
+  --accent: #059669;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f172a;
+    --card-bg: #1e293b;
+    --ink: #f1f5f9;
+    --muted: #94a3b8;
+    --grid: #334155;
+    --bar: #60a5fa;
+    --low: #f87171;
+    --border: #475569;
+    --accent: #10b981;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Sans", sans-serif;
+  padding: 16px 20px;
+}
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--grid);
+  padding-bottom: 12px;
+}
+.title-area h1 {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.title-area .sub {
+  color: var(--muted);
+  font-size: 13px;
+}
+.controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+select, .btn {
+  background: var(--card-bg);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-primary {
+  background: var(--bar);
+  color: white;
+  border: none;
+}
+.live-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--accent);
+  padding: 5px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 1.8s infinite;
+}
+@keyframes pulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+/* Tiles */
+.tiles {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.tile {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 18px;
+  min-width: 140px;
+  flex: 1;
+}
+.tile .k { color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; }
+.tile .v { font-size: 30px; font-weight: 800; margin: 3px 0; }
+.tile .sub-k { font-size: 12px; color: var(--muted); }
+
+/* Charts */
+h2 {
+  font-size: 17px;
+  margin: 20px 0 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.chart-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+.chart {
+  display: flex;
+  gap: 6px;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--grid);
+  padding-bottom: 4px;
+  overflow-x: auto;
+}
+.bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 38px;
+  flex: 0 0 38px;
+}
+.val {
+  position: absolute;
+  left: -8px;
+  right: -8px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink);
+  font-weight: 700;
+}
+.lab {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+  margin-top: 4px;
+}
+.track {
+  position: relative;
+  height: 150px;
+  width: 22px;
+  margin-top: 18px;
+  display: flex;
+  align-items: flex-end;
+  background: linear-gradient(var(--grid) 1px, transparent 1px) 0 0/100% 50%;
+}
+.fill {
+  width: 100%;
+  background: var(--bar);
+  border-radius: 4px 4px 0 0;
+  transition: height 0.4s ease;
+}
+.fill.low { background: var(--low); }
+
+/* Difficult Questions */
+.diff-box {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+.diff-box ul {
+  font-size: 14px;
+  line-height: 1.8;
+  padding-left: 20px;
+}
+
+/* Submissions Gallery */
+.subs-section {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-top: 24px;
+}
+.subs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+.sub-card {
+  display: flex;
+  gap: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  align-items: center;
+}
+.sub-card.ok { border-left: 5px solid #10b981; }
+.sub-card.warning { border-left: 5px solid #f59e0b; }
+.sub-card.error { border-left: 5px solid #ef4444; background: rgba(239,68,68,0.04); }
+.card-left {
+  flex: 0 0 75px;
+  height: 95px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.card-thumb:hover { transform: scale(1.05); }
+.card-right { flex: 1; min-width: 0; }
+.card-user { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+.user-no { background: var(--grid); padding: 2px 6px; border-radius: 4px; font-size: 12px; font-weight: 800; }
+.user-name { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-meta { display: flex; gap: 8px; font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+.card-file { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 700; }
+.badge-ok { background: #dcfce7; color: #166534; }
+.badge-warn { background: #fef3c7; color: #92400e; }
+.badge-err { background: #fee2e2; color: #991b1b; }
+.card-desc { font-size: 11px; margin-top: 3px; line-height: 1.3; }
+.card-desc.err { color: #dc2626; font-weight: 600; }
+.card-desc.warn { color: #b45309; }
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+}
+.modal img {
+  max-width: 92%;
+  max-height: 92%;
+  border-radius: 8px;
+  box-shadow: 0 0 24px rgba(0,0,0,0.5);
+}
+</style>
+</head>
+<body>
+
+<div class="header-row">
+  <div class="title-area">
+    <h1>👨‍🏫 Panel del Profesor · Resultados en Vivo</h1>
+    <div class="sub" id="statusHeader">Conectando al servidor...</div>
+  </div>
+  <div class="controls">
+    <div class="live-pill" id="livePill">
+      <div class="pulse-dot"></div>
+      <span>EN TIEMPO REAL</span>
+    </div>
+    <select id="dateSelect" onchange="changeFilter()">
+      <option value="NOVEMBER 7" selected>NOVEMBER 7 (Sábado actual)</option>
+      <option value="NOVEMBER 14">NOVEMBER 14</option>
+      <option value="OCTOBER 31">OCTOBER 31</option>
+    </select>
+    <select id="levelSelect" onchange="changeFilter()">
+      <option value="N5" selected>Nivel N5</option>
+      <option value="N4">Nivel N4</option>
+    </select>
+    <button class="btn btn-primary" onclick="loadData(true)">🔄 Actualizar</button>
+  </div>
+</div>
+
+<!-- Tiles Summary -->
+<div class="tiles">
+  <div class="tile">
+    <div class="k">Hojas recibidas / 受信枚数</div>
+    <div class="v" id="tileReceived">--</div>
+    <div class="sub-k" id="tileReceivedSub">Cargando...</div>
+  </div>
+  <div class="tile">
+    <div class="k">Promedio total / 平均点</div>
+    <div class="v" id="tileAvgTotal">--</div>
+    <div class="sub-k" id="tileAvgTotalSub">--% correcto</div>
+  </div>
+  <div class="tile">
+    <div class="k">Vocabulario / 文字・語彙</div>
+    <div class="v" id="tileAvgVocab">--</div>
+    <div class="sub-k" id="tileAvgVocabSub">--% aciertos</div>
+  </div>
+  <div class="tile">
+    <div class="k">Gramática / 文法・読解</div>
+    <div class="v" id="tileAvgGram">--</div>
+    <div class="sub-k" id="tileAvgGramSub">--% aciertos</div>
+  </div>
+</div>
+
+<!-- Charts Section -->
+<h2>文字・語彙 / Vocabulario — % correcto por pregunta</h2>
+<div class="chart-box">
+  <div class="chart" id="chartVocab">
+    <div style="padding:20px;color:var(--muted);">Cargando gráfico...</div>
+  </div>
+</div>
+
+<h2>文法・読解 / Gramática y lectura — % correcto por pregunta</h2>
+<div class="chart-box">
+  <div class="chart" id="chartGrammar">
+    <div style="padding:20px;color:var(--muted);">Cargando gráfico...</div>
+  </div>
+</div>
+
+<!-- Difficult Questions -->
+<div class="diff-box">
+  <h2 style="margin:0 0 8px;">⚠️ Preguntas con mayor dificultad / まちがいが多い問題</h2>
+  <ul id="diffList">
+    <li>Calculando estadísticas...</li>
+  </ul>
+</div>
+
+<!-- Submissions Gallery -->
+<div class="subs-section">
+  <h2>📥 Fotos recibidas y estado de calificación (<span id="subsCount">0</span>)</h2>
+  <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">
+    Haz clic en cualquier imagen para verla en pantalla completa con la revisión automática (marcas, círculos y recuadros).
+  </div>
+  <div class="subs-grid" id="subsGrid">
+    <div style="padding:30px;color:var(--muted);text-align:center;grid-column:1/-1;">Esperando hojas de respuestas...</div>
+  </div>
+</div>
+
+<!-- Modal for image viewing -->
+<div class="modal" id="imgModal" onclick="closeModal()">
+  <img id="modalImg" src="" alt="Foto en grande">
+</div>
+
+<script>
+const SUPABASE_URL = "https://jpggxosenzbbxvtwtgrj.supabase.co";
+
+let currentDate = "NOVEMBER 7";
+let currentLevel = "N5";
+let autoInterval = null;
+
+function changeFilter() {
+  currentDate = document.getElementById('dateSelect').value;
+  currentLevel = document.getElementById('levelSelect').value;
+  loadData(true);
+}
+
+async function loadData(manual = false) {
+  const cleanDate = currentDate.replace(/\s+/g, '_');
+  const summaryUrl = `${SUPABASE_URL}/storage/v1/object/public/mock-sheets/${encodeURIComponent(cleanDate)}/${encodeURIComponent(currentLevel)}/summary.json?t=${Date.now()}`;
+
+  try {
+    const res = await fetch(summaryUrl);
+    if (!res.ok) {
+      if (manual) {
+        document.getElementById('statusHeader').textContent = `No hay datos para ${currentDate} ${currentLevel} todavía`;
+      }
+      return;
+    }
+    const data = await res.json();
+    renderDashboard(data);
+  } catch (e) {
+    console.warn("Fetch error:", e);
+  }
+}
+
+function renderDashboard(data) {
+  document.getElementById('statusHeader').textContent = `${data.date} · ${data.level} · Actualizado: ${data.updated_at || 'Reciente'}`;
+
+  // Tiles
+  document.getElementById('tileReceived').textContent = `${data.total_received || 0} 枚`;
+  document.getElementById('tileReceivedSub').textContent = `採点完了: ${data.graded_count || 0}人`;
+
+  document.getElementById('tileAvgTotal').textContent = `${data.avg_total || 0} / ${data.total_max || 35}`;
+  document.getElementById('tileAvgTotalSub').textContent = `正答率 ${data.pct_total || 0}%`;
+
+  document.getElementById('tileAvgVocab').textContent = `${data.avg_vocab || 0} / ${data.vocab_max || 20}`;
+  document.getElementById('tileAvgVocabSub').textContent = `正答率 ${data.pct_vocab || 0}%`;
+
+  document.getElementById('tileAvgGram').textContent = `${data.avg_grammar || 0} / ${data.grammar_max || 15}`;
+  document.getElementById('tileAvgGramSub').textContent = `正答率 ${data.pct_grammar || 0}%`;
+
+  // Charts
+  const stats = data.stats || [];
+  const vStats = stats.filter(s => s.label.startsWith('V'));
+  const gStats = stats.filter(s => s.label.startsWith('G'));
+
+  renderChart('chartVocab', vStats);
+  renderChart('chartGrammar', gStats);
+
+  // Difficult list
+  const sorted = [...stats].filter(s => s.pct < 60).sort((a, b) => a.pct - b.pct).slice(0, 5);
+  const diffUl = document.getElementById('diffList');
+  if (sorted.length === 0) {
+    diffUl.innerHTML = '<li>🎉 ¡Todos los reactivos tienen buen porcentaje de aciertos!</li>';
+  } else {
+    diffUl.innerHTML = sorted.map(s => {
+      const topWrongStr = s.top_wrong ? ` · la más elegida mal: <b>${s.top_wrong}</b>` : '';
+      return `<li><b>${s.label}</b> — ${s.pct}% correcto · correcta: <b>${s.correct}</b>${topWrongStr}</li>`;
+    }).join('');
+  }
+
+  // Submissions Gallery
+  const subs = data.submissions || [];
+  document.getElementById('subsCount').textContent = subs.length;
+  const grid = document.getElementById('subsGrid');
+  if (subs.length === 0) {
+    grid.innerHTML = '<div style="padding:30px;color:var(--muted);text-align:center;grid-column:1/-1;">Aún no hay fotos recibidas.</div>';
+    return;
+  }
+
+  grid.innerHTML = subs.map(s => {
+    let cardClass = s.status === 'ok' ? 'ok' : (s.status === 'warning' ? 'warning' : 'error');
+    let badgeClass = s.status === 'ok' ? 'badge-ok' : (s.status === 'warning' ? 'badge-warn' : 'badge-err');
+    let desc = '';
+    if (s.status === 'error') {
+      desc = `<div class="card-desc err">❌ ${s.reason || 'Error de lectura'}</div>`;
+    } else if (s.flags && s.flags.length > 0) {
+      desc = `<div class="card-desc warn">⚠ ${s.flags.join(', ')}</div>`;
+    }
+
+    return `
+      <div class="sub-card ${cardClass}">
+        <div class="card-left">
+          <img src="${s.thumb_url}" alt="Foto" class="card-thumb" onclick="openModal('${s.thumb_url}')" title="Clic para ampliar">
+        </div>
+        <div class="card-right">
+          <div class="card-user">
+            <span class="user-no">No.${s.id || '-'}</span>
+            <span class="user-name">${s.name || 'Estudiante'}</span>
+          </div>
+          <div class="card-meta">
+            <span>🕒 ${s.time_str || ''}</span>
+            <span class="card-file" title="${s.file}">📄 ${s.file}</span>
+          </div>
+          <div>
+            <span class="badge ${badgeClass}">${s.score_str || 'Sin calificar'}</span>
+          </div>
+          ${desc}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderChart(elementId, list) {
+  const container = document.getElementById(elementId);
+  if (!list || list.length === 0) {
+    container.innerHTML = '<div style="padding:20px;color:var(--muted);">Sin datos disponibles</div>';
+    return;
+  }
+  container.innerHTML = list.map(item => {
+    const isLow = item.pct < 50;
+    const warnLab = isLow ? `⚠ ${item.label.replace(/[VG]/, '')}` : item.label.replace(/[VG]/, '');
+    const countsStr = item.counts ? item.counts.map((c, idx) => `${idx + 1}: ${c}`).join(' · ') : '';
+    const title = `${item.label}: correcta ${item.correct} · ${item.pct}% · ${countsStr}`;
+
+    return `
+      <div class="bar" title="${title}">
+        <div class="track">
+          <div class="val" style="bottom:calc(${item.pct}% + 2px)">${item.pct}</div>
+          <div class="fill ${isLow ? 'low' : ''}" style="height:${item.pct}%"></div>
+        </div>
+        <div class="lab">${warnLab}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openModal(src) {
+  document.getElementById('modalImg').src = src;
+  document.getElementById('imgModal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('imgModal').style.display = 'none';
+}
+
+// Iniciar carga periódica cada 4 segundos
+loadData();
+autoInterval = setInterval(() => loadData(false), 4000);
+</script>
+</body>
+</html>

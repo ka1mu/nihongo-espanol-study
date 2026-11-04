@@ -256,6 +256,76 @@ h1 {
   margin-bottom: 20px;
   line-height: 1.5;
 }
+
+/* Score Result Card */
+.result-box {
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+  animation: fadeIn 0.3s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.score-hero {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  color: white;
+  border-radius: 14px;
+  padding: 18px 12px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(37,99,235,0.25);
+}
+.score-hero-val {
+  font-size: 2.3rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+.score-hero-pct {
+  font-size: 1.05rem;
+  font-weight: 700;
+  opacity: 0.92;
+  margin-top: 3px;
+}
+.score-hero-label {
+  font-size: 0.78rem;
+  opacity: 0.8;
+  margin-top: 4px;
+  letter-spacing: 0.5px;
+}
+.score-breakdown {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.score-item {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+}
+.score-item-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+}
+.score-item-val {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 2px;
+}
+.badge-incorrect {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
 </style>
 </head>
 <body>
@@ -370,6 +440,51 @@ h1 {
     <div class="status-desc" id="statusDesc">Por favor espera un momento mientras se sube tu examen.</div>
     <button class="btn-submit" id="btnAnother" style="display:none;" onclick="resetForm()">
       🔄 Enviar otra foto (Si quieres corregir)
+    </button>
+  </div>
+
+  <!-- Resultado de Calificación Personal (Solo para este alumno) -->
+  <div class="upload-card result-box" id="resultCard">
+    <div style="text-align:center;">
+      <div style="font-size:3rem;margin-bottom:4px;">🎉</div>
+      <div style="font-size:1.35rem;font-weight:800;color:#0f172a;">¡Examen Calificado! / 採点完了</div>
+      <div id="resStudentInfo" style="font-size:0.92rem;color:#475569;margin-top:2px;font-weight:700;">No. 6: REYES CHAVEZ PERLA KARELY</div>
+    </div>
+
+    <!-- Puntaje Total Hero -->
+    <div class="score-hero">
+      <div class="score-hero-val" id="resTotalScore">-- / 35</div>
+      <div class="score-hero-pct" id="resPercentage">--% de aciertos</div>
+      <div class="score-hero-label">PUNTAJE TOTAL / 総合得点</div>
+    </div>
+
+    <!-- Desglose por Secciones -->
+    <div class="score-breakdown">
+      <div class="score-item">
+        <div class="score-item-title">文字・語彙<br>(Vocabulario)</div>
+        <div class="score-item-val" id="resVocabScore">-- / 20</div>
+      </div>
+      <div class="score-item">
+        <div class="score-item-title">文法・読解<br>(Gramática y lectura)</div>
+        <div class="score-item-val" id="resGrammarScore">-- / 15</div>
+      </div>
+    </div>
+
+    <!-- Preguntas a Repasar / Incorrectas -->
+    <div id="resIncorrectSection" style="margin-top:4px;">
+      <div style="font-size:0.84rem;font-weight:700;color:#334155;margin-bottom:6px;">
+        📝 Preguntas a repasar / まちがえた問題:
+      </div>
+      <div id="resIncorrectList" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+    </div>
+
+    <div style="background:#f1f5f9;border-radius:10px;padding:12px;font-size:0.8rem;color:#475569;line-height:1.45;text-align:center;">
+      ✅ Tu calificación ya está registrada en la pantalla del profesor.<br>
+      先生の画面にも自動で集計されました。お疲れ様でした！
+    </div>
+
+    <button class="btn-submit" style="background:#475569;box-shadow:none;margin-top:4px;" onclick="resetForm()">
+      🔄 Enviar otra foto / もう一度送る
     </button>
   </div>
 </div>
@@ -652,17 +767,44 @@ async function submitSheet() {
       throw new Error(lastError.message || JSON.stringify(lastError));
     }
 
-    // Éxito
-    document.getElementById('statusIcon').textContent = '🎉';
-    document.getElementById('statusTitle').textContent = '¡Hoja Enviada con Éxito!';
+    // Éxito: 自動採点待機状態を表示し、個別結果JSONをポーリング
+    document.getElementById('statusIcon').textContent = '⏳';
+    document.getElementById('statusTitle').textContent = 'Calificando tu examen... / 採点中...';
     document.getElementById('statusDesc').innerHTML = `
-      Recibido: <b>No.${studentNo} ${studentName}</b> (${selectedLevel} · ${selectedDate})<br><br>
-      El profesor ya tiene tu hoja. En unos momentos verás tus resultados en la pantalla del salón.<br>
-      <i>(Recuerda entregar también tu hoja en papel al terminar)</i>
+      Recibido: <b>No.${studentNo} ${studentName}</b> (${selectedLevel})<br><br>
+      Analizando tu hoja con IA... En unos segundos verás tu calificación en esta pantalla.
     `;
-    document.getElementById('btnAnother').style.display = 'flex';
 
-  } catch (err) {
+    const resultUrl = `${SUPABASE_URL}/storage/v1/object/public/mock-sheets/${encodeURIComponent(cleanDate)}/${encodeURIComponent(selectedLevel)}/results/${encodeURIComponent(filename)}.json`;
+
+    let attempts = 0;
+    const maxAttempts = 30; // 30回 x 2秒 = 最大60秒
+    const checkInterval = setInterval(async () => {
+      attempts++;
+      try {
+        const resp = await fetch(`${resultUrl}?t=${Date.now()}`);
+        if (resp.ok) {
+          const resData = await resp.json();
+          clearInterval(checkInterval);
+          displayScoreResult(resData);
+          return;
+        }
+      } catch (e) {}
+
+      if (attempts >= maxAttempts) {
+        clearInterval(checkInterval);
+        document.getElementById('statusIcon').textContent = '✅';
+        document.getElementById('statusTitle').textContent = '¡Hoja Enviada con Éxito!';
+        document.getElementById('statusDesc').innerHTML = `
+          Recibido: <b>No.${studentNo} ${studentName}</b> (${selectedLevel} · ${selectedDate})<br><br>
+          Tu hoja fue entregada al profesor. Si tarda en calificarse, el profesor la revisará en vivo en la pantalla del salón.<br>
+          <i>(Recuerda entregar también tu hoja en papel al terminar)</i>
+        `;
+        document.getElementById('btnAnother').style.display = 'flex';
+      }
+    }, 2000);
+
+  } catch (err) { {
     console.error('Error al subir:', err);
     document.getElementById('statusIcon').textContent = '❌';
     document.getElementById('statusTitle').textContent = 'Error al enviar';
@@ -678,8 +820,50 @@ async function submitSheet() {
   }
 }
 
+function displayScoreResult(data) {
+  document.getElementById('statusCard').style.display = 'none';
+  const resultCard = document.getElementById('resultCard');
+  resultCard.style.display = 'flex';
+
+  if (data.status === 'error') {
+    document.getElementById('resStudentInfo').textContent = `${data.name || 'Estudiante'} (No. ${data.id || '-'})`;
+    document.getElementById('resTotalScore').textContent = '⚠️ Error';
+    document.getElementById('resPercentage').textContent = 'No se pudo leer la hoja';
+    document.getElementById('resVocabScore').textContent = '- / -';
+    document.getElementById('resGrammarScore').textContent = '- / -';
+    document.getElementById('resIncorrectSection').innerHTML = `
+      <div style="background:#fee2e2;border:1px solid #f87171;color:#991b1b;border-radius:10px;padding:12px;font-size:0.85rem;line-height:1.45;">
+        <b>⚠️ 読み取りエラー:</b><br>${data.error_message || 'Los 4 cuadros de las esquinas no se pudieron detectar.'}<br><br>
+        👉 <b>四隅の黒四角がしっかり写るように、明るい場所で撮り直してください。</b>
+      </div>
+    `;
+    return;
+  }
+
+  document.getElementById('resStudentInfo').textContent = `No. ${data.id}: ${data.name}`;
+  document.getElementById('resTotalScore').textContent = `${data.total_score} / ${data.total_max}`;
+  document.getElementById('resPercentage').textContent = `${data.percentage}% de aciertos`;
+  document.getElementById('resVocabScore').textContent = `${data.vocab_score} / ${data.vocab_max}`;
+  document.getElementById('resGrammarScore').textContent = `${data.grammar_score} / ${data.grammar_max}`;
+
+  const incList = document.getElementById('resIncorrectList');
+  incList.innerHTML = '';
+  const incs = data.incorrect_questions || [];
+  if (incs.length === 0) {
+    incList.innerHTML = '<span style="color:#16a34a;font-weight:700;font-size:0.88rem;">🎉 ¡Excelente! ¡Todo correcto! (全問正解)</span>';
+  } else {
+    incs.forEach(q => {
+      const badge = document.createElement('span');
+      badge.className = 'badge-incorrect';
+      badge.textContent = q;
+      incList.appendChild(badge);
+    });
+  }
+}
+
 function resetForm() {
   document.getElementById('statusCard').style.display = 'none';
+  document.getElementById('resultCard').style.display = 'none';
   document.getElementById('formCard').style.display = 'flex';
   document.getElementById('previewImg').style.display = 'none';
   document.getElementById('photoPrompt').style.display = 'block';
