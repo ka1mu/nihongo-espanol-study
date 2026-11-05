@@ -326,12 +326,154 @@ h1 {
   font-size: 0.8rem;
   font-weight: 700;
 }
+
+/* Auth Gate */
+.auth-gate-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 85vh;
+  padding: 20px 12px;
+}
+.auth-gate-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  padding: 36px 24px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+}
+.auth-icon {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+  display: inline-block;
+  animation: bounce 1.2s infinite alternate ease-in-out;
+}
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to { transform: translateY(-6px); }
+}
+.auth-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+.auth-sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.auth-input {
+  width: 100%;
+  padding: 13px 16px;
+  font-size: 1.1rem;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  text-align: center;
+  letter-spacing: 2px;
+  font-weight: 700;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.auth-input:focus {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+.auth-btn {
+  padding: 13px;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(37,99,235,0.25);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.auth-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(37,99,235,0.35);
+}
+.auth-btn:active {
+  transform: translateY(0);
+}
+.auth-error {
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: none;
+}
+.btn-logout {
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  color: #64748b;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-logout:hover {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #fca5a5;
+}
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="top-nav">
-    <a href="../" class="btn-back">← Portal de Estudio</a>
+
+  <!-- Auth Gate Screen (Password Protection) -->
+  <div id="authGate" class="auth-gate-container">
+    <div class="auth-gate-card">
+      <div class="auth-icon">🔒</div>
+      <h2 class="auth-title">Acceso al Sistema</h2>
+      <p class="auth-sub">
+        Introduce la contraseña para subir tu hoja de examen.<br>
+        (解答用紙読み込み用パスワードを入力してください)
+      </p>
+
+      <form id="authForm" class="auth-form" onsubmit="handleAuthSubmit(event)">
+        <input
+          type="password"
+          id="examPasswordInput"
+          class="auth-input"
+          placeholder="Contraseña / パスワード"
+          autocomplete="current-password"
+          required
+        >
+        <div id="authErrorMsg" class="auth-error">
+          ❌ Contraseña incorrecta / パスワードが正しくありません
+        </div>
+        <button type="submit" class="auth-btn">
+          Desbloquear / 入室する ➔
+        </button>
+      </form>
+    </div>
+  </div>
+
+<div class="container" id="appContainer" style="display:none;">
+  <div class="top-nav" style="display:flex; justify-content:space-between; align-items:center;">
+    <span style="font-size:0.78rem; font-weight:700; color:#1e40af; background:#eff6ff; padding:4px 10px; border-radius:6px; border:1px solid #bfdbfe;">
+      🔒 Acceso Autorizado (irodori)
+    </span>
+    <button type="button" class="btn-logout" onclick="logoutAuth()">
+      Cerrar Sesión / ログアウト ⏏️
+    </button>
   </div>
 
   <header>
@@ -937,6 +1079,53 @@ function resetForm() {
   selectedFileBlob = null;
   selectedRawFile = null;
 }
+
+// ==================== Autenticación con Contraseña (irodori) ====================
+const AUTH_KEY = 'exam_upload_auth_irodori';
+const CORRECT_PASS = 'irodori';
+
+function checkAuthStatus() {
+  const isAuth = sessionStorage.getItem(AUTH_KEY) === 'valid';
+  const authGate = document.getElementById('authGate');
+  const appContainer = document.getElementById('appContainer');
+
+  if (isAuth) {
+    if (authGate) authGate.style.display = 'none';
+    if (appContainer) appContainer.style.display = 'block';
+  } else {
+    if (authGate) authGate.style.display = 'flex';
+    if (appContainer) appContainer.style.display = 'none';
+    const input = document.getElementById('examPasswordInput');
+    if (input) setTimeout(() => input.focus(), 100);
+  }
+}
+
+window.handleAuthSubmit = function(e) {
+  e.preventDefault();
+  const input = document.getElementById('examPasswordInput');
+  const errorMsg = document.getElementById('authErrorMsg');
+  const val = (input.value || '').trim().toLowerCase();
+
+  if (val === CORRECT_PASS) {
+    sessionStorage.setItem(AUTH_KEY, 'valid');
+    if (errorMsg) errorMsg.style.display = 'none';
+    checkAuthStatus();
+  } else {
+    if (errorMsg) {
+      errorMsg.style.display = 'block';
+    }
+    input.value = '';
+    input.focus();
+  }
+};
+
+window.logoutAuth = function() {
+  sessionStorage.removeItem(AUTH_KEY);
+  checkAuthStatus();
+};
+
+// 起動時に認証チェックを実行
+checkAuthStatus();
 </script>
 </body>
 </html>

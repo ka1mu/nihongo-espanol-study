@@ -279,9 +279,116 @@ h2 {
   border-radius: 8px;
   box-shadow: 0 0 24px rgba(0,0,0,0.5);
 }
+
+/* Auth Gate */
+.auth-gate-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 20px 12px;
+}
+.auth-gate-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  padding: 36px 24px;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+}
+.auth-icon {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+  display: inline-block;
+}
+.auth-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.auth-sub {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.auth-input {
+  width: 100%;
+  padding: 13px 16px;
+  font-size: 1.1rem;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--ink);
+  text-align: center;
+  letter-spacing: 2px;
+  font-weight: 700;
+  outline: none;
+}
+.auth-input:focus {
+  border-color: var(--bar);
+}
+.auth-btn {
+  padding: 13px;
+  background: var(--bar);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+.auth-error {
+  color: #dc2626;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: none;
+}
 </style>
 </head>
 <body>
+
+<!-- Auth Gate Screen (Password Protection) -->
+<div id="authGate" class="auth-gate-container">
+  <div class="auth-gate-card">
+    <div class="auth-icon">👨‍🏫🔒</div>
+    <h2 class="auth-title">Acceso del Profesor</h2>
+    <p class="auth-sub">
+      Panel de control de exámenes JLPT.<br>
+      (先生専用ダッシュボード：パスワードを入力してください)
+    </p>
+
+    <form id="authForm" class="auth-form" onsubmit="handleAuthSubmit(event)">
+      <input
+        type="password"
+        id="teacherPasswordInput"
+        class="auth-input"
+        placeholder="Contraseña / パスワード"
+        autocomplete="current-password"
+        required
+      >
+      <div id="authErrorMsg" class="auth-error">
+        ❌ Contraseña incorrecta / パスワードが正しくありません
+      </div>
+      <button type="submit" class="auth-btn">
+        Desbloquear / 認証する ➔
+      </button>
+    </form>
+  </div>
+</div>
+
+<div id="teacherApp" style="display:none;">
 
 <div class="header-row">
   <div class="title-area">
@@ -516,7 +623,54 @@ function closeModal() {
 // Iniciar carga periódica cada 4 segundos
 loadData();
 autoInterval = setInterval(() => loadData(false), 4000);
+
+// ==================== Autenticación con Contraseña (irodori) ====================
+const AUTH_KEY = 'exam_upload_auth_irodori';
+const CORRECT_PASS = 'irodori';
+
+function checkAuthStatus() {
+  const isAuth = sessionStorage.getItem(AUTH_KEY) === 'valid';
+  const authGate = document.getElementById('authGate');
+  const teacherApp = document.getElementById('teacherApp');
+
+  if (isAuth) {
+    if (authGate) authGate.style.display = 'none';
+    if (teacherApp) teacherApp.style.display = 'block';
+  } else {
+    if (authGate) authGate.style.display = 'flex';
+    if (teacherApp) teacherApp.style.display = 'none';
+    const input = document.getElementById('teacherPasswordInput');
+    if (input) setTimeout(() => input.focus(), 100);
+  }
+}
+
+window.handleAuthSubmit = function(e) {
+  e.preventDefault();
+  const input = document.getElementById('teacherPasswordInput');
+  const errorMsg = document.getElementById('authErrorMsg');
+  const val = (input.value || '').trim().toLowerCase();
+
+  if (val === CORRECT_PASS) {
+    sessionStorage.setItem(AUTH_KEY, 'valid');
+    if (errorMsg) errorMsg.style.display = 'none';
+    checkAuthStatus();
+  } else {
+    if (errorMsg) {
+      errorMsg.style.display = 'block';
+    }
+    input.value = '';
+    input.focus();
+  }
+};
+
+window.logoutAuth = function() {
+  sessionStorage.removeItem(AUTH_KEY);
+  checkAuthStatus();
+};
+
+checkAuthStatus();
 </script>
+</div> <!-- /#teacherApp -->
 </body>
 </html>
 
