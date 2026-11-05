@@ -3,7 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>Panel del Profesor · Resultados en Vivo JLPT</title>
+<title>Panel del Profesor · ライブ採点結果 ＆ 提出写真管理 (JLPT N5 & N4)</title>
+<!-- Supabase Official JS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --bg: #f8fafc;
@@ -40,15 +42,15 @@ body {
 .header-row {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 16px;
   border-bottom: 1px solid var(--grid);
-  padding-bottom: 12px;
+  padding-bottom: 14px;
 }
 .title-area h1 {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 800;
   margin-bottom: 4px;
   display: flex;
@@ -80,6 +82,23 @@ select, .btn {
   color: white;
   border: none;
 }
+.btn-primary:hover {
+  opacity: 0.9;
+}
+.btn-logout {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-logout:hover {
+  background: #dc2626;
+  color: white;
+}
 .live-pill {
   display: inline-flex;
   align-items: center;
@@ -104,6 +123,36 @@ select, .btn {
   100% { transform: scale(0.95); opacity: 0.8; }
 }
 
+/* Level Toggle Buttons */
+.level-toggle-group {
+  display: flex;
+  gap: 4px;
+  background: var(--grid);
+  padding: 3px;
+  border-radius: 8px;
+}
+.btn-lvl-toggle {
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  color: var(--muted);
+  transition: all 0.15s;
+}
+.btn-lvl-toggle.active.lvl-n5 {
+  background: #10b981;
+  color: white;
+  box-shadow: 0 1px 4px rgba(16, 185, 129, 0.3);
+}
+.btn-lvl-toggle.active.lvl-n4 {
+  background: #2563eb;
+  color: white;
+  box-shadow: 0 1px 4px rgba(37, 99, 235, 0.3);
+}
+
 /* Tiles */
 .tiles {
   display: flex;
@@ -125,7 +174,7 @@ select, .btn {
 
 /* Charts */
 h2 {
-  font-size: 17px;
+  font-size: 16px;
   margin: 20px 0 10px;
   font-weight: 700;
   display: flex;
@@ -141,61 +190,62 @@ h2 {
 }
 .chart {
   display: flex;
-  gap: 6px;
   align-items: flex-end;
-  border-bottom: 1px solid var(--grid);
-  padding-bottom: 4px;
+  gap: 4px;
+  height: 140px;
+  padding: 10px 0 0;
   overflow-x: auto;
 }
 .bar {
+  flex: 1;
+  min-width: 22px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 38px;
-  flex: 0 0 38px;
-}
-.val {
-  position: absolute;
-  left: -8px;
-  right: -8px;
-  text-align: center;
-  font-size: 12px;
-  color: var(--ink);
-  font-weight: 700;
-}
-.lab {
-  font-size: 12px;
-  color: var(--muted);
-  white-space: nowrap;
-  margin-top: 4px;
+  height: 100%;
 }
 .track {
-  position: relative;
-  height: 150px;
-  width: 22px;
-  margin-top: 18px;
+  flex: 1;
+  width: 14px;
+  background: var(--grid);
+  border-radius: 4px;
   display: flex;
   align-items: flex-end;
-  background: linear-gradient(var(--grid) 1px, transparent 1px) 0 0/100% 50%;
+  position: relative;
 }
 .fill {
   width: 100%;
   background: var(--bar);
-  border-radius: 4px 4px 0 0;
-  transition: height 0.4s ease;
+  border-radius: 4px;
+  transition: height 0.3s;
 }
 .fill.low { background: var(--low); }
+.val {
+  position: absolute;
+  font-size: 9px;
+  font-weight: 800;
+  text-align: center;
+  width: 100%;
+  left: 0;
+  color: var(--ink);
+}
+.lab {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 4px;
+  font-weight: 600;
+}
 
 /* Difficult Questions */
 .diff-box {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
+  background: rgba(220, 38, 38, 0.06);
+  border: 1px solid rgba(220, 38, 38, 0.2);
   border-radius: 12px;
   padding: 14px 18px;
   margin-bottom: 20px;
 }
 .diff-box ul {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.8;
   padding-left: 20px;
 }
@@ -207,6 +257,14 @@ h2 {
   border-radius: 14px;
   padding: 16px;
   margin-top: 24px;
+}
+.subs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 .subs-grid {
   display: grid;
@@ -223,10 +281,12 @@ h2 {
   padding: 10px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
   align-items: center;
+  position: relative;
 }
 .sub-card.ok { border-left: 5px solid #10b981; }
 .sub-card.warning { border-left: 5px solid #f59e0b; }
 .sub-card.error { border-left: 5px solid #ef4444; background: rgba(239,68,68,0.04); }
+.sub-card.raw { border-left: 5px solid #3b82f6; }
 .card-left {
   flex: 0 0 75px;
   height: 95px;
@@ -255,9 +315,35 @@ h2 {
 .badge-ok { background: #dcfce7; color: #166534; }
 .badge-warn { background: #fef3c7; color: #92400e; }
 .badge-err { background: #fee2e2; color: #991b1b; }
+.badge-raw { background: #dbeafe; color: #1e40af; }
 .card-desc { font-size: 11px; margin-top: 3px; line-height: 1.3; }
 .card-desc.err { color: #dc2626; font-weight: 600; }
 .card-desc.warn { color: #b45309; }
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+.btn-delete-sub {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.btn-delete-sub:hover {
+  background: #dc2626;
+  color: white;
+  border-color: #dc2626;
+}
 
 /* Modal */
 .modal {
@@ -355,18 +441,39 @@ h2 {
   font-weight: 700;
   display: none;
 }
+
+/* Toast */
+.toast-msg {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #1e293b;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  z-index: 10000;
+  display: none;
+  animation: slideUp 0.25s ease;
+}
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
 </style>
 </head>
 <body>
 
-<!-- Auth Gate Screen (Password Protection) -->
+<!-- Auth Gate Screen (Password: kazuna1031) -->
 <div id="authGate" class="auth-gate-container">
   <div class="auth-gate-card">
     <div class="auth-icon">👨‍🏫🔒</div>
-    <h2 class="auth-title">Acceso del Profesor</h2>
+    <h2 class="auth-title">Acceso del Profesor (先生専用)</h2>
     <p class="auth-sub">
-      Panel de control de exámenes JLPT.<br>
-      (先生専用ダッシュボード：パスワードを入力してください)
+      Panel de control de exámenes y gestión de fotos.<br>
+      先生専用パスワードを入力して認証してください。
     </p>
 
     <form id="authForm" class="auth-form" onsubmit="handleAuthSubmit(event)">
@@ -392,7 +499,7 @@ h2 {
 
 <div class="header-row">
   <div class="title-area">
-    <h1>👨‍🏫 Panel del Profesor · Resultados en Vivo</h1>
+    <h1>👨‍🏫 Panel del Profesor · ライブ採点 ＆ 写真管理</h1>
     <div class="sub" id="statusHeader">Conectando al servidor...</div>
   </div>
   <div class="controls">
@@ -400,16 +507,23 @@ h2 {
       <div class="pulse-dot"></div>
       <span>EN TIEMPO REAL</span>
     </div>
+
+    <!-- Date Select -->
     <select id="dateSelect" onchange="changeFilter()">
-      <option value="NOVEMBER 7" selected>NOVEMBER 7 (Sábado actual)</option>
-      <option value="NOVEMBER 14">NOVEMBER 14</option>
-      <option value="OCTOBER 31">OCTOBER 31</option>
+      <option value="NOVEMBER 7" selected>2026-11-07 (NOVEMBER 7)</option>
+      <option value="NOVEMBER 14">2026-11-14 (NOVEMBER 14)</option>
+      <option value="OCTOBER 31">2026-10-31 (OCTOBER 31)</option>
+      <option value="OCTOBER 24">2026-10-24 (OCTOBER 24)</option>
     </select>
-    <select id="levelSelect" onchange="changeFilter()">
-      <option value="N5" selected>Nivel N5</option>
-      <option value="N4">Nivel N4</option>
-    </select>
+
+    <!-- N4 / N5 Level Toggle Pills -->
+    <div class="level-toggle-group">
+      <button type="button" class="btn-lvl-toggle active lvl-n5" id="btnLvlN5" onclick="setLevel('N5')">🟢 N5</button>
+      <button type="button" class="btn-lvl-toggle lvl-n4" id="btnLvlN4" onclick="setLevel('N4')">🔵 N4</button>
+    </div>
+
     <button class="btn btn-primary" onclick="loadData(true)">🔄 Actualizar</button>
+    <button type="button" class="btn-logout" onclick="logoutTeacher()">🔒 ログアウト</button>
   </div>
 </div>
 
@@ -438,91 +552,231 @@ h2 {
 </div>
 
 <!-- Charts Section -->
-<h2>文字・語彙 / Vocabulario — % correcto por pregunta</h2>
-<div class="chart-box">
-  <div class="chart" id="chartVocab">
-    <div style="padding:20px;color:var(--muted);">Cargando gráfico...</div>
+<div id="analyticsSection">
+  <h2>文字・語彙 / Vocabulario — % correcto por pregunta</h2>
+  <div class="chart-box">
+    <div class="chart" id="chartVocab">
+      <div style="padding:20px;color:var(--muted);">Cargando gráfico...</div>
+    </div>
   </div>
-</div>
 
-<h2>文法・読解 / Gramática y lectura — % correcto por pregunta</h2>
-<div class="chart-box">
-  <div class="chart" id="chartGrammar">
-    <div style="padding:20px;color:var(--muted);">Cargando gráfico...</div>
+  <h2>文法・読解 / Gramática y lectura — % correcto por pregunta</h2>
+  <div class="chart-box">
+    <div class="chart" id="chartGrammar">
+      <div style="padding:20px;color:var(--muted);">Cargando gráfico...</div>
+    </div>
   </div>
-</div>
 
-<!-- Difficult Questions -->
-<div class="diff-box">
-  <h2 style="margin:0 0 8px;">⚠️ Preguntas con mayor dificultad / まちがいが多い問題</h2>
-  <ul id="diffList">
-    <li>Calculando estadísticas...</li>
-  </ul>
+  <!-- Difficult Questions -->
+  <div class="diff-box">
+    <h2 style="margin:0 0 8px;">⚠️ Preguntas con mayor dificultad / まちがいが多い問題</h2>
+    <ul id="diffList">
+      <li>Calculando estadísticas...</li>
+    </ul>
+  </div>
 </div>
 
 <!-- Submissions Gallery -->
 <div class="subs-section">
-  <h2>📥 Fotos recibidas y estado de calificación (<span id="subsCount">0</span>)</h2>
+  <div class="subs-header">
+    <h2>📥 写真一覧・採点状況 (<span id="subsCount">0</span> 枚)</h2>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <span style="font-size:12px;color:var(--muted);">表示フィルター:</span>
+      <select id="subFilterSelect" onchange="filterGallery()" style="padding:4px 8px;font-size:12px;">
+        <option value="all">すべて表示</option>
+        <option value="ok">合格 (OK)</option>
+        <option value="warning">要確認 (Warning)</option>
+        <option value="error">エラー (Error)</option>
+      </select>
+    </div>
+  </div>
   <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">
-    Haz clic en cualquier imagen para verla en pantalla completa con la revisión automática (marcas, círculos y recuadros).
+    写真をタップすると拡大表示されます。不要な写真や変なテストデータは「🗑️ 削除」ボタンで直接消去できます。
   </div>
   <div class="subs-grid" id="subsGrid">
     <div style="padding:30px;color:var(--muted);text-align:center;grid-column:1/-1;">Esperando hojas de respuestas...</div>
   </div>
 </div>
 
+</div> <!-- /#teacherApp -->
+
 <!-- Modal for image viewing -->
 <div class="modal" id="imgModal" onclick="closeModal()">
   <img id="modalImg" src="" alt="Foto en grande">
 </div>
 
+<!-- Toast Notification -->
+<div id="toastMsg" class="toast-msg"></div>
+
 <script>
 const SUPABASE_URL = "https://jpggxosenzbbxvtwtgrj.supabase.co";
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpwZ2d4b3NlbnpiYnh2dHd0Z3JqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMzMDk4NDIsImV4cCI6MjEwODg4NTg0Mn0.8xSevsRv0u42rgyY3mKjHpb5khXeoy6RRwQTvURAH0A";
+
+let supabaseClient = null;
+try {
+  if (window.supabase) {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  }
+} catch(e) {
+  console.warn("Supabase init error:", e);
+}
 
 let currentDate = "NOVEMBER 7";
 let currentLevel = "N5";
 let autoInterval = null;
+let currentSubmissions = [];
 
-function changeFilter() {
-  currentDate = document.getElementById('dateSelect').value;
-  currentLevel = document.getElementById('levelSelect').value;
-  loadData(true);
+// ==================== Autenticación del Profesor (kazuna1031) ====================
+const TEACHER_AUTH_KEY = "teacher_auth_kazuna1031";
+const CORRECT_TEACHER_PASS = "kazuna1031";
+
+function checkAuthStatus() {
+  const isAuth = sessionStorage.getItem(TEACHER_AUTH_KEY) === "valid";
+  const authGate = document.getElementById("authGate");
+  const teacherApp = document.getElementById("teacherApp");
+
+  if (isAuth) {
+    if (authGate) authGate.style.display = "none";
+    if (teacherApp) teacherApp.style.display = "block";
+    loadData(true);
+    if (!autoInterval) {
+      autoInterval = setInterval(() => loadData(false), 4000);
+    }
+  } else {
+    if (authGate) authGate.style.display = "flex";
+    if (teacherApp) teacherApp.style.display = "none";
+    const input = document.getElementById("teacherPasswordInput");
+    if (input) setTimeout(() => input.focus(), 100);
+  }
 }
 
+window.handleAuthSubmit = function(e) {
+  e.preventDefault();
+  const input = document.getElementById("teacherPasswordInput");
+  const errorMsg = document.getElementById("authErrorMsg");
+  const val = (input.value || "").trim().toLowerCase();
+
+  if (val === CORRECT_TEACHER_PASS) {
+    sessionStorage.setItem(TEACHER_AUTH_KEY, "valid");
+    if (errorMsg) errorMsg.style.display = "none";
+    checkAuthStatus();
+  } else {
+    if (errorMsg) {
+      errorMsg.style.display = "block";
+    }
+    input.value = "";
+    input.focus();
+  }
+};
+
+window.logoutTeacher = function() {
+  sessionStorage.removeItem(TEACHER_AUTH_KEY);
+  if (autoInterval) {
+    clearInterval(autoInterval);
+    autoInterval = null;
+  }
+  checkAuthStatus();
+};
+
+// ==================== N4 / N5 & Date Filter ====================
+window.setLevel = function(level) {
+  currentLevel = level;
+  document.getElementById("btnLvlN5").classList.toggle("active", level === "N5");
+  document.getElementById("btnLvlN4").classList.toggle("active", level === "N4");
+  loadData(true);
+};
+
+window.changeFilter = function() {
+  currentDate = document.getElementById("dateSelect").value;
+  loadData(true);
+};
+
+// ==================== Data Loader ====================
 async function loadData(manual = false) {
   const cleanDate = currentDate.replace(/\s+/g, '_');
   const summaryUrl = `${SUPABASE_URL}/storage/v1/object/public/mock-sheets/${encodeURIComponent(cleanDate)}/${encodeURIComponent(currentLevel)}/summary.json?t=${Date.now()}`;
 
   try {
     const res = await fetch(summaryUrl);
-    if (!res.ok) {
-      if (manual) {
-        document.getElementById('statusHeader').textContent = `No hay datos para ${currentDate} ${currentLevel} todavía`;
-      }
+    if (res.ok) {
+      const data = await res.json();
+      renderDashboard(data);
       return;
     }
-    const data = await res.json();
-    renderDashboard(data);
   } catch (e) {
-    console.warn("Fetch error:", e);
+    console.warn("Summary fetch error:", e);
+  }
+
+  // summary.json がない場合のフォールバック: Supabase Storage から直接写真一覧を取得
+  loadDirectPhotosFromStorage(cleanDate, currentLevel, manual);
+}
+
+// 採点データ未生成時の生写真一覧フォールバック
+async function loadDirectPhotosFromStorage(cleanDate, level, manual) {
+  document.getElementById("statusHeader").textContent = `${currentDate} · ${level} · (未採点写真 / 待機中)`;
+  document.getElementById("tileReceived").textContent = "--";
+  document.getElementById("tileReceivedSub").textContent = "採点スクリプト待機中";
+  document.getElementById("tileAvgTotal").textContent = "--";
+  document.getElementById("tileAvgTotalSub").textContent = "--";
+  document.getElementById("tileAvgVocab").textContent = "--";
+  document.getElementById("tileAvgVocabSub").textContent = "--";
+  document.getElementById("tileAvgGram").textContent = "--";
+  document.getElementById("tileAvgGramSub").textContent = "--";
+  document.getElementById("analyticsSection").style.opacity = "0.5";
+
+  try {
+    let files = [];
+    if (supabaseClient) {
+      const { data, error } = await supabaseClient.storage.from("mock-sheets").list(`${cleanDate}/${level}`, { limit: 100 });
+      if (!error && data) {
+        files = data.filter(f => f.name && !f.name.startsWith(".") && f.name !== "check" && f.name !== "summary.json" && f.name !== "deleted_files.json");
+      }
+    }
+
+    if (files.length === 0) {
+      document.getElementById("subsCount").textContent = "0";
+      document.getElementById("subsGrid").innerHTML = `<div style="padding:30px;color:var(--muted);text-align:center;grid-column:1/-1;">${currentDate} ${level} にアップロードされた写真はありません。</div>`;
+      return;
+    }
+
+    currentSubmissions = files.map(f => {
+      const safeName = encodeURIComponent(f.name);
+      return {
+        file: f.name,
+        id: (f.name.match(/No([0-9]{1,2})/i) || ["", "-"])[1],
+        name: (f.name.match(/-(.*?)-/i) || ["", "Estudiante"])[1],
+        status: "raw",
+        score_str: "未採点",
+        time_str: f.created_at ? new Date(f.created_at).toLocaleTimeString() : "",
+        thumb_url: `${SUPABASE_URL}/storage/v1/object/public/mock-sheets/${encodeURIComponent(cleanDate)}/${encodeURIComponent(level)}/${safeName}`
+      };
+    });
+
+    document.getElementById("subsCount").textContent = currentSubmissions.length;
+    renderGallery(currentSubmissions);
+
+  } catch(e) {
+    console.warn("Direct storage list error:", e);
   }
 }
 
+// ==================== Render Dashboard ====================
 function renderDashboard(data) {
-  document.getElementById('statusHeader').textContent = `${data.date} · ${data.level} · Actualizado: ${data.updated_at || 'Reciente'}`;
+  document.getElementById("analyticsSection").style.opacity = "1";
+  document.getElementById("statusHeader").textContent = `${data.date} · ${data.level} · Actualizado: ${data.updated_at || 'Reciente'}`;
 
   // Tiles
-  document.getElementById('tileReceived').textContent = `${data.total_received || 0} 枚`;
-  document.getElementById('tileReceivedSub').textContent = `採点完了: ${data.graded_count || 0}人`;
+  document.getElementById("tileReceived").textContent = `${data.total_received || 0} 枚`;
+  document.getElementById("tileReceivedSub").textContent = `採点完了: ${data.graded_count || 0}人`;
 
-  document.getElementById('tileAvgTotal').textContent = `${data.avg_total || 0} / ${data.total_max || 35}`;
-  document.getElementById('tileAvgTotalSub').textContent = `正答率 ${data.pct_total || 0}%`;
+  document.getElementById("tileAvgTotal").textContent = `${data.avg_total || 0} / ${data.total_max || 35}`;
+  document.getElementById("tileAvgTotalSub").textContent = `正答率 ${data.pct_total || 0}%`;
 
-  document.getElementById('tileAvgVocab').textContent = `${data.avg_vocab || 0} / ${data.vocab_max || 20}`;
-  document.getElementById('tileAvgVocabSub').textContent = `正答率 ${data.pct_vocab || 0}%`;
+  document.getElementById("tileAvgVocab").textContent = `${data.avg_vocab || 0} / ${data.vocab_max || 20}`;
+  document.getElementById("tileAvgVocabSub").textContent = `正答率 ${data.pct_vocab || 0}%`;
 
-  document.getElementById('tileAvgGram').textContent = `${data.avg_grammar || 0} / ${data.grammar_max || 15}`;
-  document.getElementById('tileAvgGramSub').textContent = `正答率 ${data.pct_grammar || 0}%`;
+  document.getElementById("tileAvgGram").textContent = `${data.avg_grammar || 0} / ${data.grammar_max || 15}`;
+  document.getElementById("tileAvgGramSub").textContent = `正答率 ${data.pct_grammar || 0}%`;
 
   // Charts
   const stats = data.stats || [];
@@ -545,17 +799,29 @@ function renderDashboard(data) {
   }
 
   // Submissions Gallery
-  const subs = data.submissions || [];
-  document.getElementById('subsCount').textContent = subs.length;
-  const grid = document.getElementById('subsGrid');
-  if (subs.length === 0) {
+  currentSubmissions = data.submissions || [];
+  document.getElementById("subsCount").textContent = currentSubmissions.length;
+  renderGallery(currentSubmissions);
+}
+
+function renderGallery(subs) {
+  const grid = document.getElementById("subsGrid");
+  if (!subs || subs.length === 0) {
     grid.innerHTML = '<div style="padding:30px;color:var(--muted);text-align:center;grid-column:1/-1;">Aún no hay fotos recibidas.</div>';
     return;
   }
 
-  grid.innerHTML = subs.map(s => {
-    let cardClass = s.status === 'ok' ? 'ok' : (s.status === 'warning' ? 'warning' : 'error');
-    let badgeClass = s.status === 'ok' ? 'badge-ok' : (s.status === 'warning' ? 'badge-warn' : 'badge-err');
+  const filter = document.getElementById("subFilterSelect").value;
+  const filtered = filter === "all" ? subs : subs.filter(s => s.status === filter);
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div style="padding:30px;color:var(--muted);text-align:center;grid-column:1/-1;">No hay fotos con el filtro "${filter}".</div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(s => {
+    let cardClass = s.status === 'ok' ? 'ok' : (s.status === 'warning' ? 'warning' : (s.status === 'error' ? 'error' : 'raw'));
+    let badgeClass = s.status === 'ok' ? 'badge-ok' : (s.status === 'warning' ? 'badge-warn' : (s.status === 'error' ? 'badge-err' : 'badge-raw'));
     let desc = '';
     if (s.status === 'error') {
       desc = `<div class="card-desc err">❌ ${s.reason || 'Error de lectura'}</div>`;
@@ -563,29 +829,41 @@ function renderDashboard(data) {
       desc = `<div class="card-desc warn">⚠ ${s.flags.join(', ')}</div>`;
     }
 
+    const cardId = `sub-${(s.file || '').replace(/[^a-zA-Z0-9]/g, '_')}`;
+
     return `
-      <div class="sub-card ${cardClass}">
+      <div class="sub-card ${cardClass}" id="${cardId}">
         <div class="card-left">
-          <img src="${s.thumb_url}" alt="Foto" class="card-thumb" onclick="openModal('${s.thumb_url}')" title="Clic para ampliar">
+          <img src="${s.thumb_url}" alt="Foto" class="card-thumb" onclick="openModal('${s.thumb_url}')" title="クリックで拡大">
         </div>
         <div class="card-right">
           <div class="card-user">
             <span class="user-no">No.${s.id || '-'}</span>
-            <span class="user-name">${s.name || 'Estudiante'}</span>
+            <span class="user-name" title="${s.name || 'Estudiante'}">${s.name || 'Estudiante'}</span>
           </div>
           <div class="card-meta">
             <span>🕒 ${s.time_str || ''}</span>
             <span class="card-file" title="${s.file}">📄 ${s.file}</span>
           </div>
           <div>
-            <span class="badge ${badgeClass}">${s.score_str || 'Sin calificar'}</span>
+            <span class="badge ${badgeClass}">${s.score_str || '未採点'}</span>
           </div>
           ${desc}
+          <div class="card-actions">
+            <span></span>
+            <button type="button" class="btn-delete-sub" onclick="confirmDelete('${s.file}', '${s.id || ''}', '${s.name || ''}')" title="この提出物を削除">
+              🗑️ 削除
+            </button>
+          </div>
         </div>
       </div>
     `;
   }).join('');
 }
+
+window.filterGallery = function() {
+  renderGallery(currentSubmissions);
+};
 
 function renderChart(elementId, list) {
   const container = document.getElementById(elementId);
@@ -611,6 +889,84 @@ function renderChart(elementId, list) {
   }).join('');
 }
 
+// ==================== Delete Submission (ゴミ箱・削除機能) ====================
+window.confirmDelete = async function(fileName, studentId, studentName) {
+  const dispName = studentName && studentName !== 'Estudiante' ? `No.${studentId} ${studentName}` : fileName;
+  const ok = confirm(`【提出物の削除】\n${dispName}\n(${fileName})\n\nこの提出物（写真および採点データ）を完全に削除しますか？\n※変な写真やテスト送信を整理できます。`);
+  if (!ok) return;
+
+  const cleanDate = currentDate.replace(/\s+/g, '_');
+  const basePath = `${cleanDate}/${currentLevel}/${fileName}`;
+  const checkFileName = fileName.replace(/\.[^.]+$/, '_check.jpg');
+  const checkPath = `${cleanDate}/${currentLevel}/check/${checkFileName}`;
+
+  try {
+    if (supabaseClient) {
+      // 1. Supabase Storage から実体画像を削除
+      const pathsToDelete = [basePath, checkPath];
+      // スペースありフォルダの場合のパスも追加
+      if (currentDate.includes(' ')) {
+        pathsToDelete.push(`${currentDate}/${currentLevel}/${fileName}`);
+        pathsToDelete.push(`${currentDate}/${currentLevel}/check/${checkFileName}`);
+      }
+      await supabaseClient.storage.from('mock-sheets').remove(pathsToDelete);
+
+      // 2. deleted_files.json に追記（ローカル同期用）
+      await markFileDeletedInCloud(cleanDate, currentLevel, fileName);
+    }
+
+    showToast(`🗑️ ${dispName} を削除しました`);
+
+    // 画面上のカードを消去
+    const cardId = `sub-${fileName.replace(/[^a-zA-Z0-9]/g, '_')}`;
+    const card = document.getElementById(cardId);
+    if (card) {
+      card.style.transition = 'all 0.3s ease';
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.85)';
+      setTimeout(() => {
+        card.remove();
+        currentSubmissions = currentSubmissions.filter(s => s.file !== fileName);
+        document.getElementById("subsCount").textContent = currentSubmissions.length;
+        document.getElementById("tileReceived").textContent = `${currentSubmissions.length} 枚`;
+      }, 300);
+    }
+  } catch(e) {
+    alert(`削除中にエラーが発生しました: ${e.message || e}`);
+  }
+};
+
+async function markFileDeletedInCloud(cleanDate, level, fileName) {
+  try {
+    const listPath = `${cleanDate}/${level}/deleted_files.json`;
+    let deletedList = [];
+    try {
+      const res = await fetch(`${SUPABASE_URL}/storage/v1/object/public/mock-sheets/${encodeURIComponent(listPath)}?t=${Date.now()}`);
+      if (res.ok) {
+        deletedList = await res.json();
+      }
+    } catch(e) {}
+
+    if (!deletedList.includes(fileName)) {
+      deletedList.push(fileName);
+      const blob = new Blob([JSON.stringify(deletedList, null, 2)], { type: "application/json" });
+      await supabaseClient.storage.from("mock-sheets").upload(listPath, blob, { upsert: true });
+    }
+  } catch(e) {
+    console.warn("Error marking file deleted:", e);
+  }
+}
+
+function showToast(msg) {
+  const toast = document.getElementById("toastMsg");
+  toast.textContent = msg;
+  toast.style.display = "block";
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 2800);
+}
+
+// ==================== Modal ====================
 function openModal(src) {
   document.getElementById('modalImg').src = src;
   document.getElementById('imgModal').style.display = 'flex';
@@ -620,57 +976,8 @@ function closeModal() {
   document.getElementById('imgModal').style.display = 'none';
 }
 
-// Iniciar carga periódica cada 4 segundos
-loadData();
-autoInterval = setInterval(() => loadData(false), 4000);
-
-// ==================== Autenticación con Contraseña (irodori) ====================
-const AUTH_KEY = 'exam_upload_auth_irodori';
-const CORRECT_PASS = 'irodori';
-
-function checkAuthStatus() {
-  const isAuth = sessionStorage.getItem(AUTH_KEY) === 'valid';
-  const authGate = document.getElementById('authGate');
-  const teacherApp = document.getElementById('teacherApp');
-
-  if (isAuth) {
-    if (authGate) authGate.style.display = 'none';
-    if (teacherApp) teacherApp.style.display = 'block';
-  } else {
-    if (authGate) authGate.style.display = 'flex';
-    if (teacherApp) teacherApp.style.display = 'none';
-    const input = document.getElementById('teacherPasswordInput');
-    if (input) setTimeout(() => input.focus(), 100);
-  }
-}
-
-window.handleAuthSubmit = function(e) {
-  e.preventDefault();
-  const input = document.getElementById('teacherPasswordInput');
-  const errorMsg = document.getElementById('authErrorMsg');
-  const val = (input.value || '').trim().toLowerCase();
-
-  if (val === CORRECT_PASS) {
-    sessionStorage.setItem(AUTH_KEY, 'valid');
-    if (errorMsg) errorMsg.style.display = 'none';
-    checkAuthStatus();
-  } else {
-    if (errorMsg) {
-      errorMsg.style.display = 'block';
-    }
-    input.value = '';
-    input.focus();
-  }
-};
-
-window.logoutAuth = function() {
-  sessionStorage.removeItem(AUTH_KEY);
-  checkAuthStatus();
-};
-
+// 起動時: 認証チェック
 checkAuthStatus();
 </script>
-</div> <!-- /#teacherApp -->
 </body>
 </html>
-
