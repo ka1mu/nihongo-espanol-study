@@ -787,15 +787,19 @@ function renderDashboard(data) {
   renderChart('chartGrammar', gStats);
 
   // Difficult list
-  const sorted = [...stats].filter(s => s.pct < 60).sort((a, b) => a.pct - b.pct).slice(0, 5);
   const diffUl = document.getElementById('diffList');
-  if (sorted.length === 0) {
-    diffUl.innerHTML = '<li>🎉 ¡Todos los reactivos tienen buen porcentaje de aciertos!</li>';
+  if (!data.graded_count || data.graded_count === 0 || !stats || stats.length === 0) {
+    diffUl.innerHTML = '<li style="color:var(--muted);">Aún no hay exámenes calificados / 採点データはまだありません</li>';
   } else {
-    diffUl.innerHTML = sorted.map(s => {
-      const topWrongStr = s.top_wrong ? ` · la más elegida mal: <b>${s.top_wrong}</b>` : '';
-      return `<li><b>${s.label}</b> — ${s.pct}% correcto · correcta: <b>${s.correct}</b>${topWrongStr}</li>`;
-    }).join('');
+    const sorted = [...stats].filter(s => s.pct < 60).sort((a, b) => a.pct - b.pct).slice(0, 5);
+    if (sorted.length === 0) {
+      diffUl.innerHTML = '<li>🎉 ¡Todos los reactivos tienen buen porcentaje de aciertos!</li>';
+    } else {
+      diffUl.innerHTML = sorted.map(s => {
+        const topWrongStr = s.top_wrong ? ` · la más elegida mal: <b>${s.top_wrong}</b>` : '';
+        return `<li><b>${s.label}</b> — ${s.pct}% correcto · correcta: <b>${s.correct}</b>${topWrongStr}</li>`;
+      }).join('');
+    }
   }
 
   // Submissions Gallery
@@ -889,50 +893,65 @@ function renderChart(elementId, list) {
   }).join('');
 }
 
-// ==================== Delete Submission (ゴミ箱・削除機能) ====================
+// ==================== Delete Submission (確認なしで即座に削除) ====================
 window.confirmDelete = async function(fileName, studentId, studentName) {
   const dispName = studentName && studentName !== 'Estudiante' ? `No.${studentId} ${studentName}` : fileName;
-  const ok = confirm(`【提出物の削除】\n${dispName}\n(${fileName})\n\nこの提出物（写真および採点データ）を完全に削除しますか？\n※変な写真やテスト送信を整理できます。`);
-  if (!ok) return;
 
   const cleanDate = currentDate.replace(/\s+/g, '_');
   const basePath = `${cleanDate}/${currentLevel}/${fileName}`;
   const checkFileName = fileName.replace(/\.[^.]+$/, '_check.jpg');
   const checkPath = `${cleanDate}/${currentLevel}/check/${checkFileName}`;
+  const resultJsonPath = `${cleanDate}/${currentLevel}/results/${fileName}.json`;
+
+  // 画面上のカードを即座にフェードアウト・消去（待たせない）
+  const cardId = `sub-${fileName.replace(/[^a-zA-Z0-9]/g, '_')}`;
+  const card = document.getElementById(cardId);
+  if (card) {
+    card.style.transition = 'all 0.2s ease';
+    card.style.opacity = '0';
+    card.style.transform = 'scale(0.8)';
+    setTimeout(() => card.remove(), 200);
+  }
+
+  currentSubmissions = currentSubmissions.filter(s => s.file !== fileName);
+  document.getElementById("subsCount").textContent = currentSubmissions.length;
+  document.getElementById("tileReceived").textContent = `${currentSubmissions.length} 枚`;
+
+  if (currentSubmissions.length === 0) {
+    document.getElementById("tileReceivedSub").textContent = '採点完了: 0人';
+    document.getElementById("tileAvgTotal").textContent = '--';
+    document.getElementById("tileAvgTotalSub").textContent = '--% correcto';
+    document.getElementById("tileAvgVocab").textContent = '--';
+    document.getElementById("tileAvgVocabSub").textContent = '--%';
+    document.getElementById("tileAvgGram").textContent = '--';
+    document.getElementById("tileAvgGramSub").textContent = '--%';
+    const diffUl = document.getElementById("diffList");
+    if (diffUl) diffUl.innerHTML = '<li style="color:var(--muted);">Aún no hay exámenes calificados / 採点データはまだありません</li>';
+    const cV = document.getElementById("chartVocab");
+    if (cV) cV.innerHTML = '<div style="padding:20px;color:var(--muted);width:100%;text-align:center;">Sin datos disponibles</div>';
+    const cG = document.getElementById("chartGrammar");
+    if (cG) cG.innerHTML = '<div style="padding:20px;color:var(--muted);width:100%;text-align:center;">Sin datos disponibles</div>';
+    renderGallery([]);
+  }
+
+  showToast(`🗑️ ${dispName} を削除しました`);
 
   try {
     if (supabaseClient) {
-      // 1. Supabase Storage から実体画像を削除
-      const pathsToDelete = [basePath, checkPath];
-      // スペースありフォルダの場合のパスも追加
+      // 1. Supabase Storage から実体画像・結果JSONを削除
+      const pathsToDelete = [basePath, checkPath, resultJsonPath];
       if (currentDate.includes(' ')) {
         pathsToDelete.push(`${currentDate}/${currentLevel}/${fileName}`);
         pathsToDelete.push(`${currentDate}/${currentLevel}/check/${checkFileName}`);
+        pathsToDelete.push(`${currentDate}/${currentLevel}/results/${fileName}.json`);
       }
       await supabaseClient.storage.from('mock-sheets').remove(pathsToDelete);
 
       // 2. deleted_files.json に追記（ローカル同期用）
       await markFileDeletedInCloud(cleanDate, currentLevel, fileName);
     }
-
-    showToast(`🗑️ ${dispName} を削除しました`);
-
-    // 画面上のカードを消去
-    const cardId = `sub-${fileName.replace(/[^a-zA-Z0-9]/g, '_')}`;
-    const card = document.getElementById(cardId);
-    if (card) {
-      card.style.transition = 'all 0.3s ease';
-      card.style.opacity = '0';
-      card.style.transform = 'scale(0.85)';
-      setTimeout(() => {
-        card.remove();
-        currentSubmissions = currentSubmissions.filter(s => s.file !== fileName);
-        document.getElementById("subsCount").textContent = currentSubmissions.length;
-        document.getElementById("tileReceived").textContent = `${currentSubmissions.length} 枚`;
-      }, 300);
-    }
   } catch(e) {
-    alert(`削除中にエラーが発生しました: ${e.message || e}`);
+    console.warn("Storage delete error:", e);
   }
 };
 
