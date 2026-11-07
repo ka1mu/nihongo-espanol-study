@@ -727,24 +727,50 @@ function getSubmissionStorageKey(studentNo) {
   return `submitted_${cleanDate}_${selectedLevel}_${studentNo}`;
 }
 
-function checkExistingSubmission(studentNo) {
+async function checkExistingSubmission(studentNo) {
   if (!studentNo) return false;
   const key = getSubmissionStorageKey(studentNo);
   const saved = localStorage.getItem(key);
-  if (saved) {
+  if (!saved) return false;
+
+  try {
+    const data = JSON.parse(saved);
+    if (!data || data.status === 'error') {
+      localStorage.removeItem(key);
+      return false;
+    }
+
+    // クラウド上でこの提出がまだ有効（先生に消されていない）か確認
     try {
-      const data = JSON.parse(saved);
-      if (data && data.status !== 'error') {
-        document.getElementById('formCard').style.display = 'none';
-        displayScoreResult(data);
-        return true;
+      const cleanDate = (selectedDate || '').replace(/\s+/g, '_');
+      const summaryUrl = `${SUPABASE_URL}/storage/v1/object/public/mock-sheets/${encodeURIComponent(cleanDate)}/${encodeURIComponent(selectedLevel)}/summary.json?t=${Date.now()}`;
+      const resp = await fetch(summaryUrl);
+      if (resp.ok) {
+        const summary = await resp.json();
+        const subs = summary.submissions || [];
+        const isPresent = subs.some(s => String(s.id) === String(studentNo) && s.status !== 'error');
+        if (!isPresent) {
+          // 先生によって削除された！ロックを解除
+          console.log(`Student ${studentNo} was deleted by teacher in cloud. Unlocking.`);
+          localStorage.removeItem(key);
+          localStorage.removeItem(`last_submission_${selectedLevel}`);
+          return false;
+        }
       }
-    } catch(e) {}
+    } catch(err) {
+      console.warn("Cloud check error:", err);
+    }
+
+    // まだ有効な提出物がある場合
+    document.getElementById('formCard').style.display = 'none';
+    displayScoreResult(data);
+    return true;
+  } catch(e) {
+    return false;
   }
-  return false;
 }
 
-function onStudentChange() {
+async function onStudentChange() {
   const val = document.getElementById('studentSelect').value;
   const otherDiv = document.getElementById('otherInputs');
   if (val === 'other') {
@@ -754,9 +780,7 @@ function onStudentChange() {
     if (val) {
       const parts = val.split('|');
       const studentNo = parts[0];
-      if (checkExistingSubmission(studentNo)) {
-        return;
-      }
+      await checkExistingSubmission(studentNo);
     }
   }
 }
@@ -857,9 +881,12 @@ async function submitSheet() {
   }
 
   // 二重送信・再提出防止チェック: 既に提出済みの場合は送信をブロック
-  if (studentNo && checkExistingSubmission(studentNo)) {
-    alert("⚠️ Ya has entregado tu examen anteriormente. Solo se permite 1 intento.\nすでに提出済みです。試験の送信は1回のみです。");
-    return;
+  if (studentNo) {
+    const isSubmitted = await checkExistingSubmission(studentNo);
+    if (isSubmitted) {
+      alert("⚠️ Ya has entregado tu examen anteriormente. Solo se permite 1 intento.\nすでに提出済みです。試験の送信は1回のみです。");
+      return;
+    }
   }
 
   const fileToUpload = selectedFileBlob || selectedRawFile;
@@ -1022,24 +1049,48 @@ function displayScoreResult(data) {
 
   if (data.status === 'error') {
     if (lockedBanner) lockedBanner.style.display = 'none';
-    if (btnResubmit) btnResubmit.style.display = 'flex';
+    if (btnResubmit) {
+      btnResubmit.style.display = 'flex';
+      btnResubmit.textContent = '📸 Volver a tomar foto / 撮り直して再提出する';
+    }
+
+    // 読み取りエラー（四隅の黒四角が見つからない等）の時はロックを一切かけない！
+    if (data.id) {
+      localStorage.removeItem(getSubmissionStorageKey(data.id));
+      localStorage.removeItem(`last_submission_${selectedLevel}`);
+    }
 
     document.getElementById('resStudentInfo').textContent = `${data.name || 'Estudiante'} (No. ${data.id || '-'})`;
-    document.getElementById('resTotalScore').textContent = '⚠️ Error';
+    document.getElementById('resTotalScore').textContent = '⚠️ 読取エラー';
     document.getElementById('resPercentage').textContent = 'No se pudo leer la hoja';
     document.getElementById('resVocabScore').textContent = '- / -';
     document.getElementById('resGrammarScore').textContent = '- / -';
     document.getElementById('resIncorrectSection').innerHTML = `
-      <div style="background:#fee2e2;border:1px solid #f87171;color:#991b1b;border-radius:10px;padding:12px;font-size:0.85rem;line-height:1.45;">
-        <b>⚠️ 読み取りエラー:</b><br>${data.error_message || 'Los 4 cuadros de las esquinas no se pudieron detectar.'}<br><br>
-        👉 <b>四隅の黒四角がしっかり写るように、明るい場所で撮り直してください。</b>
+      <div style="background:#fee2e2;border:2px solid #ef4444;color:#991b1b;border-radius:12px;padding:16px;font-size:0.9rem;line-height:1.5;text-align:center;">
+        <div style="font-size:1.8rem;margin-bottom:6px;">⚠️</div>
+        <b style="font-size:1.05rem;">認識できませんでした (Error de lectura)</b><br><br>
+        ${data.error_message || '四隅の黒四角が検出できませんでした。'}<br><br>
+        👉 <b>マークシート全体が枠内に収まるように、明るい場所でもう一度撮影してください！</b>
       </div>
     `;
     return;
   }
 
   // 正常採点完了: 再送信不可ロックバナーを表示し、撮り直しボタンは隠す
-  if (lockedBanner) lockedBanner.style.display = 'block';
+  if (lockedBanner) {
+    lockedBanner.style.display = 'block';
+    lockedBanner.style.background = '#f8fafc';
+    lockedBanner.style.border = '2px dashed #94a3b8';
+    lockedBanner.innerHTML = `
+      <div style="font-size:0.95rem;font-weight:800;color:#334155;margin-bottom:3px;">
+        🔒 Entrega Registrada (1 solo intento) / 提出完了
+      </div>
+      <div style="font-size:0.78rem;color:#64748b;line-height:1.4;">
+        Tu calificación oficial ha sido guardada. <b>No se permiten correcciones ni reenvíos.</b><br>
+        成績が記録されました。修正や再送信はできません。
+      </div>
+    `;
+  }
   if (btnResubmit) btnResubmit.style.display = 'none';
 
   // localStorage に記録して、ページリロード後も提出済み状態を保持（カンニング防止）
@@ -1049,6 +1100,9 @@ function displayScoreResult(data) {
       localStorage.setItem(`last_submission_${selectedLevel}`, JSON.stringify(data));
     } catch(e) {}
   }
+
+  // 先生がダッシュボードで提出物を削除した場合をリアルタイム検知するタイマー
+  startSubmissionLivenessCheck(data.id, data.file);
 
   document.getElementById('resStudentInfo').textContent = `No. ${data.id}: ${data.name}`;
   document.getElementById('resTotalScore').textContent = `${data.total_score} / ${data.total_max}`;
@@ -1071,7 +1125,56 @@ function displayScoreResult(data) {
   }
 }
 
+function startSubmissionLivenessCheck(studentNo, fileName) {
+  if (window._livenessTimer) clearInterval(window._livenessTimer);
+  window._livenessTimer = setInterval(async () => {
+    const cleanDate = (selectedDate || '').replace(/\s+/g, '_');
+    const summaryUrl = `${SUPABASE_URL}/storage/v1/object/public/mock-sheets/${encodeURIComponent(cleanDate)}/${encodeURIComponent(selectedLevel)}/summary.json?t=${Date.now()}`;
+    try {
+      const resp = await fetch(summaryUrl);
+      if (resp.ok) {
+        const summary = await resp.json();
+        const subs = summary.submissions || [];
+        const isPresent = subs.some(s => {
+          if (fileName && s.file === fileName) return true;
+          if (studentNo && String(s.id) === String(studentNo) && s.status !== 'error') return true;
+          return false;
+        });
+
+        if (!isPresent) {
+          // 先生がダッシュボードから削除した！ロックを完全解除し、画面を更新
+          console.log("Submission was reset by teacher! Allowing resubmission.");
+          clearInterval(window._livenessTimer);
+          if (studentNo) {
+            localStorage.removeItem(getSubmissionStorageKey(studentNo));
+          }
+          localStorage.removeItem(`last_submission_${selectedLevel}`);
+
+          const banner = document.getElementById('resLockedBanner');
+          if (banner) {
+            banner.style.background = '#fef3c7';
+            banner.style.border = '2px solid #f59e0b';
+            banner.innerHTML = `
+              <div style="font-size:1.05rem;font-weight:800;color:#92400e;margin-bottom:6px;">
+                🔄 先生が提出物をリセットしました！
+              </div>
+              <div style="font-size:0.85rem;color:#78350f;margin-bottom:12px;line-height:1.45;">
+                El profesor eliminó la entrega anterior.<br>
+                <b>もう一度新しく撮影して提出できます。</b>
+              </div>
+              <button type="button" class="btn-submit" style="background:#2563eb;padding:12px 20px;font-size:0.95rem;width:100%;cursor:pointer;" onclick="resetForm()">
+                📸 Volver a enviar / 新しく撮影して提出する ➔
+              </button>
+            `;
+          }
+        }
+      }
+    } catch(e) {}
+  }, 4000);
+}
+
 function resetForm() {
+  if (window._livenessTimer) clearInterval(window._livenessTimer);
   document.getElementById('statusCard').style.display = 'none';
   document.getElementById('resultCard').style.display = 'none';
   document.getElementById('formCard').style.display = 'flex';
@@ -1081,6 +1184,22 @@ function resetForm() {
   document.getElementById('photoInput').value = '';
   selectedFileBlob = null;
   selectedRawFile = null;
+
+  // 選択されていた生徒のエラーキーがあれば削除
+  const selectVal = document.getElementById('studentSelect').value;
+  if (selectVal && selectVal !== 'other') {
+    const sId = selectVal.split('|')[0];
+    const key = getSubmissionStorageKey(sId);
+    const saved = localStorage.getItem(key);
+    if (saved) {
+      try {
+        const d = JSON.parse(saved);
+        if (d && d.status === 'error') {
+          localStorage.removeItem(key);
+        }
+      } catch(e) {}
+    }
+  }
 }
 
 // ==================== Autenticación con Contraseña (irodori) ====================
