@@ -510,8 +510,11 @@ h2 {
 
     <!-- Date Select -->
     <select id="dateSelect" onchange="changeFilter()">
-      <option value="NOVEMBER 7" selected>2026-11-07 (NOVEMBER 7)</option>
       <option value="NOVEMBER 14">2026-11-14 (NOVEMBER 14)</option>
+      <option value="NOVEMBER 21">2026-11-21 (NOVEMBER 21)</option>
+      <option value="NOVEMBER 28">2026-11-28 (NOVEMBER 28)</option>
+      <option value="DECEMBER 5">2026-12-05 (DECEMBER 5)</option>
+      <option value="NOVEMBER 7">2026-11-07 (NOVEMBER 7)</option>
       <option value="OCTOBER 31">2026-10-31 (OCTOBER 31)</option>
       <option value="OCTOBER 24">2026-10-24 (OCTOBER 24)</option>
     </select>
@@ -621,10 +624,47 @@ try {
   console.warn("Supabase init error:", e);
 }
 
-let currentDate = "NOVEMBER 7";
-let currentLevel = "N5";
+function getUpcomingSaturday() {
+  const d = new Date();
+  const day = d.getDay(); // 0: 日, 1: 月, ..., 6: 土
+  const diff = (6 - day + 7) % 7;
+  const sat = new Date(d);
+  sat.setDate(d.getDate() + diff);
+  const months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+  return `${months[sat.getMonth()]} ${sat.getDate()}`;
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+let currentDate = urlParams.get('date') || getUpcomingSaturday();
+let currentLevel = (urlParams.get('level') || "N5").toUpperCase();
+if (currentLevel !== "N4") currentLevel = "N5";
 let autoInterval = null;
 let currentSubmissions = [];
+
+function initDateSelect() {
+  const select = document.getElementById("dateSelect");
+  if (!select) return;
+  let found = false;
+  for (let i = 0; i < select.options.length; i++) {
+    if (select.options[i].value === currentDate) {
+      select.selectedIndex = i;
+      found = true;
+      break;
+    }
+  }
+  if (!found && currentDate) {
+    const opt = document.createElement("option");
+    opt.value = currentDate;
+    opt.text = `${currentDate} (選択中)`;
+    select.insertBefore(opt, select.firstChild);
+    select.selectedIndex = 0;
+  }
+}
+initDateSelect();
+const _btnN5 = document.getElementById("btnLvlN5");
+const _btnN4 = document.getElementById("btnLvlN4");
+if (_btnN5) _btnN5.classList.toggle("active", currentLevel === "N5");
+if (_btnN4) _btnN4.classList.toggle("active", currentLevel === "N4");
 
 // ==================== Autenticación del Profesor (kazuna1031) ====================
 const TEACHER_AUTH_KEY = "teacher_auth_kazuna1031";
