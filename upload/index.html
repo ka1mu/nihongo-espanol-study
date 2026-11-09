@@ -632,16 +632,21 @@ h1 {
       先生の画面にも自動で集計されました。お疲れ様でした！
     </div>
 
-    <!-- 1回のみ提出のロック通知バナー（正常採点完了時：再送信不可） -->
+    <!-- 1回のみ提出のロック通知バナー（先生が削除した場合は自動で解除） -->
     <div id="resLockedBanner" style="background:#f8fafc;border:2px dashed #94a3b8;border-radius:12px;padding:12px;margin-top:8px;text-align:center;">
       <div style="font-size:0.95rem;font-weight:800;color:#334155;margin-bottom:3px;">
-        🔒 Entrega Registrada (1 solo intento) / 提出完了
+        🔒 Entrega Registrada / 提出完了
       </div>
       <div style="font-size:0.78rem;color:#64748b;line-height:1.4;">
-        Tu calificación oficial ha sido guardada. <b>No se permiten correcciones ni reenvíos.</b><br>
-        成績が記録されました。修正や再送信はできません。
+        Tu calificación oficial ha sido guardada. <b>Solo podrás volver a enviar si el profesor elimina esta entrega.</b><br>
+        成績が記録されました。修正が必要な場合は先生に削除してもらってください。
       </div>
     </div>
+
+    <!-- 別のレベル (N4/N5) や生徒へ切り替えるための戻るボタン -->
+    <button type="button" id="btnSwitchMode" onclick="backToFormSelection()" style="width:100%;padding:11px;border-radius:10px;border:1.5px solid #cbd5e1;background:white;color:#475569;font-size:0.86rem;font-weight:700;cursor:pointer;margin-top:4px;">
+      ↩ Cambiar nivel (N5/N4) o alumno / レベル・生徒を選び直す
+    </button>
 
     <!-- 読み取りエラー（四隅が切れている等）時のみ表示される撮り直しボタン -->
     <button class="btn-submit" id="btnResubmitError" style="display:none;background:#2563eb;margin-top:8px;" onclick="resetForm()">
@@ -726,48 +731,128 @@ function selectLevel(lvl) {
   document.getElementById('btnN4').classList.toggle('selected', lvl === 'N4');
 }
 
-function getSubmissionStorageKey(studentNo) {
-  const cleanDate = (selectedDate || '').replace(/\s+/g, '_');
-  return `submitted_${cleanDate}_${selectedLevel}_${studentNo}`;
+function getCleanDate() {
+  return (selectedDate || getUpcomingSaturday()).replace(/[^a-zA-Z0-9_-]/g, '_').replace(/_+/g, '_');
 }
 
-async function checkExistingSubmission(studentNo) {
-  if (!studentNo) return false;
-  const key = getSubmissionStorageKey(studentNo);
+function sanitizeForStorage(name, no) {
+  if (!name || !name.trim()) return `Alumno_${no}`;
+  let s = name.trim();
+  s = s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  s = s.replace(/ñ/g, "n").replace(/Ñ/g, "N");
+  if (/[^a-zA-Z0-9_\-\s]/.test(s)) {
+    try {
+      const encoder = new TextEncoder();
+      const bytes = encoder.encode(s);
+      const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+      return `hex_${hex}`;
+    } catch (e) {
+      return `Alumno_${no}`;
+    }
+  }
+  s = s.replace(/[\s\t\n]+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "");
+  return s || `Alumno_${no}`;
+}
+
+function getSubmissionStorageKey(studentNo, studentName) {
+  const cleanDate = getCleanDate();
+  const idPart = (studentNo && Number(studentNo) > 0)
+    ? String(Number(studentNo))
+    : `name_${sanitizeForStorage(studentName || 'Estudiante', '0')}`;
+  return `submitted_${cleanDate}_${selectedLevel}_${idPart}`;
+}
+
+function clearSubmissionLock(studentNo, studentName, shownAt) {
+  const keys = new Set();
+  if (studentNo || studentName) keys.add(getSubmissionStorageKey(studentNo, studentName));
+  if (studentNo) keys.add(getSubmissionStorageKey(studentNo, ''));
+  if (studentName) keys.add(getSubmissionStorageKey(0, studentName));
+  const cleanDate = getCleanDate();
+  if (studentNo) keys.add(`submitted_${cleanDate}_${selectedLevel}_${studentNo}`);
+  keys.forEach(k => { try { localStorage.removeItem(k); } catch(e) {} });
+  try { localStorage.removeItem(`last_submission_${selectedLevel}`); } catch(e) {}
+}
+
+async function isSubmissionActiveOnCloud(data, shownAtMs = 0) {
+  if (!data || data.status === 'error') return false;
+  const cleanDate = getCleanDate();
+  const encDate = encodeURIComponent(cleanDate);
+  const encLvl = encodeURIComponent(selectedLevel);
+  const fileName = data.file;
+
+  // 1. deleted_files.json に含まれていれば即「削除された（再提出OK）」
+  if (fileName) {
+    try {
+      const delUrl = `${SUPABASE_URL}/storage/v1/object/public/mock-sheets/${encDate}/${encLvl}/deleted_files.json?t=${Date.now()}`;
+      const delResp = await fetch(delUrl, { cache: 'no-store' });
+      if (delResp.ok) {
+        const delList = await delResp.json();
+        if (Array.isArray(delList) && delList.includes(fileName)) {
+          return false;
+        }
+      }
+    } catch(e) {}
+  }
+
+  // 2. results/<fileName>.json が 404/400 で消えていれば即「削除された（再提出OK）」
+  if (fileName) {
+    try {
+      const resUrl = `${SUPABASE_URL}/storage/v1/object/public/mock-sheets/${encDate}/${encLvl}/results/${encodeURIComponent(fileName)}.json?t=${Date.now()}`;
+      const resResp = await fetch(resUrl, { cache: 'no-store' });
+      if (resResp.status === 400 || resResp.status === 404) {
+        return false;
+      }
+    } catch(e) {}
+  }
+
+  // 3. summary.json 上で自分のファイルが消えていれば「削除された（再提出OK）」
+  // (採点完了直後10秒未満の反映ラグ中は誤解除を避ける)
+  const ageMs = shownAtMs ? (Date.now() - shownAtMs) : 999999;
+  if (ageMs >= 10000) {
+    try {
+      const summaryUrl = `${SUPABASE_URL}/storage/v1/object/public/mock-sheets/${encDate}/${encLvl}/summary.json?t=${Date.now()}`;
+      const resp = await fetch(summaryUrl, { cache: 'no-store' });
+      if (resp.ok) {
+        const summary = await resp.json();
+        const subs = summary.submissions || [];
+        if (fileName) {
+          const isPresent = subs.some(s => s.file === fileName && s.status !== 'error');
+          if (!isPresent) return false;
+        } else if (data.id) {
+          const isPresent = subs.some(s => String(s.id) === String(data.id) && s.status !== 'error');
+          if (!isPresent) return false;
+        }
+      }
+    } catch(err) {
+      console.warn("Cloud check error:", err);
+    }
+  }
+
+  return true;
+}
+
+async function checkExistingSubmission(studentNo, studentName = '') {
+  const key = getSubmissionStorageKey(studentNo, studentName);
   const saved = localStorage.getItem(key);
   if (!saved) return false;
 
   try {
     const data = JSON.parse(saved);
     if (!data || data.status === 'error') {
-      localStorage.removeItem(key);
+      clearSubmissionLock(studentNo, studentName);
       return false;
     }
 
-    // クラウド上でこの提出がまだ有効（先生に消されていない）か確認
-    try {
-      const cleanDate = (selectedDate || '').replace(/\s+/g, '_');
-      const summaryUrl = `${SUPABASE_URL}/storage/v1/object/public/mock-sheets/${encodeURIComponent(cleanDate)}/${encodeURIComponent(selectedLevel)}/summary.json?t=${Date.now()}`;
-      const resp = await fetch(summaryUrl);
-      if (resp.ok) {
-        const summary = await resp.json();
-        const subs = summary.submissions || [];
-        const isPresent = subs.some(s => String(s.id) === String(studentNo) && s.status !== 'error');
-        if (!isPresent) {
-          // 先生によって削除された！ロックを解除
-          console.log(`Student ${studentNo} was deleted by teacher in cloud. Unlocking.`);
-          localStorage.removeItem(key);
-          localStorage.removeItem(`last_submission_${selectedLevel}`);
-          return false;
-        }
-      }
-    } catch(err) {
-      console.warn("Cloud check error:", err);
+    const stillActive = await isSubmissionActiveOnCloud(data);
+    if (!stillActive) {
+      console.log(`Submission ${data.file || studentNo} was deleted by teacher in cloud. Unlocking.`);
+      clearSubmissionLock(studentNo, studentName);
+      return false;
     }
 
     // まだ有効な提出物がある場合
     document.getElementById('formCard').style.display = 'none';
-    displayScoreResult(data);
+    displayScoreResult(data, { studentNo, studentName });
     return true;
   } catch(e) {
     return false;
@@ -783,8 +868,9 @@ async function onStudentChange() {
     otherDiv.style.display = 'none';
     if (val) {
       const parts = val.split('|');
-      const studentNo = parts[0];
-      await checkExistingSubmission(studentNo);
+      const studentNo = parseInt(parts[0]) || 0;
+      const studentName = parts[1] || '';
+      await checkExistingSubmission(studentNo, studentName);
     }
   }
 }
@@ -862,6 +948,9 @@ function handleFileSelect(e) {
 }
 
 async function submitSheet() {
+  const btnSubmit = document.getElementById('btnSubmit');
+  if (btnSubmit && btnSubmit.disabled) return;
+
   const selectVal = document.getElementById('studentSelect').value;
   if (!selectVal) {
     alert('Por favor selecciona tu nombre y número de lista.');
@@ -884,54 +973,35 @@ async function submitSheet() {
     studentName = parts[1];
   }
 
-  // 二重送信・再提出防止チェック: 既に提出済みの場合は送信をブロック
-  if (studentNo) {
-    const isSubmitted = await checkExistingSubmission(studentNo);
-    if (isSubmitted) {
-      alert("⚠️ Ya has entregado tu examen anteriormente. Solo se permite 1 intento.\nすでに提出済みです。試験の送信は1回のみです。");
-      return;
-    }
-  }
-
   const fileToUpload = selectedFileBlob || selectedRawFile;
   if (!fileToUpload) {
     alert('Por favor toma o selecciona una foto de tu hoja de respuestas.');
     return;
   }
 
+  if (btnSubmit) btnSubmit.disabled = true;
+  try {
+    // 二重送信・再提出防止チェック: まだ有効な提出物が残っている場合のみブロック（先生削除時は通過）
+    const isSubmitted = await checkExistingSubmission(studentNo, studentName);
+    if (isSubmitted) {
+      alert("⚠️ Ya has entregado tu examen anteriormente.\nすでに提出済みです。再提出が必要な場合は先生に削除してもらってください。");
+      if (btnSubmit) btnSubmit.disabled = false;
+      return;
+    }
+  } catch (e) {
+    if (btnSubmit) btnSubmit.disabled = false;
+  }
+
   // Desactivar botón y mostrar estado
   document.getElementById('formCard').style.display = 'none';
+  if (btnSubmit) btnSubmit.disabled = false;
   const statusCard = document.getElementById('statusCard');
   statusCard.style.display = 'block';
   document.getElementById('statusIcon').textContent = '⏳';
   document.getElementById('statusTitle').textContent = 'Subiendo examen...';
   document.getElementById('statusDesc').textContent = 'Subiendo tu hoja a la nube del profesor...';
 
-  // Supabase Storage (S3互換) はキーにASCII英数字・ハイフン・アンダースコアのみ許可
-  // 日本語等のマルチバイト文字は Hex 16進数英数字に変換し、Supabaseのキー規則（InvalidKeyエラー）を完全回避
-  function sanitizeForStorage(name, no) {
-    if (!name || !name.trim()) return `Alumno_${no}`;
-    let s = name.trim();
-    // スペイン語のアクセント記号を展開
-    s = s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    s = s.replace(/ñ/g, "n").replace(/Ñ/g, "N");
-    // 日本語・マルチバイト文字・特殊記号が含まれる場合、Hex（16進数英数字）に変換
-    if (/[^a-zA-Z0-9_\-\s]/.test(s)) {
-      try {
-        const encoder = new TextEncoder();
-        const bytes = encoder.encode(s);
-        const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
-        return `hex_${hex}`;
-      } catch (e) {
-        return `Alumno_${no}`;
-      }
-    }
-    // 通常の英数字とアンダースコア・ハイフンに正規化
-    s = s.replace(/[\s\t\n]+/g, "_").replace(/[^a-zA-Z0-9_-]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "");
-    return s || `Alumno_${no}`;
-  }
-
-  const cleanDate = (selectedDate || getUpcomingSaturday()).replace(/[^a-zA-Z0-9_-]/g, '_').replace(/_+/g, '_');
+  const cleanDate = getCleanDate();
   const padNo = String(studentNo).padStart(2, '0');
   const cleanName = sanitizeForStorage(studentName, padNo);
   const timestamp = Math.floor(Date.now() / 1000);
@@ -1009,7 +1079,7 @@ async function submitSheet() {
         if (resp.ok) {
           const resData = await resp.json();
           clearInterval(checkInterval);
-          displayScoreResult(resData);
+          displayScoreResult(resData, { studentNo, studentName });
           return;
         }
       } catch (e) {}
@@ -1043,19 +1113,24 @@ async function submitSheet() {
   }
 }
 
-function displayScoreResult(data) {
+function displayScoreResult(data, formContext = null) {
   document.getElementById('statusCard').style.display = 'none';
   const resultCard = document.getElementById('resultCard');
   resultCard.style.display = 'flex';
 
   const lockedBanner = document.getElementById('resLockedBanner');
   const btnResubmit = document.getElementById('btnResubmitError');
+  const btnSwitch = document.getElementById('btnSwitchMode');
   const errBanner = document.getElementById('resErrorBanner');
   const incSection = document.getElementById('resIncorrectSection');
   const teacherNote = document.getElementById('resTeacherNote');
 
+  const lockNo = (formContext && formContext.studentNo !== undefined) ? formContext.studentNo : data.id;
+  const lockName = (formContext && formContext.studentName) ? formContext.studentName : (data.name || '');
+
   if (data.status === 'error') {
     if (lockedBanner) lockedBanner.style.display = 'none';
+    if (btnSwitch) btnSwitch.style.display = 'none';
     if (incSection) incSection.style.display = 'none';
     if (teacherNote) teacherNote.style.display = 'none';
     if (btnResubmit) {
@@ -1064,10 +1139,8 @@ function displayScoreResult(data) {
     }
 
     // 読み取りエラー（四隅の黒四角が見つからない等）の時はロックを一切かけない！
-    if (data.id) {
-      localStorage.removeItem(getSubmissionStorageKey(data.id));
-      localStorage.removeItem(`last_submission_${selectedLevel}`);
-    }
+    clearSubmissionLock(lockNo, lockName);
+    if (data.id && data.id !== lockNo) clearSubmissionLock(data.id, data.name || '');
 
     document.getElementById('resStudentInfo').textContent = `${data.name || 'Estudiante'} (No. ${data.id || '-'})`;
     document.getElementById('resTotalScore').textContent = '⚠️ 読取エラー';
@@ -1092,34 +1165,37 @@ function displayScoreResult(data) {
   if (errBanner) errBanner.style.display = 'none';
   if (incSection) incSection.style.display = 'block';
   if (teacherNote) teacherNote.style.display = 'block';
+  if (btnSwitch) btnSwitch.style.display = 'block';
   if (lockedBanner) {
     lockedBanner.style.display = 'block';
     lockedBanner.style.background = '#f8fafc';
     lockedBanner.style.border = '2px dashed #94a3b8';
     lockedBanner.innerHTML = `
       <div style="font-size:0.95rem;font-weight:800;color:#334155;margin-bottom:3px;">
-        🔒 Entrega Registrada (1 solo intento) / 提出完了
+        🔒 Entrega Registrada / 提出完了
       </div>
       <div style="font-size:0.78rem;color:#64748b;line-height:1.4;">
-        Tu calificación oficial ha sido guardada. <b>No se permiten correcciones ni reenvíos.</b><br>
-        成績が記録されました。修正や再送信はできません。
+        Tu calificación oficial ha sido guardada. <b>Solo podrás volver a enviar si el profesor elimina esta entrega.</b><br>
+        成績が記録されました。修正が必要な場合は先生に削除してもらってください。
       </div>
     `;
   }
   if (btnResubmit) btnResubmit.style.display = 'none';
 
-  // localStorage に記録して、ページリロード後も提出済み状態を保持（カンニング防止）
-  if (data.id) {
-    try {
-      localStorage.setItem(getSubmissionStorageKey(data.id), JSON.stringify(data));
-      localStorage.setItem(`last_submission_${selectedLevel}`, JSON.stringify(data));
-    } catch(e) {}
-  }
+  // localStorage に記録して、ページリロード後も提出済み状態を保持（フォーム選択キーと採点ID両方に紐づけ）
+  try {
+    const primaryKey = getSubmissionStorageKey(lockNo, lockName);
+    localStorage.setItem(primaryKey, JSON.stringify(data));
+    if (data.id && data.id !== lockNo) {
+      localStorage.setItem(getSubmissionStorageKey(data.id, data.name || lockName), JSON.stringify(data));
+    }
+    localStorage.setItem(`last_submission_${selectedLevel}`, JSON.stringify(data));
+  } catch(e) {}
 
   // 先生がダッシュボードで提出物を削除した場合をリアルタイム検知するタイマー
-  startSubmissionLivenessCheck(data.id, data.file);
+  startSubmissionLivenessCheck(data, lockNo, lockName);
 
-  document.getElementById('resStudentInfo').textContent = `No. ${data.id}: ${data.name}`;
+  document.getElementById('resStudentInfo').textContent = `No. ${data.id != null ? data.id : '-'}: ${data.name}`;
   document.getElementById('resTotalScore').textContent = `${data.total_score} / ${data.total_max}`;
   document.getElementById('resPercentage').textContent = `${data.percentage}% de aciertos`;
   document.getElementById('resVocabScore').textContent = `${data.vocab_score} / ${data.vocab_max}`;
@@ -1140,52 +1216,47 @@ function displayScoreResult(data) {
   }
 }
 
-function startSubmissionLivenessCheck(studentNo, fileName) {
+function startSubmissionLivenessCheck(data, lockNo, lockName) {
   if (window._livenessTimer) clearInterval(window._livenessTimer);
+  const shownAt = Date.now();
   window._livenessTimer = setInterval(async () => {
-    const cleanDate = (selectedDate || '').replace(/\s+/g, '_');
-    const summaryUrl = `${SUPABASE_URL}/storage/v1/object/public/mock-sheets/${encodeURIComponent(cleanDate)}/${encodeURIComponent(selectedLevel)}/summary.json?t=${Date.now()}`;
     try {
-      const resp = await fetch(summaryUrl);
-      if (resp.ok) {
-        const summary = await resp.json();
-        const subs = summary.submissions || [];
-        const isPresent = subs.some(s => {
-          if (fileName && s.file === fileName) return true;
-          if (studentNo && String(s.id) === String(studentNo) && s.status !== 'error') return true;
-          return false;
-        });
+      const stillActive = await isSubmissionActiveOnCloud(data, shownAt);
+      if (!stillActive) {
+        // 先生がダッシュボードから削除した！ロックを完全解除し、再提出ボタンを表示
+        console.log("Submission was reset by teacher! Allowing resubmission.");
+        clearInterval(window._livenessTimer);
+        clearSubmissionLock(lockNo, lockName);
+        if (data.id && data.id !== lockNo) clearSubmissionLock(data.id, data.name || '');
 
-        if (!isPresent) {
-          // 先生がダッシュボードから削除した！ロックを完全解除し、画面を更新
-          console.log("Submission was reset by teacher! Allowing resubmission.");
-          clearInterval(window._livenessTimer);
-          if (studentNo) {
-            localStorage.removeItem(getSubmissionStorageKey(studentNo));
-          }
-          localStorage.removeItem(`last_submission_${selectedLevel}`);
-
-          const banner = document.getElementById('resLockedBanner');
-          if (banner) {
-            banner.style.background = '#fef3c7';
-            banner.style.border = '2px solid #f59e0b';
-            banner.innerHTML = `
-              <div style="font-size:1.05rem;font-weight:800;color:#92400e;margin-bottom:6px;">
-                🔄 先生が提出物をリセットしました！
-              </div>
-              <div style="font-size:0.85rem;color:#78350f;margin-bottom:12px;line-height:1.45;">
-                El profesor eliminó la entrega anterior.<br>
-                <b>もう一度新しく撮影して提出できます。</b>
-              </div>
-              <button type="button" class="btn-submit" style="background:#2563eb;padding:12px 20px;font-size:0.95rem;width:100%;cursor:pointer;" onclick="resetForm()">
-                📸 Volver a enviar / 新しく撮影して提出する ➔
-              </button>
-            `;
-          }
+        const banner = document.getElementById('resLockedBanner');
+        if (banner) {
+          banner.style.background = '#fef3c7';
+          banner.style.border = '2px solid #f59e0b';
+          banner.innerHTML = `
+            <div style="font-size:1.05rem;font-weight:800;color:#92400e;margin-bottom:6px;">
+              🔄 先生が提出物をリセットしました！
+            </div>
+            <div style="font-size:0.85rem;color:#78350f;margin-bottom:12px;line-height:1.45;">
+              El profesor eliminó la entrega anterior.<br>
+              <b>もう一度新しく撮影して提出できます（2回目以降もOK）。</b>
+            </div>
+            <button type="button" class="btn-submit" style="background:#2563eb;padding:12px 20px;font-size:0.95rem;width:100%;cursor:pointer;" onclick="resetForm()">
+              📸 Volver a enviar / 新しく撮影して提出する ➔
+            </button>
+          `;
         }
       }
     } catch(e) {}
-  }, 4000);
+  }, 3000);
+}
+
+function backToFormSelection() {
+  if (window._livenessTimer) clearInterval(window._livenessTimer);
+  document.getElementById('statusCard').style.display = 'none';
+  document.getElementById('btnAnother').style.display = 'none';
+  document.getElementById('resultCard').style.display = 'none';
+  document.getElementById('formCard').style.display = 'flex';
 }
 
 function resetForm() {
@@ -1204,14 +1275,16 @@ function resetForm() {
   // 選択されていた生徒のエラーキーがあれば削除
   const selectVal = document.getElementById('studentSelect').value;
   if (selectVal && selectVal !== 'other') {
-    const sId = selectVal.split('|')[0];
-    const key = getSubmissionStorageKey(sId);
+    const parts = selectVal.split('|');
+    const sId = parseInt(parts[0]) || 0;
+    const sName = parts[1] || '';
+    const key = getSubmissionStorageKey(sId, sName);
     const saved = localStorage.getItem(key);
     if (saved) {
       try {
         const d = JSON.parse(saved);
         if (d && d.status === 'error') {
-          localStorage.removeItem(key);
+          clearSubmissionLock(sId, sName);
         }
       } catch(e) {}
     }

@@ -268,7 +268,7 @@ h2 {
 }
 .subs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
   gap: 12px;
   margin-top: 12px;
 }
@@ -280,7 +280,7 @@ h2 {
   border-radius: 10px;
   padding: 10px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  align-items: center;
+  align-items: flex-start;
   position: relative;
 }
 .sub-card.ok { border-left: 5px solid #10b981; }
@@ -306,11 +306,11 @@ h2 {
 }
 .card-thumb:hover { transform: scale(1.05); }
 .card-right { flex: 1; min-width: 0; }
-.card-user { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
-.user-no { background: var(--grid); padding: 2px 6px; border-radius: 4px; font-size: 12px; font-weight: 800; }
-.user-name { font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-meta { display: flex; gap: 8px; font-size: 11px; color: var(--muted); margin-bottom: 4px; }
-.card-file { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px; }
+.card-user { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+.user-no { background: var(--grid); padding: 2px 6px; border-radius: 4px; font-size: 12px; font-weight: 800; flex-shrink: 0; }
+.user-name { font-weight: 700; font-size: 14px; white-space: normal; overflow: visible; text-overflow: clip; word-break: break-word; line-height: 1.35; }
+.card-meta { display: flex; gap: 8px; flex-wrap: wrap; font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+.card-file { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
 .badge { display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 700; }
 .badge-ok { background: #dcfce7; color: #166534; }
 .badge-warn { background: #fef3c7; color: #92400e; }
@@ -731,15 +731,55 @@ window.changeFilter = function() {
   loadData(true);
 };
 
+// ==================== Utilities & Deletion Sync State ====================
+const locallyDeletedFiles = new Set(); // このセッションで削除操作済みのキー `${cleanDate}/${level}/${file}`
+let cloudMutationQueue = Promise.resolve();
+
+function escHtml(str) {
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function decodeStudentNameFromFilename(fileName) {
+  const m = String(fileName || '').match(/^No\d+\s*[-_]\s*(.*?)\s*[-_]\s*\d+\.[^.]+$/i)
+    || String(fileName || '').match(/-(.*?)-/i);
+  const raw = m ? m[1].trim() : '';
+  if (!raw) return 'Estudiante';
+  const mHex = raw.match(/^hex_([0-9a-fA-F]+)$/);
+  if (mHex) {
+    try {
+      const hex = mHex[1];
+      const bytes = new Uint8Array(hex.length / 2);
+      for (let i = 0; i < hex.length; i += 2) {
+        bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
+      }
+      return new TextDecoder().decode(bytes).trim() || 'Estudiante';
+    } catch (e) {}
+  }
+  try {
+    return decodeURIComponent(raw).replace(/_/g, ' ').trim() || 'Estudiante';
+  } catch (e) {
+    return raw.replace(/_/g, ' ').trim() || 'Estudiante';
+  }
+}
+
 // ==================== Data Loader ====================
 async function loadData(manual = false) {
   const cleanDate = currentDate.replace(/\s+/g, '_');
+  const targetKey = `${cleanDate}/${currentLevel}`;
   const summaryUrl = `${SUPABASE_URL}/storage/v1/object/public/mock-sheets/${encodeURIComponent(cleanDate)}/${encodeURIComponent(currentLevel)}/summary.json?t=${Date.now()}`;
 
   try {
-    const res = await fetch(summaryUrl);
+    const res = await fetch(summaryUrl, { cache: 'no-store' });
     if (res.ok) {
       const data = await res.json();
+      if (Array.isArray(data.submissions)) {
+        data.submissions = data.submissions.filter(s => !locallyDeletedFiles.has(`${targetKey}/${s.file}`));
+      }
       renderDashboard(data);
       return;
     }
@@ -769,13 +809,21 @@ async function loadDirectPhotosFromStorage(cleanDate, level, manual) {
     if (supabaseClient) {
       const { data, error } = await supabaseClient.storage.from("mock-sheets").list(`${cleanDate}/${level}`, { limit: 100 });
       if (!error && data) {
-        files = data.filter(f => f.name && !f.name.startsWith(".") && f.name !== "check" && f.name !== "summary.json" && f.name !== "deleted_files.json");
+        files = data.filter(f =>
+          f.name
+          && !f.name.startsWith(".")
+          && f.name !== "check"
+          && f.name !== "results"
+          && f.name !== "summary.json"
+          && f.name !== "deleted_files.json"
+          && !locallyDeletedFiles.has(`${cleanDate}/${level}/${f.name}`)
+        );
       }
     }
 
     if (files.length === 0) {
       document.getElementById("subsCount").textContent = "0";
-      document.getElementById("subsGrid").innerHTML = `<div style="padding:30px;color:var(--muted);text-align:center;grid-column:1/-1;">${currentDate} ${level} にアップロードされた写真はありません。</div>`;
+      document.getElementById("subsGrid").innerHTML = `<div style="padding:30px;color:var(--muted);text-align:center;grid-column:1/-1;">${escHtml(currentDate)} ${escHtml(level)} にアップロードされた写真はありません。</div>`;
       return;
     }
 
@@ -784,7 +832,7 @@ async function loadDirectPhotosFromStorage(cleanDate, level, manual) {
       return {
         file: f.name,
         id: (f.name.match(/No([0-9]{1,2})/i) || ["", "-"])[1],
-        name: (f.name.match(/-(.*?)-/i) || ["", "Estudiante"])[1],
+        name: decodeStudentNameFromFilename(f.name),
         status: "raw",
         score_str: "未採点",
         time_str: f.created_at ? new Date(f.created_at).toLocaleTimeString() : "",
@@ -868,34 +916,35 @@ function renderGallery(subs) {
     let badgeClass = s.status === 'ok' ? 'badge-ok' : (s.status === 'warning' ? 'badge-warn' : (s.status === 'error' ? 'badge-err' : 'badge-raw'));
     let desc = '';
     if (s.status === 'error') {
-      desc = `<div class="card-desc err">❌ ${s.reason || 'Error de lectura'}</div>`;
+      desc = `<div class="card-desc err">❌ ${escHtml(s.reason || 'Error de lectura')}</div>`;
     } else if (s.flags && s.flags.length > 0) {
-      desc = `<div class="card-desc warn">⚠ ${s.flags.join(', ')}</div>`;
+      desc = `<div class="card-desc warn">⚠ ${escHtml(s.flags.join(', '))}</div>`;
     }
 
     const cardId = `sub-${(s.file || '').replace(/[^a-zA-Z0-9]/g, '_')}`;
+    const dispName = s.name || 'Estudiante';
 
     return `
       <div class="sub-card ${cardClass}" id="${cardId}">
         <div class="card-left">
-          <img src="${s.thumb_url}" alt="Foto" class="card-thumb" onclick="openModal('${s.thumb_url}')" title="クリックで拡大">
+          <img src="${escHtml(s.thumb_url)}" alt="Foto" class="card-thumb" data-thumb="${escHtml(s.thumb_url)}" onclick="openModal(this.dataset.thumb)" title="クリックで拡大">
         </div>
         <div class="card-right">
           <div class="card-user">
-            <span class="user-no">No.${s.id || '-'}</span>
-            <span class="user-name" title="${s.name || 'Estudiante'}">${s.name || 'Estudiante'}</span>
+            <span class="user-no">No.${escHtml(s.id || '-')}</span>
+            <span class="user-name" title="${escHtml(dispName)}">${escHtml(dispName)}</span>
           </div>
           <div class="card-meta">
-            <span>🕒 ${s.time_str || ''}</span>
-            <span class="card-file" title="${s.file}">📄 ${s.file}</span>
+            <span>🕒 ${escHtml(s.time_str || '')}</span>
+            <span class="card-file" title="${escHtml(s.file)}">📄 ${escHtml(s.file)}</span>
           </div>
           <div>
-            <span class="badge ${badgeClass}">${s.score_str || '未採点'}</span>
+            <span class="badge ${badgeClass}">${escHtml(s.score_str || '未採点')}</span>
           </div>
           ${desc}
           <div class="card-actions">
             <span></span>
-            <button type="button" class="btn-delete-sub" onclick="confirmDelete('${s.file}', '${s.id || ''}', '${s.name || ''}')" title="この提出物を削除">
+            <button type="button" class="btn-delete-sub" data-file="${escHtml(s.file)}" data-id="${escHtml(s.id || '')}" data-name="${escHtml(dispName)}" onclick="confirmDelete(this.dataset.file, this.dataset.id, this.dataset.name)" title="この提出物を削除">
               🗑️ 削除
             </button>
           </div>
@@ -933,15 +982,20 @@ function renderChart(elementId, list) {
   }).join('');
 }
 
-// ==================== Delete Submission (確認なしで即座に削除) ====================
+// ==================== Delete Submission (確認なしで即座に削除 ＆ 再提出許可) ====================
 window.confirmDelete = async function(fileName, studentId, studentName) {
   const dispName = studentName && studentName !== 'Estudiante' ? `No.${studentId} ${studentName}` : fileName;
 
-  const cleanDate = currentDate.replace(/\s+/g, '_');
-  const basePath = `${cleanDate}/${currentLevel}/${fileName}`;
+  const targetDate = currentDate;
+  const targetLevel = currentLevel;
+  const cleanDate = targetDate.replace(/\s+/g, '_');
+  const basePath = `${cleanDate}/${targetLevel}/${fileName}`;
   const checkFileName = fileName.replace(/\.[^.]+$/, '_check.jpg');
-  const checkPath = `${cleanDate}/${currentLevel}/check/${checkFileName}`;
-  const resultJsonPath = `${cleanDate}/${currentLevel}/results/${fileName}.json`;
+  const checkPath = `${cleanDate}/${targetLevel}/check/${checkFileName}`;
+  const resultJsonPath = `${cleanDate}/${targetLevel}/results/${fileName}.json`;
+
+  // このセッション中の古いキャッシュ読み戻しを即座にブロック
+  locallyDeletedFiles.add(`${cleanDate}/${targetLevel}/${fileName}`);
 
   // 画面上のカードを即座にフェードアウト・消去（待たせない）
   const cardId = `sub-${fileName.replace(/[^a-zA-Z0-9]/g, '_')}`;
@@ -974,45 +1028,80 @@ window.confirmDelete = async function(fileName, studentId, studentName) {
     renderGallery([]);
   }
 
-  showToast(`🗑️ ${dispName} を削除しました`);
+  showToast(`🗑️ ${dispName} を削除しました（再提出可能）`);
 
-  try {
-    if (supabaseClient) {
-      // 1. Supabase Storage から実体画像・結果JSONを削除
+  // 連続削除時の競合を防ぐため直列化してクラウドを更新
+  cloudMutationQueue = cloudMutationQueue.then(async () => {
+    try {
+      if (!supabaseClient) return;
+
+      // 1. Supabase Storage から実体画像・確認画像・個別結果JSONを削除
       const pathsToDelete = [basePath, checkPath, resultJsonPath];
-      if (currentDate.includes(' ')) {
-        pathsToDelete.push(`${currentDate}/${currentLevel}/${fileName}`);
-        pathsToDelete.push(`${currentDate}/${currentLevel}/check/${checkFileName}`);
-        pathsToDelete.push(`${currentDate}/${currentLevel}/results/${fileName}.json`);
+      if (targetDate.includes(' ')) {
+        pathsToDelete.push(`${targetDate}/${targetLevel}/${fileName}`);
+        pathsToDelete.push(`${targetDate}/${targetLevel}/check/${checkFileName}`);
+        pathsToDelete.push(`${targetDate}/${targetLevel}/results/${fileName}.json`);
       }
       await supabaseClient.storage.from('mock-sheets').remove(pathsToDelete);
 
-      // 2. deleted_files.json に追記（ローカル同期用）
-      await markFileDeletedInCloud(cleanDate, currentLevel, fileName);
+      // 2. deleted_files.json に追記（生徒端末と採点デーモンへ即時削除通知）
+      await markFileDeletedInCloud(cleanDate, targetLevel, fileName);
+
+      // 3. summary.json からも即座に対象ファイルを除去（デーモン更新前の遅延・復活防止）
+      await removeSubmissionFromCloudSummary(cleanDate, targetLevel, fileName);
+    } catch(e) {
+      console.warn("Storage delete error:", e);
     }
-  } catch(e) {
-    console.warn("Storage delete error:", e);
-  }
+  });
 };
 
 async function markFileDeletedInCloud(cleanDate, level, fileName) {
   try {
     const listPath = `${cleanDate}/${level}/deleted_files.json`;
+    const publicListUrl = `${SUPABASE_URL}/storage/v1/object/public/mock-sheets/${encodeURIComponent(cleanDate)}/${encodeURIComponent(level)}/deleted_files.json?t=${Date.now()}`;
     let deletedList = [];
     try {
-      const res = await fetch(`${SUPABASE_URL}/storage/v1/object/public/mock-sheets/${encodeURIComponent(listPath)}?t=${Date.now()}`);
+      const res = await fetch(publicListUrl, { cache: 'no-store' });
       if (res.ok) {
-        deletedList = await res.json();
+        const parsed = await res.json();
+        if (Array.isArray(parsed)) deletedList = parsed;
       }
     } catch(e) {}
 
     if (!deletedList.includes(fileName)) {
       deletedList.push(fileName);
       const blob = new Blob([JSON.stringify(deletedList, null, 2)], { type: "application/json" });
-      await supabaseClient.storage.from("mock-sheets").upload(listPath, blob, { upsert: true });
+      await supabaseClient.storage.from("mock-sheets").upload(listPath, blob, {
+        contentType: "application/json",
+        upsert: true
+      });
     }
   } catch(e) {
     console.warn("Error marking file deleted:", e);
+  }
+}
+
+async function removeSubmissionFromCloudSummary(cleanDate, level, fileName) {
+  try {
+    const summaryPath = `${cleanDate}/${level}/summary.json`;
+    const publicSummaryUrl = `${SUPABASE_URL}/storage/v1/object/public/mock-sheets/${encodeURIComponent(cleanDate)}/${encodeURIComponent(level)}/summary.json?t=${Date.now()}`;
+    const res = await fetch(publicSummaryUrl, { cache: 'no-store' });
+    if (!res.ok) return;
+    const summary = await res.json();
+    if (!Array.isArray(summary.submissions)) return;
+
+    const nextSubs = summary.submissions.filter(s => s.file !== fileName);
+    if (nextSubs.length === summary.submissions.length) return;
+
+    summary.submissions = nextSubs;
+    summary.total_received = nextSubs.length;
+    const blob = new Blob([JSON.stringify(summary)], { type: "application/json" });
+    await supabaseClient.storage.from("mock-sheets").upload(summaryPath, blob, {
+      contentType: "application/json",
+      upsert: true
+    });
+  } catch(e) {
+    console.warn("Error updating summary on delete:", e);
   }
 }
 
