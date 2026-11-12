@@ -235,7 +235,7 @@ tr.is-learned .es-word {
 }
 .es-word {
   font-weight: 700;
-  color: var(--primary);
+  color: var(--text);
   font-size: 0.98rem;
   line-height: 1.25;
 }
@@ -252,7 +252,7 @@ tr.is-learned .es-word {
   margin-left: 3px;
 }
 .es-pron {
-  color: var(--accent);
+  color: var(--text);
   font-size: 0.8rem;
   margin-top: 2px;
 }
@@ -332,6 +332,7 @@ tr.is-learned .es-word {
   background: transparent !important;
   color: inherit !important;
 }
+.mask:hover *,
 .mask.revealed * {
   color: inherit !important;
 }
@@ -390,25 +391,14 @@ tr.is-learned .es-word {
 /* Exceptional article highlight */
 .art-exc {
   color: #dc2626 !important;
-  background: #fee2e2;
-  border: 1px solid #fca5a5;
-  border-radius: 4px;
-  padding: 0 4px;
-  margin-right: 1px;
   font-weight: 800;
-  display: inline-block;
-  line-height: 1.2;
 }
 .mask .art-exc {
-  background: transparent !important;
-  border-color: transparent !important;
   color: transparent !important;
 }
 .mask:hover .art-exc,
 .mask.revealed .art-exc {
   color: #dc2626 !important;
-  background: #fee2e2 !important;
-  border-color: #fca5a5 !important;
 }
 .meta-right {
   display: flex;
@@ -449,12 +439,8 @@ tr.is-learned .es-word {
 }
 .art-exc-sample {
   color: #dc2626;
-  background: #fee2e2;
-  border: 1px solid #fca5a5;
-  border-radius: 4px;
-  padding: 0 4px;
   font-weight: 800;
-  font-size: 0.72rem;
+  font-size: 0.74rem;
 }
 
 /* Etymology button & accordion row */
@@ -961,7 +947,7 @@ tr.etym-row:hover td {
 .exp-word-title {
   font-size: 0.95rem;
   font-weight: 700;
-  color: var(--primary);
+  color: var(--text);
   margin-bottom: 6px;
   display: flex;
   align-items: center;
@@ -1221,7 +1207,7 @@ tr.etym-row:hover td {
     </div>
     <div class="legend-note">
       <span class="art-exc-sample">el / la / los</span>
-      <span>赤表示の冠詞＝例外（elなのに-a終わり / los・las複数形 / 有名語尾以外の女性名詞など）</span>
+      <span>赤文字の冠詞＝例外（elなのに-a終わり / los・las複数形 / 有名語尾以外の女性名詞など）</span>
     </div>
   </div>
 
