@@ -387,6 +387,76 @@ tr.is-learned .es-word {
   margin: 1px 0;
 }
 
+/* Exceptional article highlight */
+.art-exc {
+  color: #dc2626 !important;
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 4px;
+  padding: 0 4px;
+  margin-right: 1px;
+  font-weight: 800;
+  display: inline-block;
+  line-height: 1.2;
+}
+.mask .art-exc {
+  background: transparent !important;
+  border-color: transparent !important;
+  color: transparent !important;
+}
+.mask:hover .art-exc,
+.mask.revealed .art-exc {
+  color: #dc2626 !important;
+  background: #fee2e2 !important;
+  border-color: #fca5a5 !important;
+}
+.meta-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.btn-all-etym {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #b45309;
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-all-etym:hover {
+  background: #fde68a;
+}
+.btn-all-etym.active {
+  background: #f59e0b;
+  color: #ffffff;
+  border-color: #d97706;
+}
+.legend-note {
+  font-size: 0.73rem;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.art-exc-sample {
+  color: #dc2626;
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  border-radius: 4px;
+  padding: 0 4px;
+  font-weight: 800;
+  font-size: 0.72rem;
+}
+
 /* Etymology button & accordion row */
 .es-word-row {
   display: flex;
@@ -1144,7 +1214,14 @@ tr.etym-row:hover td {
         <label><input type="checkbox" id="maskNoteEs"> メモ(西)</label>
         <label><input type="checkbox" id="maskNoteJa"> メモ(日)</label>
       </div>
-      <div class="stats" id="statsDisplay">表示中: 1700語</div>
+      <div class="meta-right">
+        <button type="button" class="btn-all-etym" id="btnAllEtym">💡 由来をすべて表示</button>
+        <div class="stats" id="statsDisplay">表示中: 1700語</div>
+      </div>
+    </div>
+    <div class="legend-note">
+      <span class="art-exc-sample">el / la / los</span>
+      <span>赤表示の冠詞＝例外（elなのに-a終わり / los・las複数形 / 有名語尾以外の女性名詞など）</span>
     </div>
   </div>
 
@@ -1338,7 +1415,73 @@ let maskEnActive = false;
 let maskNoteEsActive = false;
 let maskNoteJaActive = false;
 let hideLearnedActive = false;
+let allEtymOpen = false;
 const openEtymSet = new Set();
+
+const FAMOUS_FEM_RE = /(ción|sión|gión|nión|dad|tad|tud|umbre|ie|sis|tis|ez|triz)$/;
+const NATURAL_FEM_NOUNS = new Set(['mujer', 'madre', 'cantante', 'hermana', 'hija', 'chica', 'señora', 'amiga', 'alumna', 'jugadora', 'abogada']);
+const EXCEPTIONAL_MASC_NOUNS = new Set(['hambre', 'arte', 'agua', 'alma', 'arma', 'aula', 'águila', 'área']);
+const EXCLUDED_PLURAL_NOUNS = new Set(['dos']);
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function getArticleExceptionReason(phrase) {
+  const m = phrase.match(/^(el|la|los|las)\s+(.+)$/i);
+  if (!m) return null;
+  const art = m[1].toLowerCase();
+  const restTokens = m[2].trim().split(/\s+/);
+  let noun = restTokens[0].toLowerCase().replace(/[(),.]/g, '');
+  if (phrase.toLowerCase() === 'la mayor parte') {
+    noun = 'parte';
+  }
+  if (!noun) return null;
+
+  if (art === 'los' || art === 'las') {
+    if (EXCLUDED_PLURAL_NOUNS.has(noun)) return null;
+    return '常に複数形で使う表現 (los / las)';
+  }
+  if (art === 'el') {
+    if (/[aá]$/.test(noun)) {
+      return 'el だが -a で終わる例外';
+    }
+    if (EXCEPTIONAL_MASC_NOUNS.has(noun)) {
+      return '女性名詞だが単数は el（または複数で女性形）';
+    }
+    if (/z$/.test(noun)) {
+      return '-z 終わりだが男性名詞 (el)';
+    }
+    return null;
+  }
+  if (art === 'la') {
+    if (/[oó]$/.test(noun)) {
+      return 'la だが -o で終わる例外';
+    }
+    if (!/[aá]$/.test(noun)) {
+      if (NATURAL_FEM_NOUNS.has(noun)) return null;
+      if (FAMOUS_FEM_RE.test(noun)) return null;
+      return '-a / 有名女性語尾以外だが女性名詞 (la)';
+    }
+    return null;
+  }
+  return null;
+}
+
+function formatEsHtml(esText) {
+  return esText.split(' / ').map(part => {
+    const trimmed = part.trim();
+    const reason = getArticleExceptionReason(trimmed);
+    if (!reason) return escapeHtml(trimmed);
+    const m = trimmed.match(/^(el|la|los|las)(\s+.+)$/i);
+    if (!m) return escapeHtml(trimmed);
+    return `<span class="art-exc" title="${escapeHtml(reason)}">${escapeHtml(m[1])}</span>${escapeHtml(m[2])}`;
+  }).join(' / ');
+}
 
 // Load learned from localStorage
 let learnedSet = new Set();
@@ -1357,6 +1500,18 @@ const partSelect = document.getElementById('partSelect');
 const btnAll = document.getElementById('btnAll');
 const pillsGroup = document.getElementById('pillsGroup');
 const statsDisplay = document.getElementById('statsDisplay');
+const btnAllEtym = document.getElementById('btnAllEtym');
+
+function updateAllEtymBtnUI() {
+  if (!btnAllEtym) return;
+  if (allEtymOpen) {
+    btnAllEtym.classList.add('active');
+    btnAllEtym.textContent = '💡 由来をすべて閉じる';
+  } else {
+    btnAllEtym.classList.remove('active');
+    btnAllEtym.textContent = '💡 由来をすべて表示';
+  }
+}
 
 const maskEsCheck = document.getElementById('maskEs');
 const maskJaCheck = document.getElementById('maskJa');
@@ -1452,7 +1607,7 @@ function renderTable() {
       <td class="col-es">
         <div class="es-word-row">
           <div class="es-word-main ${esMaskClass}" onclick="this.classList.toggle('revealed')">
-            <div class="es-word"><span class="es-no">#${item.no}</span>${item.es} ${posTag}</div>
+            <div class="es-word"><span class="es-no">#${item.no}</span>${formatEsHtml(item.es)} ${posTag}</div>
             <div class="es-pron">(${item.pronunciation})</div>
           </div>
           <button type="button" class="btn-etym ${etymBtnActive}" id="etym-btn-${item.no}" onclick="toggleEtym(${item.no})" title="由来・覚え方を見る">💡<span class="btn-etym-label">由来</span></button>
@@ -1481,6 +1636,10 @@ window.toggleEtym = function(no) {
     existing.remove();
     openEtymSet.delete(no);
     if (btn) btn.classList.remove('active');
+    if (openEtymSet.size === 0 && allEtymOpen) {
+      allEtymOpen = false;
+      updateAllEtymBtnUI();
+    }
     return;
   }
   const item = rawData.find(it => it.no === no);
@@ -1490,6 +1649,21 @@ window.toggleEtym = function(no) {
   if (btn) btn.classList.add('active');
   row.insertAdjacentHTML('afterend', `<tr class="etym-row" id="etym-row-${no}"><td colspan="4"><div class="etym-box"><span class="badge-etym">💡 由来・英語</span><span class="etym-text">${item.etym}</span></div></td></tr>`);
 };
+
+if (btnAllEtym) {
+  btnAllEtym.addEventListener('click', () => {
+    allEtymOpen = !allEtymOpen;
+    if (allEtymOpen) {
+      rawData.forEach(item => {
+        if (item.etym) openEtymSet.add(item.no);
+      });
+    } else {
+      openEtymSet.clear();
+    }
+    updateAllEtymBtnUI();
+    renderTable();
+  });
+}
 
 window.toggleLearned = function(no, isChecked) {
   if (isChecked) {
@@ -1847,7 +2021,7 @@ function handleAnswer(chosenItem, chosenBtn) {
   updateQuizLearnedButton();
 
   // 解説エリアの表示
-  expWordTitle.innerHTML = `<span>#${currentQuizItem.no} <b>${currentQuizItem.es}</b> <small>(${currentQuizItem.pronunciation})</small> <span class="pos-badge">${currentQuizItem.pos_ja}</span></span> <span>➔ ${currentQuizItem.ja} / <small style="color:#64748b;">${currentQuizItem.en}</small></span>`;
+  expWordTitle.innerHTML = `<span>#${currentQuizItem.no} <b>${formatEsHtml(currentQuizItem.es)}</b> <small>(${currentQuizItem.pronunciation})</small> <span class="pos-badge">${currentQuizItem.pos_ja}</span></span> <span>➔ ${currentQuizItem.ja} / <small style="color:#64748b;">${currentQuizItem.en}</small></span>`;
   expNotes.innerHTML = currentQuizItem.note;
   if (currentQuizItem.etym) {
     quizEtymWrap.style.display = 'block';
@@ -1936,7 +2110,7 @@ function showResult() {
 
     html += `<div class="result-item ${statusClass}">
       <div class="result-item-info">
-        <div class="result-item-main">${icon} #${item.no} ${item.es} <small>(${item.ja})</small></div>
+        <div class="result-item-main">${icon} #${item.no} ${formatEsHtml(item.es)} <small>(${item.ja})</small></div>
         <div class="result-item-sub">${item.expr || ''}</div>
       </div>
       <button type="button" class="result-item-btn ${learnedClass}" id="res-btn-${item.no}" onclick="toggleResultLearned(${item.no})">
