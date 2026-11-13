@@ -220,9 +220,15 @@ tr.is-learned .es-word {
   color: #166534;
 }
 .col-check {
-  width: 34px;
+  width: 48px;
   text-align: center;
-  padding: 8px 2px;
+  padding: 6px 3px;
+}
+.action-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 .check-box {
   width: 18px;
@@ -230,8 +236,29 @@ tr.is-learned .es-word {
   cursor: pointer;
   accent-color: var(--accent);
 }
+.btn-row-audio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 22px;
+  font-size: 0.78rem;
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: transform 0.12s, background 0.15s;
+}
+.btn-row-audio:hover {
+  background: #bae6fd;
+}
+.btn-row-audio:active {
+  transform: scale(0.92);
+}
 .col-es {
-  width: 25%;
+  width: 24%;
 }
 .es-word {
   font-weight: 700;
@@ -458,9 +485,11 @@ tr.is-learned .es-word {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  padding: 2px 6px;
-  font-size: 0.70rem;
+  justify-content: center;
+  width: 30px;
+  height: 22px;
+  padding: 0;
+  font-size: 0.76rem;
   font-weight: 700;
   color: #b45309 !important;
   background: #fef3c7 !important;
@@ -527,17 +556,18 @@ tr.etym-row:hover td {
   body { padding: 4px 2px; }
   h1 { font-size: 1.2rem; }
   .container { width: 100%; max-width: 100%; }
-  .col-check { width: 26px; padding: 6px 2px; }
-  .col-es { width: 26%; }
+  .col-check { width: 38px; padding: 6px 2px; }
+  .col-es { width: 25%; }
   .col-ja-en { width: 17%; }
-  .col-note { width: 57%; font-size: 0.73rem; }
+  .col-note { width: 58%; font-size: 0.73rem; }
   th, td { padding: 6px 3px; }
   .check-box { width: 16px; height: 16px; }
+  .btn-row-audio { width: 26px; height: 20px; font-size: 0.72rem; }
   .es-word { font-size: 0.82rem; }
   .es-no { font-size: 0.68rem; margin-right: 1px; }
   .pos-badge { font-size: 0.68rem; margin-left: 1px; }
   .es-pron { font-size: 0.70rem; }
-  .btn-etym { padding: 1px 4px; font-size: 0.68rem; }
+  .btn-etym { width: 26px; height: 20px; padding: 0; justify-content: center; font-size: 0.70rem; }
   .btn-etym-label { display: none; }
   tr.etym-row td { padding: 7px 8px; }
   .etym-box { font-size: 0.76rem; gap: 6px; }
@@ -670,11 +700,50 @@ tr.etym-row:hover td {
   color: white;
   border-color: var(--secondary);
 }
+.range-inputs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+  font-size: 0.86rem;
+  color: #475569;
+}
+.range-input {
+  width: 78px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  text-align: center;
+  background: white;
+  color: var(--text);
+}
+.range-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+.btn-range-reset {
+  padding: 5px 10px;
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+}
+.btn-range-reset:hover {
+  background: #e2e8f0;
+}
 .checkbox-group {
   background: #f0fdf4;
   padding: 10px 12px;
   border-radius: 8px;
   border: 1px solid #bbf7d0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 .checkbox-label {
   display: flex;
@@ -684,6 +753,9 @@ tr.etym-row:hover td {
   font-weight: 600;
   color: #166534;
   cursor: pointer;
+}
+.checkbox-label-unmark {
+  color: #b91c1c;
 }
 .btn-start-quiz {
   padding: 12px;
@@ -1214,7 +1286,7 @@ tr.etym-row:hover td {
   <table id="vocabTable">
     <thead>
       <tr>
-        <th class="col-check">済</th>
+        <th class="col-check">済<br><small style="font-weight:400;opacity:0.85;">音/💡</small></th>
         <th class="col-es">西語 (発音)</th>
         <th class="col-ja-en">日本語 / 英語</th>
         <th class="col-note">DELEメモ</th>
@@ -1234,9 +1306,9 @@ tr.etym-row:hover td {
       
       <div class="quiz-form">
         <div class="form-group">
-          <label class="form-label">出題パート (Part):</label>
+          <label class="form-label">出題範囲 (Part / 番号):</label>
           <select id="quizPartSelect" class="form-select">
-            <option value="all">全1700語</option>
+            <option value="all">全1700語 (No. 1 - 1700)</option>
             <option value="1">Part 1 (No. 1 - 100)</option>
             <option value="2">Part 2 (No. 101 - 200)</option>
             <option value="3">Part 3 (No. 201 - 300)</option>
@@ -1254,7 +1326,16 @@ tr.etym-row:hover td {
             <option value="15">Part 15 (No. 1401 - 1500)</option>
             <option value="16">Part 16 (No. 1501 - 1600)</option>
             <option value="17">Part 17 (No. 1601 - 1700)</option>
+            <option value="custom">番号指定 (下の No. で指定)</option>
           </select>
+          <div class="range-inputs">
+            <span>No.</span>
+            <input type="number" id="quizStartNo" class="range-input" min="1" max="1700" value="1">
+            <span>番 〜</span>
+            <input type="number" id="quizEndNo" class="range-input" min="1" max="1700" value="1700">
+            <span>番</span>
+            <button type="button" id="btnResetRange" class="btn-range-reset">全範囲</button>
+          </div>
         </div>
 
         <div class="form-group">
@@ -1307,6 +1388,10 @@ tr.etym-row:hover td {
           <label class="checkbox-label">
             <input type="checkbox" id="autoMarkLearned" checked>
             <span>正解したら自動で「済（覚えた）」に更新する</span>
+          </label>
+          <label class="checkbox-label checkbox-label-unmark">
+            <input type="checkbox" id="autoUnmarkLearned" checked>
+            <span>不正解したら自動で「済（覚えた）」を消す</span>
           </label>
         </div>
 
@@ -1588,15 +1673,16 @@ function renderTable() {
     
     html += `<tr class="${learnedClass}" id="row-${item.no}">
       <td class="col-check">
-        <input type="checkbox" class="check-box" data-no="${item.no}" ${checkedAttr} onchange="toggleLearned(${item.no}, this.checked)">
+        <div class="action-stack">
+          <input type="checkbox" class="check-box" data-no="${item.no}" ${checkedAttr} onchange="toggleLearned(${item.no}, this.checked)">
+          <button type="button" class="btn-row-audio" onclick="event.stopPropagation(); speakByNo(${item.no})" title="発音を聞く">🔊</button>
+          <button type="button" class="btn-etym ${etymBtnActive}" id="etym-btn-${item.no}" onclick="event.stopPropagation(); toggleEtym(${item.no})" title="由来・覚え方を見る">💡</button>
+        </div>
       </td>
       <td class="col-es">
-        <div class="es-word-row">
-          <div class="es-word-main ${esMaskClass}" onclick="this.classList.toggle('revealed')">
-            <div class="es-word"><span class="es-no">#${item.no}</span>${formatEsHtml(item.es)} ${posTag}</div>
-            <div class="es-pron">(${item.pronunciation})</div>
-          </div>
-          <button type="button" class="btn-etym ${etymBtnActive}" id="etym-btn-${item.no}" onclick="toggleEtym(${item.no})" title="由来・覚え方を見る">💡<span class="btn-etym-label">由来</span></button>
+        <div class="es-word-main ${esMaskClass}" onclick="this.classList.toggle('revealed')">
+          <div class="es-word"><span class="es-no">#${item.no}</span>${formatEsHtml(item.es)} ${posTag}</div>
+          <div class="es-pron">(${item.pronunciation})</div>
         </div>
       </td>
       <td class="col-ja-en">
@@ -1746,6 +1832,11 @@ function speakSpanish(text) {
   }
 }
 
+window.speakByNo = function(no) {
+  const item = rawData.find(it => it.no === no);
+  if (item) speakSpanish(item.es);
+};
+
 // ==================== タブ切り替え ====================
 const tabModeList = document.getElementById('tabModeList');
 const tabModeQuiz = document.getElementById('tabModeQuiz');
@@ -1766,6 +1857,7 @@ window.switchMainTab = function(mode) {
     quizView.style.display = 'block';
     // 現在選択中のPartをクイズ設定に反映
     quizPartSelect.value = currentPart;
+    syncQuizRangeFromPart();
     updateQuizSetupCounts();
   }
 };
@@ -1776,11 +1868,15 @@ const quizPlay = document.getElementById('quizPlay');
 const quizResult = document.getElementById('quizResult');
 
 const quizPartSelect = document.getElementById('quizPartSelect');
+const quizStartNo = document.getElementById('quizStartNo');
+const quizEndNo = document.getElementById('quizEndNo');
+const btnResetRange = document.getElementById('btnResetRange');
 const unlearnedCount = document.getElementById('unlearnedCount');
 const totalQuizCount = document.getElementById('totalQuizCount');
 const learnedQuizCount = document.getElementById('learnedQuizCount');
 const quizCountSelector = document.getElementById('quizCountSelector');
 const autoMarkLearned = document.getElementById('autoMarkLearned');
+const autoUnmarkLearned = document.getElementById('autoUnmarkLearned');
 const btnStartQuiz = document.getElementById('btnStartQuiz');
 
 const quizQuestionNo = document.getElementById('quizQuestionNo');
@@ -1829,21 +1925,70 @@ quizCountSelector.querySelectorAll('.btn-count').forEach(btn => {
   });
 });
 
-quizPartSelect.addEventListener('change', updateQuizSetupCounts);
+function syncQuizRangeFromPart() {
+  const part = quizPartSelect.value;
+  if (part === 'all') {
+    quizStartNo.value = 1;
+    quizEndNo.value = 1700;
+  } else if (part !== 'custom') {
+    const p = parseInt(part, 10);
+    quizStartNo.value = (p - 1) * 100 + 1;
+    quizEndNo.value = Math.min(p * 100, 1700);
+  }
+}
+
+function getQuizRange() {
+  let s = parseInt(quizStartNo.value, 10);
+  let e = parseInt(quizEndNo.value, 10);
+  if (isNaN(s) || s < 1) s = 1;
+  if (isNaN(e) || e > 1700) e = 1700;
+  if (s > 1700) s = 1700;
+  if (e < 1) e = 1;
+  if (s > e) {
+    const tmp = s;
+    s = e;
+    e = tmp;
+  }
+  return { start: s, end: e };
+}
+
+quizPartSelect.addEventListener('change', () => {
+  syncQuizRangeFromPart();
+  updateQuizSetupCounts();
+});
+
+[quizStartNo, quizEndNo].forEach(input => {
+  input.addEventListener('input', () => {
+    quizPartSelect.value = 'custom';
+    updateQuizSetupCounts();
+  });
+  input.addEventListener('change', () => {
+    const { start, end } = getQuizRange();
+    quizStartNo.value = start;
+    quizEndNo.value = end;
+    updateQuizSetupCounts();
+  });
+});
+
+if (btnResetRange) {
+  btnResetRange.addEventListener('click', () => {
+    quizPartSelect.value = 'all';
+    syncQuizRangeFromPart();
+    updateQuizSetupCounts();
+  });
+}
+
 document.querySelectorAll('input[name="quizTarget"]').forEach(r => {
   r.addEventListener('change', updateQuizSetupCounts);
 });
 
-function getPoolWords(part) {
-  if (part === 'all') return rawData;
-  const p = parseInt(part);
-  const start = (p - 1) * 100 + 1;
-  const end = Math.min(p * 100, 1700);
+function getPoolWords() {
+  const { start, end } = getQuizRange();
   return rawData.filter(it => it.no >= start && it.no <= end);
 }
 
 function updateQuizSetupCounts() {
-  const pool = getPoolWords(quizPartSelect.value);
+  const pool = getPoolWords();
   const learnedInPool = pool.filter(it => learnedSet.has(it.no)).length;
   const unlearnedInPool = pool.length - learnedInPool;
 
@@ -1859,7 +2004,7 @@ function startQuiz(mistakesOnlyPool = null) {
   if (Array.isArray(mistakesOnlyPool) && mistakesOnlyPool.length > 0) {
     pool = mistakesOnlyPool;
   } else {
-    const rawPool = getPoolWords(quizPartSelect.value);
+    const rawPool = getPoolWords();
     const targetType = document.querySelector('input[name="quizTarget"]:checked').value;
     
     if (targetType === 'unlearned') {
@@ -2001,6 +2146,12 @@ function handleAnswer(chosenItem, chosenBtn) {
     feedbackBanner.className = 'feedback-banner incorrect';
     const correctAnsText = currentDirection === 'es2ja' ? currentQuizItem.ja : `${currentQuizItem.es} (${currentQuizItem.ja})`;
     feedbackBanner.innerHTML = `❌ 不正解... 正解は「<b>${correctAnsText}</b>」`;
+
+    // 自動で「済」を外す設定がONの場合
+    if (autoUnmarkLearned && autoUnmarkLearned.checked && learnedSet.has(currentQuizItem.no)) {
+      learnedSet.delete(currentQuizItem.no);
+      saveLearned();
+    }
   }
 
   // 「済」トグルボタンの表示更新
