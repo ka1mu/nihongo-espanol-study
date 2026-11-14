@@ -874,17 +874,6 @@ tr.etym-row:hover td {
 .btn-audio:active {
   transform: scale(0.9);
 }
-.btn-audio.btn-audio-lg {
-  width: auto;
-  height: auto;
-  border-radius: 999px;
-  padding: 10px 22px;
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #0369a1;
-  gap: 6px;
-  box-shadow: 0 2px 6px rgba(14, 165, 233, 0.2);
-}
 .q-sub-text {
   color: var(--accent);
   font-size: 0.92rem;
@@ -1202,7 +1191,7 @@ tr.etym-row:hover td {
 <div class="container">
   <header>
     <h1>🇪🇸 ターゲット1200 スペイン語</h1>
-    <p class="subtitle">全1700語・暗記チェック・全語由来＆対応英語・個別マスク・4択＆リスニングクイズ</p>
+    <p class="subtitle">全1700語・暗記チェック・全語由来＆対応英語・個別マスク・4択クイズ</p>
   </header>
 
   <div class="main-tabs">
@@ -1377,10 +1366,6 @@ tr.etym-row:hover td {
             <label class="radio-label">
               <input type="radio" name="quizDirection" value="ja2es">
               <span>🇯🇵 日本語 ➔ 🇪🇸 スペイン語</span>
-            </label>
-            <label class="radio-label">
-              <input type="radio" name="quizDirection" value="listening">
-              <span>🎧 リスニング (音声 ➔ 🇯🇵 日本語)</span>
             </label>
             <label class="radio-label">
               <input type="radio" name="quizDirection" value="mixed">
@@ -2092,30 +2077,15 @@ function showQuestion() {
 
   if (currentDirection === 'es2ja') {
     // 問題: スペイン語 ➔ 正解: 日本語
-    qPromptText.style.display = '';
     qPromptText.textContent = currentQuizItem.es;
     btnSpeakPrompt.style.display = 'inline-flex';
-    btnSpeakPrompt.classList.remove('btn-audio-lg');
-    btnSpeakPrompt.textContent = '🔊';
     btnSpeakPrompt.onclick = () => speakSpanish(currentQuizItem.es);
     qSubText.innerHTML = `(${currentQuizItem.pronunciation})`;
     speakSpanish(currentQuizItem.es);
-  } else if (currentDirection === 'listening') {
-    // 問題: 音声のみ ➔ 正解: 日本語
-    qPromptText.style.display = 'none';
-    btnSpeakPrompt.style.display = 'inline-flex';
-    btnSpeakPrompt.classList.add('btn-audio-lg');
-    btnSpeakPrompt.textContent = '🔊 音声を聞く';
-    btnSpeakPrompt.onclick = () => speakSpanish(currentQuizItem.es);
-    qSubText.innerHTML = `<span style="color:#64748b;">音声を聞いて正しい意味を選んでください</span>`;
-    speakSpanish(currentQuizItem.es);
   } else {
     // 問題: 日本語 ➔ 正解: スペイン語
-    qPromptText.style.display = '';
     qPromptText.textContent = currentQuizItem.ja;
     btnSpeakPrompt.style.display = 'none';
-    btnSpeakPrompt.classList.remove('btn-audio-lg');
-    btnSpeakPrompt.textContent = '🔊';
     qSubText.innerHTML = `<span style="color:#64748b;">英語: ${currentQuizItem.en}</span>`;
   }
 
@@ -2140,7 +2110,7 @@ function generateOptions(correctItem, direction) {
     btn.type = 'button';
     btn.className = 'opt-btn';
     
-    const text = (direction === 'es2ja' || direction === 'listening') ? item.ja : `${item.es} (${item.ja})`;
+    const text = direction === 'es2ja' ? item.ja : `${item.es} (${item.ja})`;
     btn.innerHTML = `<span class="opt-label">${labels[idx]}</span> <span>${text}</span>`;
 
     btn.addEventListener('click', () => handleAnswer(item, btn));
