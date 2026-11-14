@@ -548,9 +548,14 @@ h2 {
     <div class="sub-k" id="tileAvgVocabSub">--% aciertos</div>
   </div>
   <div class="tile">
-    <div class="k" id="tileGramTitle">Gramática / 文法・読解・聴解</div>
+    <div class="k" id="tileGramTitle">Gramática / 文法・読解</div>
     <div class="v" id="tileAvgGram">--</div>
     <div class="sub-k" id="tileAvgGramSub">--% aciertos</div>
+  </div>
+  <div class="tile" id="tileListeningBox" style="display:none;">
+    <div class="k">Audición / 聴解</div>
+    <div class="v" id="tileAvgListen">--</div>
+    <div class="sub-k" id="tileAvgListenSub">--% aciertos</div>
   </div>
 </div>
 
@@ -563,10 +568,19 @@ h2 {
     </div>
   </div>
 
-  <h2 id="chartGramTitle">文法・読解・聴解 / Gramática, lectura y audición — % correcto por pregunta</h2>
+  <h2 id="chartGramTitle">文法・読解 / Gramática y lectura — % correcto por pregunta</h2>
   <div class="chart-box">
     <div class="chart" id="chartGrammar">
       <div style="padding:20px;color:var(--muted);">Cargando gráfico...</div>
+    </div>
+  </div>
+
+  <div id="listeningChartSection" style="display:none;">
+    <h2>聴解 / Audición — % correcto por pregunta</h2>
+    <div class="chart-box">
+      <div class="chart" id="chartListening">
+        <div style="padding:20px;color:var(--muted);">Cargando gráfico...</div>
+      </div>
     </div>
   </div>
 
@@ -866,25 +880,37 @@ function renderDashboard(data) {
   document.getElementById("tileAvgGram").textContent = `${data.avg_grammar || 0} / ${data.grammar_max || 15}`;
   document.getElementById("tileAvgGramSub").textContent = `正答率 ${data.pct_grammar || 0}%`;
 
-  const hasListening = (data.grammar_max || 0) > 15;
   const tileGramTitle = document.getElementById("tileGramTitle");
-  if (tileGramTitle) {
-    tileGramTitle.textContent = hasListening ? "Gramática y audición / 文法・読解・聴解" : "Gramática / 文法・読解";
-  }
+  if (tileGramTitle) tileGramTitle.textContent = "Gramática / 文法・読解";
   const chartGramTitle = document.getElementById("chartGramTitle");
-  if (chartGramTitle) {
-    chartGramTitle.textContent = hasListening
-      ? "文法・読解・聴解 / Gramática, lectura y audición — % correcto por pregunta (G16〜: 聴解)"
-      : "文法・読解 / Gramática y lectura — % correcto por pregunta";
-  }
+  if (chartGramTitle) chartGramTitle.textContent = "文法・読解 / Gramática y lectura — % correcto por pregunta";
 
   // Charts
   const stats = data.stats || [];
   const vStats = stats.filter(s => s.label.startsWith('V'));
   const gStats = stats.filter(s => s.label.startsWith('G'));
+  const lStats = stats.filter(s => s.label.startsWith('L'));
+
+  const hasListening = (data.listening_max || 0) > 0 || lStats.length > 0;
+  const tileListeningBox = document.getElementById("tileListeningBox");
+  const listeningChartSection = document.getElementById("listeningChartSection");
+  if (tileListeningBox) {
+    tileListeningBox.style.display = hasListening ? "" : "none";
+  }
+  if (listeningChartSection) {
+    listeningChartSection.style.display = hasListening ? "block" : "none";
+  }
+  if (hasListening) {
+    const lMax = data.listening_max || lStats.length || 8;
+    document.getElementById("tileAvgListen").textContent = `${data.avg_listening || 0} / ${lMax}`;
+    document.getElementById("tileAvgListenSub").textContent = `正答率 ${data.pct_listening || 0}%`;
+  }
 
   renderChart('chartVocab', vStats);
   renderChart('chartGrammar', gStats);
+  if (hasListening) {
+    renderChart('chartListening', lStats);
+  }
 
   // Difficult list
   const diffUl = document.getElementById('diffList');

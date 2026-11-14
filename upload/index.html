@@ -296,7 +296,7 @@ h1 {
 }
 .score-breakdown {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   gap: 10px;
 }
 .score-item {
@@ -608,8 +608,12 @@ h1 {
         <div class="score-item-val" id="resVocabScore">-- / --</div>
       </div>
       <div class="score-item">
-        <div class="score-item-title" id="resGrammarLabel">文法・読解・聴解<br>(Gramática, lectura y audición)</div>
+        <div class="score-item-title" id="resGrammarLabel">文法・読解<br>(Gramática y lectura)</div>
         <div class="score-item-val" id="resGrammarScore">-- / --</div>
+      </div>
+      <div class="score-item" id="resListeningBox" style="display:none;">
+        <div class="score-item-title">聴解<br>(Audición)</div>
+        <div class="score-item-val" id="resListeningScore">-- / --</div>
       </div>
     </div>
 
@@ -623,7 +627,7 @@ h1 {
       </div>
       <div id="resIncorrectList" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
       <div id="resLegendNote" style="font-size:0.72rem;color:#64748b;margin-top:5px;">
-        ※ V = Vocabulario (文字・語彙) · G1〜G15 = Gramática y lectura (文法・読解) · G16〜 = Audición (聴解)
+        ※ V = Vocabulario (文字・語彙) · G = Gramática (文法・読解) · L = Audición (聴解)
       </div>
     </div>
 
@@ -1201,17 +1205,23 @@ function displayScoreResult(data, formContext = null) {
   document.getElementById('resVocabScore').textContent = `${data.vocab_score} / ${data.vocab_max}`;
   document.getElementById('resGrammarScore').textContent = `${data.grammar_score} / ${data.grammar_max}`;
 
-  const hasListening = (data.grammar_max || 0) > 15;
+  const hasListening = (data.listening_max || 0) > 0;
+  const listenBox = document.getElementById('resListeningBox');
+  if (listenBox) {
+    listenBox.style.display = hasListening ? 'block' : 'none';
+  }
+  const listenScoreEl = document.getElementById('resListeningScore');
+  if (listenScoreEl && hasListening) {
+    listenScoreEl.textContent = `${data.listening_score != null ? data.listening_score : 0} / ${data.listening_max}`;
+  }
   const gramLabel = document.getElementById('resGrammarLabel');
   if (gramLabel) {
-    gramLabel.innerHTML = hasListening
-      ? '文法・読解・聴解<br>(Gramática, lectura y audición)'
-      : '文法・読解<br>(Gramática y lectura)';
+    gramLabel.innerHTML = '文法・読解<br>(Gramática y lectura)';
   }
   const legendNote = document.getElementById('resLegendNote');
   if (legendNote) {
     legendNote.textContent = hasListening
-      ? '※ V = Vocabulario (文字・語彙) · G1〜G15 = Gramática y lectura (文法・読解) · G16〜 = Audición (聴解)'
+      ? '※ V = Vocabulario (文字・語彙) · G = Gramática (文法・読解) · L = Audición (聴解)'
       : '※ V = Vocabulario (文字・語彙) · G = Gramática (文法・読解)';
   }
 
