@@ -548,7 +548,7 @@ h2 {
     <div class="sub-k" id="tileAvgVocabSub">--% aciertos</div>
   </div>
   <div class="tile">
-    <div class="k">Gramática / 文法・読解</div>
+    <div class="k" id="tileGramTitle">Gramática / 文法・読解・聴解</div>
     <div class="v" id="tileAvgGram">--</div>
     <div class="sub-k" id="tileAvgGramSub">--% aciertos</div>
   </div>
@@ -563,7 +563,7 @@ h2 {
     </div>
   </div>
 
-  <h2>文法・読解 / Gramática y lectura — % correcto por pregunta</h2>
+  <h2 id="chartGramTitle">文法・読解・聴解 / Gramática, lectura y audición — % correcto por pregunta</h2>
   <div class="chart-box">
     <div class="chart" id="chartGrammar">
       <div style="padding:20px;color:var(--muted);">Cargando gráfico...</div>
@@ -865,6 +865,18 @@ function renderDashboard(data) {
 
   document.getElementById("tileAvgGram").textContent = `${data.avg_grammar || 0} / ${data.grammar_max || 15}`;
   document.getElementById("tileAvgGramSub").textContent = `正答率 ${data.pct_grammar || 0}%`;
+
+  const hasListening = (data.grammar_max || 0) > 15;
+  const tileGramTitle = document.getElementById("tileGramTitle");
+  if (tileGramTitle) {
+    tileGramTitle.textContent = hasListening ? "Gramática y audición / 文法・読解・聴解" : "Gramática / 文法・読解";
+  }
+  const chartGramTitle = document.getElementById("chartGramTitle");
+  if (chartGramTitle) {
+    chartGramTitle.textContent = hasListening
+      ? "文法・読解・聴解 / Gramática, lectura y audición — % correcto por pregunta (G16〜: 聴解)"
+      : "文法・読解 / Gramática y lectura — % correcto por pregunta";
+  }
 
   // Charts
   const stats = data.stats || [];
