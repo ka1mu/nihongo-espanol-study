@@ -1251,6 +1251,10 @@ td.col-es, td.col-ja-en {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* 西語マスク: 見出し語と派生語をまとめて1つのマスクで隠す */
+.es-cell-wrap.mask {
+  padding: 2px 4px;
+}
 /* 西語マスク時に紫の四角 (.deriv-tag-pill) も完全にグレーの下に隠す */
 .mask .deriv-tag-pill {
   background: transparent !important;
@@ -1841,12 +1845,12 @@ function renderTable() {
         </div>
       </td>
       <td class="col-es">
-        <div class="cell-flex-wrap">
-          <div class="es-word-main ${esMaskClass}" onclick="this.classList.toggle('revealed')">
+        <div class="cell-flex-wrap es-cell-wrap ${esMaskClass}" onclick="this.classList.toggle('revealed')">
+          <div class="es-word-main">
             <div class="es-word"><span class="es-no">#${item.no}</span>${formatEsHtml(item.es)} ${posTag}</div>
             <div class="es-pron">(${item.pronunciation})</div>
           </div>
-          ${item.deriv_cols ? `<div class="deriv-sub-list">${item.deriv_cols.map(d => `<div class="deriv-sub-item ${esMaskClass}" onclick="this.classList.toggle('revealed')" title="${escapeHtml(d[1])}"><span class="deriv-tag-pill">${d[0]}</span><span class="deriv-es-text">${escapeHtml(d[1])}</span></div>`).join('')}</div>` : ''}
+          ${item.deriv_cols ? `<div class="deriv-sub-list">${item.deriv_cols.map(d => `<div class="deriv-sub-item" title="${escapeHtml(d[1])}"><span class="deriv-tag-pill">${d[0]}</span><span class="deriv-es-text">${escapeHtml(d[1])}</span></div>`).join('')}</div>` : ''}
         </div>
       </td>
       <td class="col-ja-en">
