@@ -1744,11 +1744,29 @@ function saveLearned() {
   updateProgressBar();
 }
 
+function partRange(part) {
+  if (part === 'all') return [1, 1700];
+  const p = parseInt(part);
+  return [(p - 1) * 100 + 1, Math.min(p * 100, 1700)];
+}
+
 function updateProgressBar() {
-  const count = learnedSet.size;
-  const pct = ((count / 1700) * 100).toFixed(1);
-  learnedStatsText.textContent = `覚えた語数: ${count} / 1700 (${pct}%)`;
-  progressBarFill.style.width = `${pct}%`;
+  const total = learnedSet.size;
+  if (currentPart === 'all') {
+    const pct = ((total / 1700) * 100).toFixed(1);
+    learnedStatsText.textContent = `覚えた語数: ${total} / 1700 (${pct}%)`;
+    progressBarFill.style.width = `${pct}%`;
+    btnResetLearned.textContent = '全部リセット';
+  } else {
+    const [start, end] = partRange(currentPart);
+    const size = end - start + 1;
+    let count = 0;
+    learnedSet.forEach(no => { if (no >= start && no <= end) count++; });
+    const pct = ((count / size) * 100).toFixed(1);
+    learnedStatsText.textContent = `Part ${currentPart} の覚えた語数: ${count} / ${size} (${pct}%)　全体: ${total} / 1700`;
+    progressBarFill.style.width = `${pct}%`;
+    btnResetLearned.textContent = `Part ${currentPart} をリセット`;
+  }
 }
 
 function syncPartUI(part) {
@@ -1767,6 +1785,7 @@ function syncPartUI(part) {
       pill.classList.remove('active');
     }
   });
+  updateProgressBar();
   renderTable();
 }
 
@@ -1960,8 +1979,17 @@ hideLearnedCheck.addEventListener('change', (e) => {
 });
 
 btnResetLearned.addEventListener('click', () => {
-  if (confirm('覚えた単語のチェックをすべてリセットしますか？')) {
-    learnedSet.clear();
+  if (currentPart === 'all') {
+    if (confirm('覚えた単語のチェックを全パートすべてリセットしますか？')) {
+      learnedSet.clear();
+      saveLearned();
+      renderTable();
+    }
+    return;
+  }
+  const [start, end] = partRange(currentPart);
+  if (confirm(`Part ${currentPart}（No. ${start}〜${end}）の覚えた単語のチェックだけをリセットしますか？\n（ほかのパートはそのままです）`)) {
+    Array.from(learnedSet).forEach(no => { if (no >= start && no <= end) learnedSet.delete(no); });
     saveLearned();
     renderTable();
   }
